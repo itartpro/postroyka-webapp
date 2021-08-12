@@ -1,0 +1,28 @@
+.form small {
+    color: red;
+    width: 100%
+}
+
+.form input, .form select {
+    margin-top: 10px;
+    font-size: 1rem
+}
+
+.radios {
+    margin-top: 10px
+}
+
+.radios input {
+    margin: 0 0 0 5px
+}
+
+.radios label {
+    margin-left: 20px;
+    cursor: pointer
+}
+
+.select select {
+    margin-right: 15px;
+    min-width: 60px;
+    cursor: pointer
+}

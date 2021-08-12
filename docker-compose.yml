@@ -1,0 +1,28 @@
+networks:
+  docknet:
+    external: true
+
+services:
+  nextjs:
+    container_name: postroyka
+    logging:
+      options:
+        max-size: 5m
+    build: ./
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/webapp
+      - ../appservices/uploads:/uploads
+      - ../appservices/uploads/logs/npm:/root/.npm/_logs
+      - /webapp/.next
+      - /webapp/node_modules
+    tty: true
+    networks:
+      - docknet
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.nextjs.loadbalancer.server.port=3000
+      - traefik.http.routers.postroyka.rule=Host(`postroyka.localhost`)
+      - traefik.http.routers.postroyka.entrypoints=web

@@ -1,0 +1,11 @@
+.n1 {
+    background-color: #fbfbfb;
+    border-right: 1px solid #ebebeb;
+    max-width: 280px;
+    padding: 30px
+}
+
+.m1 {
+    padding-top: 30px;
+    max-width: calc(100% - 280px)
+}

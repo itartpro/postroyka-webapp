@@ -1,0 +1,152 @@
+.menu {
+    color: white;
+    width: 280px;
+    overflow: hidden;
+    transition: all .3s;
+    border-radius: 0 20px 20px 0;
+    background: #dadada;
+    box-shadow: inset 5px 5px 15px #b4b4b4, inset -5px -5px 15px #ffffff;
+    margin: 20px 0;
+    padding-bottom: 20px;
+    float: left;
+}
+
+.menu.change {
+    width: 0
+}
+
+.menu ul {
+    margin-top: 90px;
+    list-style: none
+}
+
+.menu li {
+    padding: 0 20px;
+    margin-bottom: 20px
+}
+
+.menu li a {
+    transition: all .3s;
+    position: relative;
+    color: #6f7580;
+    font-weight: 500;
+    text-shadow: 0 1px 0 white;
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
+.menu li a span:nth-child(1) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #e0e0e0;
+    box-shadow:  3px 3px 6px #bebebe, -3px -3px 6px #ffffff;
+    transition: all .3s
+}
+
+.menu li svg, .menu li a:hover {
+    color: #e6080b
+}
+
+.menu li a:hover span:nth-child(1) {
+    box-shadow: 2px 2px 4px #bebebe, -2px -2px 4px #ffffff;
+}
+
+.menu li a.current {
+    color: #2e294e
+}
+
+.main {
+    width: calc(100% - 280px);
+    padding: 0 30px;
+    overflow: hidden;
+    transition: all .3s;
+    float: right;
+}
+
+.main.change {
+    width: 100%;
+    padding: 0 15px;
+    box-shadow: inset 15px 0 20px -10px #444;
+}
+
+.main > section, .main > header {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto 40px auto
+}
+
+.main > header {
+    margin-top: 80px;
+    text-align: center;
+    text-shadow: 1px 1px 0 white
+}
+
+/* hamburger */
+
+.burger {
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+    top: 40px;
+}
+
+.patties {
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    width: 35px;
+    height: 22px;
+    pointer-events: none
+}
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 3px;
+    background-color: #e6080b;
+    margin: 6px 0;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    box-shadow: 0 1px 0 white;
+}
+
+/* Rotate first bar */
+.burger .change {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+}
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 5px);
+    transform: rotate(-45deg) translate(-9px, 5px)
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+    opacity: 0
+}
+
+/* Rotate last bar */
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -4px);
+    transform: rotate(45deg) translate(-8px, -4px)
+}
+
+@media (max-width:900px) {
+    .menu {
+        width: 100%;
+    }
+
+    .main {
+        width: 100%;
+        padding: 0 15px;
+        display: block;
+        float: right
+    }
+}

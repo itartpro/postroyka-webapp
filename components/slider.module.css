@@ -1,0 +1,112 @@
+.wrap {
+    position: relative;
+    overflow: hidden;
+}
+
+.wrap > div, .wrap > div > div {
+    overflow: initial
+}
+
+.dots {
+    display: flex;
+    padding: 10px 0;
+    justify-content: center;
+}
+
+.dot {
+    border: none;
+    width: 10px;
+    height: 10px;
+    background: #c5c5c5;
+    border-radius: 50%;
+    margin: 0 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dot:focus, .link:focus {
+    outline: none;
+}
+
+.dot.active {
+    background: #000
+}
+
+.links > div {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto
+}
+
+.link {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    color: white;
+    margin: 0 30px 20px 0;
+    transition: all .3s
+}
+
+.link:after {
+    position: absolute;
+    content: "";
+    right: 0;
+    bottom: -5px;
+    width: 0;
+    background: white;
+    height: 2px;
+    transition: all .3s;
+}
+
+.link:hover:after, .link.active:after {
+    width: 100%
+}
+
+.arrow {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    fill: #fff;
+    cursor: pointer;
+}
+
+.arrow_left {
+    left: 0;
+}
+
+.arrow_right {
+    left: auto;
+    right: 0;
+}
+
+.arrow_disabled {
+    fill: rgba(255, 255, 255, 0.5);
+}
+
+@media all and (min-width: 700px){
+    .links {
+        position: relative
+    }
+
+    .links > div {
+        position: absolute;
+        left: 300px;
+        top: -44px;
+    }
+}
+
+@media all and (max-width: 340px) {
+    .link {
+        margin: 0 15px 20px 0;
+    }
+
+    .links > *:last-child {
+        margin-right: 0
+    }
+}
