@@ -1,5 +1,6 @@
-import PublicLayout from 'components/public/public-layout'
-import css from './home.module.css'
+import PublicLayout from 'components/public/public-layout';
+import Order from "components/public/order";
+import css from './home.module.css';
 
 const Home = () => {
     const page = {
@@ -14,6 +15,7 @@ const Home = () => {
             <main className={`row center ${css.m1}`}>
                 <h1>Постройка hello</h1>
                 <small>Ещё чего</small>
+                <Order/>
             </main>
         </PublicLayout>
     )
