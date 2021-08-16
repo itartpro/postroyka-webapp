@@ -13,6 +13,7 @@ const Home = () => {
         <PublicLayout page={page} ogImage={ogImage}>
             <main className={`row center ${css.m1}`}>
                 <h1>Постройка hello</h1>
+                <small>Ещё чего</small>
             </main>
         </PublicLayout>
     )
