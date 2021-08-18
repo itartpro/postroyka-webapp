@@ -43,6 +43,7 @@ const PublicLayout = ({page, user, children, ogImage}) => {
                     </ul>
                 </div>
             </nav>
+            {children}
             <style jsx global>{`
                 @font-face {
                     font-family: Roboto;
