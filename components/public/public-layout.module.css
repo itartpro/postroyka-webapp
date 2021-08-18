@@ -1,11 +1,22 @@
-.n1 {
-    background-color: #fbfbfb;
-    border-right: 1px solid #ebebeb;
-    max-width: 280px;
-    padding: 30px
+.top {
+    background-color: #f8f8f8;
+    min-height: 100px
 }
 
-.m1 {
-    padding-top: 30px;
-    max-width: calc(100% - 280px)
+.top ul {
+    list-style: none
+}
+
+.top ul li {
+    margin: 15px;
+    color: #777
+}
+
+.top ul li:last-child {
+    margin-right: 0
+}
+
+.top li a:hover {
+    text-shadow: 0 0 0 black;
+    color: black
 }
