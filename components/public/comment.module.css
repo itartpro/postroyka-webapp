@@ -6,7 +6,9 @@
     border-radius: 10px
 }
 
-.d1 > div:first-child
+.d1 > div:first-child svg {
+    color: green
+}
 
 @media all and (max-width: 390px) {
     .d1 {
