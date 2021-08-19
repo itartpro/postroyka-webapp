@@ -31,7 +31,11 @@ const Home = () => {
                     </div>
                 </header>
                 <small>Ещё чего</small>
-                <Order/>
+                <div className="col start max">
+                    <Order/>
+                    <Order/>
+                    <Order/>
+                </div>
             </main>
         </PublicLayout>
     )
