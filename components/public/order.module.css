@@ -2,6 +2,7 @@
     border: 1px solid #B9B9B9;
     padding: 40px 50px;
     border-radius: 20px;
+    margin-bottom: 20px;
 }
 
 .box > div:nth-child(1) {
@@ -9,32 +10,70 @@
     font-size: 18px;
     color: #065A89;
 }
-.box > div:nth-child(1) > p{
+
+.box > div:nth-child(1) > span {
     font-weight: bold;
     font-size: 22px;
     line-height: 26px;
     color: #111111;
 }
 
+.box > div:nth-child(2) {
+    margin: 25px 0;
+}
+
 .box > div:nth-child(2) > span {
-    color: green;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-right: 20px;
 }
 
 .box > div:nth-child(2) button {
+    padding: 10px 20px;
+    background: white;
+    color: #f69292;
+    font-size: 1rem;
     border: 1px solid #F69292;
     box-sizing: border-box;
-    border-radius: 4px
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.box > div:nth-child(2) button:hover {
+    background: #f69292;
+    color: white;
+    -webkit-transition: all 023s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.box > div:nth-child(2) button:nth-child(3) {
+    color: #4DA8FE;
+    border: 1px solid #4DA8FE;
+}
+
+.box > div:nth-child(2) button:nth-child(3):hover {
+    background: #4DA8FE;
+    color: white;
+    -webkit-transition: all 023s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .box > p {
-    color: pink
+    line-height: 130%;
+    margin-bottom: 25px;
 }
 
 .box > div:nth-child(4) > p {
-    color: red
+    font-size: 0.8rem;
+    color: #9D9D9D;
 }
 
 .box > div:nth-child(4) > span {
-    color: #6f7580;
+    font-size: 0.8rem;
+    color: #9D9D9D;
 }
 
