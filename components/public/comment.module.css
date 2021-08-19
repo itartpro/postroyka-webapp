@@ -1,0 +1,15 @@
+.d1 {
+    background-color: white;
+    width: 100%;
+    max-width: 360px;
+    padding: 30px;
+    border-radius: 10px
+}
+
+.d1 > div:first-child
+
+@media all and (max-width: 390px) {
+    .d1 {
+        padding: 15px
+    }
+}

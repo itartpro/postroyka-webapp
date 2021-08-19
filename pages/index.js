@@ -1,6 +1,7 @@
 import PublicLayout from 'components/public/public-layout';
 import Order from "components/public/order";
 import css from './home.module.css';
+import Comment from "../components/public/comment";
 
 const Home = () => {
     const page = {
@@ -21,20 +22,23 @@ const Home = () => {
                             <input type="submit" value="Найти мастера"/>
                         </form>
                         <div className={css.d2}>
-                            <div className={css.d3}>
+                            <div>
                                 <b>С нами легко</b>
                                 <p>Услуги строительных компаний помогут Вам...</p>
                                 <img src="/images/home/people.png"/>
                             </div>
-
                         </div>
                     </div>
                 </header>
-                <small>Ещё чего</small>
                 <div className="col start max">
                     <Order/>
                     <Order/>
                     <Order/>
+                </div>
+                <div className="row max">
+                    <Comment/>
+                    <Comment/>
+                    <Comment/>
                 </div>
             </main>
         </PublicLayout>
