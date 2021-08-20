@@ -16,7 +16,7 @@
     font-weight: bold;
     font-size: 1.4rem;
     line-height: 26px;
-    color: #111111
+    color: #111
 }
 
 .box > div:nth-child(2) {
@@ -111,7 +111,7 @@
     }
 
     .box > div:nth-child(4) > span {
-        color: #000000
+        color: black
     }
 }
 
