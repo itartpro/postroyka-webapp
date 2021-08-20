@@ -35,10 +35,12 @@ const Home = () => {
                     <Order/>
                     <Order/>
                 </div>
-                <div className={`row max ${css.bg}`}>
-                    <Comment/>
-                    <Comment/>
-                    <Comment/>
+                <div className={`row ${css.bg}`}>
+                    <div className={`row max`}>
+                        <Comment/>
+                        <Comment/>
+                        <Comment/>
+                    </div>
                 </div>
             </main>
         </PublicLayout>
