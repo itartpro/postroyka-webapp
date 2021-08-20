@@ -30,17 +30,17 @@ const Home = () => {
                         </div>
                     </div>
                 </header>
-                <div className="col start max">
-                    <Order/>
-                    <Order/>
-                    <Order/>
-                </div>
                 <div className={`row ${css.bg}`}>
                     <div className={`row max`}>
                         <Comment/>
                         <Comment/>
                         <Comment/>
                     </div>
+                </div>
+                <div className="col start max">
+                    <Order/>
+                    <Order/>
+                    <Order/>
                 </div>
             </main>
         </PublicLayout>
