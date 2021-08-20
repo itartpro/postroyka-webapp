@@ -11,6 +11,7 @@ const Comment = () => {
                 <p>Положительный отзыв</p>{/*Тут просто надо marign-right чтобы сделать место от надписи до звезды*/}
                 <BsStar/>
                 <span>8.2</span>
+                <div></div>
             </div>
             <div className="row bet">
                 <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76" loading="lazy"/>
@@ -22,7 +23,7 @@ const Comment = () => {
                 удобно. Работой довольна. Заказ был, чтобы перила были надежны, с..</p>
             <span>2 дня назад</span>
         </div>
-)
+    )
 }
 
 export default Comment

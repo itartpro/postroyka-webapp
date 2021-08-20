@@ -13,9 +13,8 @@
 }
 
 .box > div:nth-child(1) > span {
-    font-weight: bold;
     font-size: 1.4rem;
-    line-height: 26px;
+    line-height: 1.6rem;
     color: #111111
 }
 
@@ -25,7 +24,6 @@
 
 .box > div:nth-child(2) > span {
     font-weight: bold;
-    font-size: 1rem;
     margin-right: 20px
 }
 
@@ -33,9 +31,7 @@
     padding: 10px 20px;
     background: white;
     color: #f69292;
-    font-size: 1rem;
     border: 1px solid #F69292;
-    box-sizing: border-box;
     border-radius: 4px;
     margin-right: 10px
 }
@@ -128,7 +124,6 @@
     .box:first-of-type {
         border-top: 1px solid #B9B9B9
     }
-
 
     .box > div:nth-child(1) > span {
         font-size: 1.1rem;
