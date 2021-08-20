@@ -14,8 +14,13 @@
 
 .box > div:nth-child(1) > span {
     font-size: 1.4rem;
+<<<<<<< HEAD
     line-height: 1.6rem;
     color: #111111
+=======
+    line-height: 26px;
+    color: #111
+>>>>>>> 6781acc03f16f5f1e4d664c3e74a0e5c10b23cbc
 }
 
 .box > div:nth-child(2) {
@@ -107,7 +112,7 @@
     }
 
     .box > div:nth-child(4) > span {
-        color: #000000
+        color: black
     }
 }
 
