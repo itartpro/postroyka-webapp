@@ -7,13 +7,13 @@
 
 .box > div:nth-child(1) {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 1.1rem;
     color: #065A89;
 }
 
 .box > div:nth-child(1) > span {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 1.4rem;
     line-height: 26px;
     color: #111111;
 }
@@ -77,3 +77,76 @@
     color: #9D9D9D;
 }
 
+
+
+@media screen and (max-width: 1000px) {
+    .box {
+        padding: 20px 25px;
+        border-radius: 8px;
+    }
+
+    .box > div:nth-child(1) {
+        font-size: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .box > div:nth-child(2) > span {
+        font-size: 0.8rem;
+    }
+
+    .box > div:nth-child(1) > p {
+        max-width: 80%;
+    }
+
+    .box > div:nth-child(2) {
+        margin: 10px 0;
+    }
+
+    .box > p {
+        font-size: 0.8rem;
+        margin-bottom: 20px;
+    }
+
+    .box > div:nth-child(4) > p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.8rem;
+    }
+
+
+    .box > div:nth-child(2) button {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+    .box > div:nth-child(4) > p {
+        color: #9D9D9D;
+        margin-bottom: 10px;
+    }
+
+    .box > div:nth-child(4) > span {
+        color: #000000;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .box {
+        padding: 20px 25px;
+        border-radius: 0px;
+    }
+
+    .box > div:nth-child(1) > p {
+        max-width: 60%;
+    }
+
+    .box > div:nth-child(2) > span {
+
+    }
+
+    .box > div:nth-child(2) button {
+        font-size: 0.7rem;
+    }
+}

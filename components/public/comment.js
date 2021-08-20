@@ -1,6 +1,7 @@
 import css from "./comment.module.css";
-import { BsStar } from 'react-icons/bs';
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import {BsStar} from 'react-icons/bs';
+import {IoIosCheckmarkCircleOutline} from 'react-icons/io';
+
 
 const Comment = () => {
 
@@ -17,10 +18,11 @@ const Comment = () => {
                 <IoIosCheckmarkCircleOutline/>{/*Я думаю это надо сделать позитион абсолют*/}
                 <span>17 отзывов</span>{/*Я думаю это надо сделать позитион абсолют*/}
             </div>
-            <p>Порядочный, аккуратный мастер. Делает на совесть. Весь инструмент свой, в т.ч. фрезер. Делает, чтобы было удобно. Работой довольна. Заказ был, чтобы перила были надежны, с..</p>
+            <p>Порядочный, аккуратный мастер. Делает на совесть. Весь инструмент свой, в т.ч. фрезер. Делает, чтобы было
+                удобно. Работой довольна. Заказ был, чтобы перила были надежны, с..</p>
             <span>2 дня назад</span>
         </div>
-    )
+)
 }
 
 export default Comment

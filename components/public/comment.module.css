@@ -1,9 +1,22 @@
+.bg {
+    position: absolute;
+    width: 1920px;
+    height: 560px;
+    left: 0px;
+    top: 653px;
+
+    background: #F6F6F6;
+    opacity: 0.8;
+}
+
 .d1 {
+    /*width: 355px;*/
+    border-radius: 12px;
     background-color: white;
     width: 100%;
     max-width: 360px;
     padding: 30px;
-    border-radius: 10px
+
 }
 
 .d1 > div:first-child svg {
@@ -15,3 +28,5 @@
         padding: 15px
     }
 }
+
+

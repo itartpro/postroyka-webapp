@@ -35,7 +35,7 @@ const Home = () => {
                     <Order/>
                     <Order/>
                 </div>
-                <div className="row max">
+                <div className={`row max ${css.bg}`}>
                     <Comment/>
                     <Comment/>
                     <Comment/>
