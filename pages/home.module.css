@@ -86,3 +86,38 @@
     font-size: 1.5rem;
     padding-bottom: 3px
 }
+
+.best {
+    min-height: 256px
+}
+
+.best > div {
+    max-width: 374px;
+    padding: 40px 40px 40px 75px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-image: url(../public/images/home/best.png);
+    background-repeat: no-repeat;
+    background-position: 31px 40px;
+    line-height: 140%;
+    min-height: 173px
+}
+
+.best > div b {
+    margin-bottom: 5px
+}
+
+.best > div span {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    color: #5ED25A
+}
+
+.best > div:nth-child(2) {
+    background-position: 31px -192px
+}
+
+.best > div:nth-child(3) {
+    background-position: 31px -428px
+}

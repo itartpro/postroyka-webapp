@@ -39,6 +39,23 @@ const Home = () => {
                         </div>
                     </div>
                 </header>
+                <div className={'row center bet max '+css.best}>
+                    <div className="col start rel">
+                        <b>Добавьте заказ</b>
+                        <p>Никаких лишних звонков – мы никому не показываем ваш номер</p>
+                        <span>1</span>
+                    </div>
+                    <div className="col start rel">
+                        <b>Сравните предложения</b>
+                        <p>Связывайтесь с кандидатами и обсуждайте детали заказа по телефону или в чате</p>
+                        <span>2</span>
+                    </div>
+                    <div className="col start rel">
+                        <b>Договоритесь напрямую</b>
+                        <p>Изучите отзывы об исполнителях, сравните их условия и цены на вашу работу</p>
+                        <span>3</span>
+                    </div>
+                </div>
                 <div className={`row ${css.bg}`}>
                     <div className={`row max`}>
                         <Comment/>
