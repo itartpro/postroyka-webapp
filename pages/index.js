@@ -67,6 +67,9 @@ const Home = () => {
                     <Order/>
                 </div>
             </main>
+            <style jsx global>{`
+                #__next > nav { background-color: white }
+            `}</style>
         </PublicLayout>
     )
 }
