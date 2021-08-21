@@ -47,14 +47,14 @@ const PublicLayout = ({page, user, children, ogImage}) => {
             <style jsx global>{`
                 @font-face {
                     font-family: Roboto;
-                    src: url(../../public/fonts/Roboto-Regular.ttf);
+                    src: url(/fonts/Roboto-Regular.ttf);
                     font-weight: normal;
                     font-display: swap
                 }
                 
                 @font-face {
                     font-family: Roboto;
-                    src: url(../../public/fonts/Roboto-Bold.ttf);
+                    src: url(/fonts/Roboto-Bold.ttf);
                     font-weight: bold;
                     font-display: swap
                 }

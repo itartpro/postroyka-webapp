@@ -1,7 +1,9 @@
 import PublicLayout from 'components/public/public-layout';
 import Order from "components/public/order";
 import css from './home.module.css';
-import Comment from "../components/public/comment";
+import Comment from "components/public/comment";
+import Slider from "components/slider";
+import Comments from "components/public/home/comments";
 
 const Home = () => {
     const page = {
@@ -57,11 +59,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className={`row ${css.bg}`}>
-                    <div className={`row max`}>
-                        <Comment/>
-                        <Comment/>
-                        <Comment/>
-                    </div>
+                    <Comments/>
                 </div>
                 <div className="col start max">
                     <Order/>
