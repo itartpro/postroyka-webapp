@@ -1,0 +1,12 @@
+.ar {
+    width: 100%;
+    max-width: 930px;
+    margin: 0 auto 50px auto;
+    line-height: 160%;
+    padding: 0 15px
+}
+
+.ar img {
+    max-width: calc(100% - 20px);
+    margin: 10px;
+}

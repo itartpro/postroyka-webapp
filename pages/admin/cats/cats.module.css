@@ -1,0 +1,120 @@
+.link {
+    width: fit-content;
+    padding: 5px 25px 7px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: initial;
+    margin: 10px 0;
+    border-radius: 7px;
+    background: #e0e0e0;
+    box-shadow:  3px 3px 6px #bebebe, -3px -3px 6px #fff;
+    transition: all .6s;
+    color: #6f7580;
+    font-weight: 500;
+    text-shadow: 0 1px 0 white;
+}
+
+.link svg {
+    padding-top: 2px;
+    margin-right: 15px
+}
+
+.link:hover {
+    filter: brightness(.98);
+    box-shadow:  2px 2px 3px #bebebe, -2px -2px 3px #fff;
+    color: #e6080b
+}
+
+.indicator {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.indicator > span, .list li > span {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 15px;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #e0e0e0;
+    box-shadow:  3px 3px 6px #bebebe, -3px -3px 6px #fff;
+}
+
+.list {
+    list-style: none
+}
+
+.list li {
+    width: max-content;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 10px 10px 10px 20px;
+    padding: 5px 15px 7px 20px;
+    text-shadow: 0 1px 0 white;
+    list-style: none;
+    position: relative;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    background: #e0e0e0;
+    box-shadow:  3px 3px 6px #bebebe, -3px -3px 6px #fff;
+}
+
+.list li a:hover {
+    color: #e6080b
+}
+
+.list li span {
+    display: block;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    cursor: pointer;
+    padding: 2px 2px 0 5px;
+    font-size: 1.2rem;
+    transition: all .3s
+}
+
+.list li span:hover {
+    box-shadow: 2px 2px 4px #cfc9c3, -2px -2px 4px #fffaf4
+}
+
+.list li span:nth-of-type(2) {
+    padding: 2px 2px 0 3px;
+}
+
+.bars {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    left: 10px;
+    top: 3px;
+    width: 28px;
+    height: 28px;
+    padding-top: 5px;
+    border-radius: 14px;
+    font-size: 1.2rem
+}
+
+.bars:hover {
+    box-shadow: 0 2px 5px #AAA
+}
+
+.bars > * {
+    pointer-events: none
+}
+
+.list li ul {
+    transition: all .3s;
+    max-height: 0;
+    overflow: hidden
+}

@@ -1,0 +1,169 @@
+.form {
+    border-radius: 15px;
+    background: linear-gradient(145deg, #f0f0f0, #cacaca);
+    box-shadow:  13px 13px 26px #a1a1a1, -13px -13px 26px #ffffff;
+    transition: all .3s;
+    padding: 20px;
+    margin: 15px;
+}
+
+.pad {
+    padding: 0 15px
+}
+
+.form label {
+    display: block;
+    text-shadow: 1px 1px 0 white;
+    margin-bottom: 5px
+}
+
+.form input {
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    background: #f9f9f9;
+    box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff;
+    text-shadow: 1px 1px 0 #ffffff;
+    margin-bottom: 20px;
+    transition: all .3s
+}
+
+.form input:focus {
+    box-shadow: inset 2px 2px 4px #b6b6b6, inset -2px -2px 4px #ffffff;
+}
+
+.form input[type=submit] {
+    width: initial;
+    border-radius: 5px;
+    padding: 0 20px;
+    height: 44px;
+    border-color: transparent;
+    display: block;
+    color: #ffffff;
+    text-shadow: none;
+    margin: 5px 35px 15px 0;
+    background: linear-gradient(145deg, #674afd, #563ed4);
+    box-shadow:  2px 2px 4px #573fd7, -2px -2px 4px #ffffff;
+    transition: all .3s
+}
+
+.form input[type=submit]:hover {
+    background-color: #2a139c;
+    transform: translateY(2px);
+    box-shadow: 1px 1px 1px #6045ec;
+}
+
+.cancel {
+    align-self: center;
+    padding-bottom: 11px;
+    margin: 15px 0px;
+    transition: all .3s
+}
+
+.cancel:hover {
+    color: #e6080b
+}
+
+@media (max-width:600px) {
+    .pad {
+        padding: 0;
+    }
+
+    .form {
+        margin: 15px 0;
+    }
+}
+
+.folder {
+    border-bottom: 1px solid #CCC;
+    transition: all .3s;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #e1e1e1;
+    border-radius: 0 10px 10px 10px;
+    box-shadow: inset 15px 15px 25px #c5c5c5, inset -15px -15px 25px #ebebeb;
+    padding: 0 15px;
+}
+
+.tab {
+    width: max-content;
+    padding: 5px 25px 5px 15px;
+    background-color: #CCC;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    text-shadow: 0 1px 0 white
+}
+
+.tab > svg, .tab > h4 {
+    pointer-events: none
+}
+
+.shorty {
+    max-width: 200px;
+    margin: 20px 10px 0 0;
+}
+
+.bubble {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 3px solid #84acce;
+    padding: 2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    z-index: 2;
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px
+}
+
+.bubble > svg {
+    font-size: 20px;
+    color: #84acce
+}
+
+.bubble > p {
+    display: none;
+    position: absolute;
+    left: 27px;
+    width: 100vw;
+    max-width: 360px;
+    z-index: 3;
+    padding: 15px;
+    border-radius: 15px;
+    background: #ededed;
+    box-shadow:  22px 22px 31px #c2c2c2,
+    -22px -22px 31px #ffffff;
+}
+
+.bubble:hover > p {
+    display: block
+}
+
+@keyframes FadeOut {
+    20%{opacity:1}
+    70%{transform: translateY(-100px)}
+    100%{
+        transform: translateY(-100px);
+        opacity: 0
+    }
+}
+
+.success {
+    position: fixed;
+    left: 40%;
+    bottom: 40%;
+    max-width: 180px;
+    animation: FadeOut 2s forwards infinite;
+    font-size: 1.6rem;
+    color: #00d007;
+    text-shadow: 0 -1px 0 white, 0 4px 10px #0000007d;
+    z-index: 2
+}
+
+.success > svg {
+    filter: drop-shadow(0 4px 5px #777)
+}

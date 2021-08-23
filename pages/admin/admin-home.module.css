@@ -1,0 +1,34 @@
+.point {
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
+.point a {
+    color: dodgerblue;
+    min-width: 80px;
+    margin-right: 15px;
+    text-decoration: underline;
+}
+
+.div {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.folder {
+    display: block;
+    background: #ffcd8b;
+    padding: 5px 10px;
+    width: 130px;
+    border-radius: 0 10px 0 0;
+    margin-right: 15px;
+}
+
+.lines p {
+    margin-bottom: 20px;
+    line-height: 180%
+}
