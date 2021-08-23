@@ -3,7 +3,7 @@ import {BsStar} from 'react-icons/bs';
 import {IoIosCheckmarkCircleOutline} from 'react-icons/io';
 
 
-const Comment = () => {
+export const Comment = () => {
 
     return (
         <div className={`row bet ${css.d1}`}>
@@ -25,5 +25,3 @@ const Comment = () => {
         </div>
     )
 }
-
-export default Comment

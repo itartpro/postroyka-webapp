@@ -1,4 +1,4 @@
-export default function Practice() {
+const Scratch = () => {
 
     const arr = [
         {"man":"Bob"},
@@ -25,3 +25,5 @@ export default function Practice() {
         </div>
     )
 }
+
+export default Scratch
