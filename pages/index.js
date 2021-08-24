@@ -1,6 +1,6 @@
 import PublicLayout from 'components/public/public-layout';
 import Order from "components/public/order";
-import css from './home.module.css';
+import css from 'styles/home.module.css';
 import Comments from "components/public/home/comments";
 
 const Home = () => {
