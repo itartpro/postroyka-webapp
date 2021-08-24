@@ -21,7 +21,7 @@ export default function EditImage({table,id,PhotoSwipe,location,alt,title,text,l
             action: 'update',
             instructions: JSON.stringify({...form,"table":table})
         }
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
     const imageRemove = deletedName => deletedName === name ? removeImage(name) : null;
@@ -34,7 +34,7 @@ export default function EditImage({table,id,PhotoSwipe,location,alt,title,text,l
             action: 'delete',
             instructions: JSON.stringify({...form,"table":table,"location":location,"name":name})
         }
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
     useEffect(() => {

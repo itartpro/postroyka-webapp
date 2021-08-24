@@ -76,7 +76,7 @@ export default function Admin() {
                         address: 'gpics:50051',
                         action: 'insert'
                     }
-                    request('upload', JSON.stringify(goData))
+                    request(JSON.stringify(goData), 'upload')
                     `}</pre>
                     <p>На этом примере, мы видим что в бэк-энд отправляется имя, тип, куда отправить файл, его размер, и адрес grpc на который отправить данные, и название микросервиса (gpics)</p>
                     <p>Бэкэнд смотрит на порт и название микросервиса, и всё в общем. Т.е. по gRPC передаётся следующее:</p>

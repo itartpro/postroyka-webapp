@@ -21,7 +21,7 @@ const Register = () => {
             action: 'read-countries',
             instructions: JSON.stringify({})
         };
-        request('crud', JSON.stringify(goData))
+        request(JSON.stringify(goData))
     }, [rs]);
 
 
@@ -65,7 +65,7 @@ const Register = () => {
                     action: 'login',
                     instructions: JSON.stringify(instructions)
                 };
-                request('jwt-auth', JSON.stringify(goData));
+                request(JSON.stringify(goData), 'jwt-auth');
             }
         }
         setRegi({});
@@ -114,7 +114,7 @@ const Register = () => {
                 action: 'new-country',
                 instructions: JSON.stringify({name: country})
             };
-            request('crud', JSON.stringify(goData));
+            request(JSON.stringify(goData));
         } else {
             checked.country_id = found.id;
         }
@@ -128,7 +128,7 @@ const Register = () => {
             action: 'register',
             instructions: JSON.stringify(regi)
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }, [regi])
 
 

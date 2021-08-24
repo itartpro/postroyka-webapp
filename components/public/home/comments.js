@@ -1,9 +1,9 @@
-import { useKeenSlider } from 'keen-slider/react'
-import 'keen-slider/keen-slider.min.css'
-import {Comment} from 'components/public/comment'
-import {useState, useRef, useEffect} from 'react'
-import css from 'components/slider.module.css'
-import css2 from './comments.module.css'
+import { useKeenSlider } from 'keen-slider/react';
+import 'keen-slider/keen-slider.min.css';
+import {Comment} from 'components/public/comment';
+import {useState, useRef, useEffect} from 'react';
+import css from 'components/slider.module.css';
+import css2 from './comments.module.css';
 
 const Comments = () => {
 

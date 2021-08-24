@@ -12,10 +12,9 @@ export default function WsProvider(props) {
     const [wsMsg, setWsMsg] = useState(undefined);
 
     //send stuff to Go
-    const request = async (type, data) => {
-        const payload = {type, data};
+    const request = async (data, type = 'crud') => {
         if (ws && ws['readyState'] === 1) {
-            ws.send(JSON.stringify(payload));
+            ws.send(JSON.stringify({data, type}));
             return true
         }
         return false
@@ -42,10 +41,10 @@ export default function WsProvider(props) {
 
                     case "jwt-auth":
                         parsed = JSON.parse(msgObj.data);
-                        request('verify-jwt-auth', JSON.stringify({
+                        request(JSON.stringify({
                             acs: parsed[0],
                             ref: parsed[1]
-                        }))
+                        }), 'verify-jwt-auth')
                         break
 
                     case "valid-tokens":
@@ -114,7 +113,7 @@ export default function WsProvider(props) {
             return logOut()
         }
         const str = window.localStorage.getItem('RefreshJWT')
-        request('refresh-attempt', str)
+        request(str, 'refresh-attempt')
     }
 
     //This function will address the backend and validate the access token EVERYTIME ws.readyState changes
@@ -124,7 +123,7 @@ export default function WsProvider(props) {
             const exp = parsed.exp * 1000;
             const now = new Date().getTime();
             const str = window.localStorage.getItem('AccessJWT')
-            if (exp > now) request('validate-access-token', str);
+            if (exp > now) request(str, 'validate-access-token');
             if (exp < now) refreshAttempt()
         }
     }, [rs])

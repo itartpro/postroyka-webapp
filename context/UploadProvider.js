@@ -36,7 +36,7 @@ export default function UploadProvider(props) {
                 goData.action = props.action
                 goData.instructions = JSON.stringify(fullInstructions)
             }
-            request('upload', JSON.stringify(goData))
+            request(JSON.stringify(goData), 'upload')
         } else {
             setWsMsg({type: 'error', data: "UploadProvider.js onLoadHandler error: "+ev.target.error})
         }

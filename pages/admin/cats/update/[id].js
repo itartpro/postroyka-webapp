@@ -29,7 +29,7 @@ export default function Update() {
             action: 'read',
             instructions: JSON.stringify({id:urlId})
         };
-        request('crud', JSON.stringify(goData))
+        request(JSON.stringify(goData))
     }, [rs, urlId]);
 
     //this is for some expandable fields to be expanded on default
@@ -75,7 +75,7 @@ export default function Update() {
             action: 'update',
             instructions: JSON.stringify(checked)
         };
-        return request('crud', JSON.stringify(goData));
+        return request(JSON.stringify(goData));
     }
 
     const autoFill = () => {
@@ -250,7 +250,7 @@ export default function Update() {
                                     table: 'cats'
                                 })
                             };
-                            return request('crud', JSON.stringify(goData));
+                            return request(JSON.stringify(goData));
                         }}>Удалить картинку
                         </button>
                     </div><br/>

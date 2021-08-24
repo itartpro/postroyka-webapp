@@ -17,7 +17,7 @@ export default function Filters() {
             action: 'filters-read_all',
             instructions: ""
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }, [rs]);
 
     const saveNewFilter = () => {
@@ -30,7 +30,7 @@ export default function Filters() {
             action: 'filters-create',
             instructions: JSON.stringify(form)
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
         setForm({filter_name: null});
     }
 

@@ -20,7 +20,7 @@ export default function Cats() {
                 id
             })
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function Cats() {
             action: 'read_all',
             instructions: "{}"
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }, [rs]);
 
     useEffect(() => {

@@ -23,7 +23,7 @@ export default function Images() {
             action: 'products-read',
             instructions: JSON.stringify({id: urlId})
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }, [rs, urlId]);
 
     useEffect(() => {
@@ -69,7 +69,7 @@ export default function Images() {
             action: 'p_vars-delete',
             instructions: e.target.dataset.id
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
     const makeFastSizes = () => {
@@ -90,7 +90,7 @@ export default function Images() {
                 action: 'p_vars-update',
                 instructions: JSON.stringify(newPVars)
             };
-            request('crud', JSON.stringify(goData));
+            request(JSON.stringify(goData));
         }
     }
 

@@ -4,7 +4,10 @@ import {Login as LoginComponent} from "../components/public/loginforms/login";
 const Login = () => {
     return (
         <PublicLayout>
-            <LoginComponent/>
+            <main className={`row center`}>
+                <LoginComponent/>
+                <p>Какой то текст</p>
+            </main>
         </PublicLayout>
     )
 }

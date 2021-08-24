@@ -30,7 +30,7 @@ export default function Create() {
                 action: 'read',
                 instructions: JSON.stringify({id:urlId})
             };
-            return request('crud', JSON.stringify(goData))
+            return request(JSON.stringify(goData))
         }
 
     }, [router.query, rs])
@@ -47,7 +47,7 @@ export default function Create() {
             action: 'create',
             instructions: JSON.stringify(form)
         }
-        request('crud', JSON.stringify(goData))
+        request(JSON.stringify(goData))
     }
 
     const autoFill = () => {

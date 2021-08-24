@@ -1,6 +1,6 @@
 import css from "./forms.module.css";
 import { useForm } from "react-hook-form";
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect} from 'react';
 import {useRouter} from 'next/router';
 import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
@@ -38,12 +38,13 @@ export const Login = () => {
                 action: 'get-profile',
                 instructions: JSON.stringify({id})
             };
-            request('crud', JSON.stringify(goData))
+            request(JSON.stringify(goData))
         }
     }, [verifiedJwt])
 
     const onSubmit = d => {
         const login = validateEmailPhoneInput(d.login);
+        {/* login returns {type, value} type is 'email' or 'phone' */}
         if(!login) return false;
         const instructions = {
             login: btoa(login.value),
@@ -54,7 +55,7 @@ export const Login = () => {
             action: 'login',
             instructions: JSON.stringify(instructions)
         };
-        request('jwt-auth', JSON.stringify(goData))
+        request(JSON.stringify(goData), 'jwt-auth')
     };
 
     useEffect(() => {

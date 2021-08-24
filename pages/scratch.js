@@ -1,27 +1,30 @@
+import {useEffect, useContext} from 'react';
+import {WsContext} from 'context/WsProvider';
+
 const Scratch = () => {
+    const { request, wsMsg } = useContext(WsContext);
 
-    const arr = [
-        {"man":"Bob"},
-        2,
-        "string",
-        [1,2,15],
-        true
-    ];
+    useEffect(() => {
+        const instructions = {
+            password: btoa("a guy dude")
+        };
+        const goData = {
+            address: 'auth:50003',
+            action: 'hash',
+            instructions: JSON.stringify(instructions)
+        };
+        request(JSON.stringify(goData))
+    }, []);
 
-    const mapExample = array => array.map(el => JSON.stringify(el));
-
-    const newArr = mapExample(arr);
-
-    console.log(newArr);
-    console.log(newArr[0]);
-    console.log(JSON.parse(newArr[0]));
+    useEffect(() => {
+        if(!wsMsg || wsMsg.type !== "info") return false;
+        const res = JSON.parse(wsMsg.data);
+        console.log(res);
+    }, [wsMsg]);
 
     return (
         <div style={{padding:'30px'}}>
             <h1>Практика</h1>
-            {arr.map((el, i) => (
-                <div key={i}>{JSON.stringify(el)}<br/><br/></div>
-            ))}
         </div>
     )
 }

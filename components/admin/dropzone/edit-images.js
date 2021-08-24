@@ -25,7 +25,7 @@ export default function EditImages({ins}) {
                 action: 'read',
                 instructions: JSON.stringify(instructions)
             };
-            return request('crud', JSON.stringify(goData));
+            return request(JSON.stringify(goData));
         }
         if(ins && !ins.table && ins.location) {
             return fetch(imgApi)

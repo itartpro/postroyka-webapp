@@ -21,7 +21,7 @@ export default function Values() {
             action: 'filter_values-read_group',
             instructions: JSON.stringify({id:urlId})
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }, [rs, urlId]);
 
     const saveNewValue = () => {
@@ -33,7 +33,7 @@ export default function Values() {
             action: 'filter_values-create',
             instructions: JSON.stringify(form)
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
         setForm({filter_id:urlId, value_name: null});
     }
 

@@ -36,28 +36,28 @@ export default function Update() {
             action: 'products-read',
             instructions: JSON.stringify({id: urlId})
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
 
         const goData2 = {
             address: 'products:50005',
             action: 'filters-read_all',
             instructions: "{}"
         };
-        request('crud', JSON.stringify(goData2));
+        request(JSON.stringify(goData2));
 
         const goData3 = {
             address: 'products:50005',
             action: 'filter_values-read_all',
             instructions: "{}"
         };
-        request('crud', JSON.stringify(goData3));
+        request(JSON.stringify(goData3));
 
         const goData4 = {
             address: 'cats:50004',
             action: 'read_all',
             instructions: "{}"
         };
-        request('crud', JSON.stringify(goData4));
+        request(JSON.stringify(goData4));
     }, [rs, urlId])
 
     const handleFormChange = e => {
@@ -126,7 +126,7 @@ export default function Update() {
             action: 'products-update',
             instructions: JSON.stringify(form)
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
 
         const pfvCombos = [];
         for (let i in filterForm) {
@@ -141,7 +141,7 @@ export default function Update() {
             action: 'pfv_combos-update',
             instructions: JSON.stringify(pfvCombos)
         };
-        request('crud', JSON.stringify(goData2));
+        request(JSON.stringify(goData2));
 
         const pcCombos = [];
         if(catIds.length) {
@@ -160,7 +160,7 @@ export default function Update() {
             action: 'pc_combos-update',
             instructions: JSON.stringify(pcCombos)
         };
-        request('crud', JSON.stringify(goData3));
+        request(JSON.stringify(goData3));
     };
 
     useEffect(() => {
@@ -480,7 +480,7 @@ export default function Update() {
                                     table: 'products'
                                 })
                             };
-                            return request('crud', JSON.stringify(goData));
+                            return request(JSON.stringify(goData));
                         }}>Удалить картинку
                         </button>
                     </div>

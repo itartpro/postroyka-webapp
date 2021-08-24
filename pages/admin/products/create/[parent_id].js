@@ -22,7 +22,7 @@ export default function Create() {
             action: 'read',
             instructions: JSON.stringify({id:urlId})
         };
-        request('crud', JSON.stringify(goData))
+        request(JSON.stringify(goData))
     }, [rs, urlId])
 
     useEffect(() => {
@@ -64,7 +64,7 @@ export default function Create() {
             action: 'products-create',
             instructions: JSON.stringify(form)
         };
-        request('crud', JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
     const clearAll = () => setForm({});
