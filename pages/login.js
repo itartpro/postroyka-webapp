@@ -1,5 +1,5 @@
-import PublicLayout from "../components/public/public-layout";
-import {Login as LoginComponent} from "../components/public/login";
+import PublicLayout from "components/public/public-layout";
+import {Login as LoginComponent} from "components/public/login";
 
 const Login = () => {
     return (
@@ -8,6 +8,11 @@ const Login = () => {
                 <LoginComponent/>
                 <p>Какой то текст</p>
             </main>
+            <style jsx global>{`
+                main > p {
+                    color: red
+                }
+            `}</style>
         </PublicLayout>
     )
 }

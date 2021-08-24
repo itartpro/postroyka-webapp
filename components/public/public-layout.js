@@ -1,4 +1,4 @@
-    import Head from 'next/head';
+import Head from 'next/head';
 import {useRouter} from 'next/router';
 import css from './public-layout.module.css';
 import Link from 'next/link';
