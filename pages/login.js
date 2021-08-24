@@ -1,5 +1,5 @@
 import PublicLayout from "../components/public/public-layout";
-import {Login as LoginComponent} from "../components/public/loginforms/login";
+import {Login as LoginComponent} from "../components/public/login";
 
 const Login = () => {
     return (

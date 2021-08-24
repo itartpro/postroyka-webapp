@@ -1,4 +1,4 @@
-import css from "./forms.module.css";
+import css from "styles/forms.module.css";
 import { useForm } from "react-hook-form";
 import {useContext, useEffect} from 'react';
 import {useRouter} from 'next/router';

@@ -1,4 +1,4 @@
-import css from 'components/public/loginforms/forms.module.css';
+import css from 'styles/forms.module.css';
 import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
 import {useContext, useEffect, useState} from 'react';
