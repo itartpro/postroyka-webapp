@@ -1,12 +1,13 @@
-import css from './forms.module.css';
+import css from 'components/public/loginforms/forms.module.css';
 import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
 import {nowToISO, rusDateToIso} from 'libs/js-time-to-psql';
 import {validateEmailPhoneInput} from 'libs/email-phone-input';
+import PublicLayout from "../components/public/public-layout";
 
-export const Register = () => {
+const Registration = () => {
     const {wsMsg, rs, setWsMsg, request} = useContext(WsContext);
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [countries, setCountries] = useState([]);
@@ -161,59 +162,63 @@ export const Register = () => {
     }
 
     return (
-        <div className={`col start init`}>
-            <p>Вы здесь впервые?</p>
-            <small>Зарегистрируйтесь, и не забудьте записать пароль</small>
-            <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
-                <input type="text" {...register('full_name', {required: true, maxLength: 50})} placeholder="Ваше имя"/>
-                {errMsg('full_name', 50)}
+        <PublicLayout>
+            <main className={`col start init`}>
+                <p>Вы здесь впервые?</p>
+                <small>Зарегистрируйтесь, и не забудьте записать пароль</small>
+                <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
+                    <input type="text" {...register('full_name', {required: true, maxLength: 50})} placeholder="Ваше имя"/>
+                    {errMsg('full_name', 50)}
 
-                <br/>
-                <div className={`row start ${css.select}`}>
-                    <p className={`row start`}>Дата рождения</p>
-                    <select onClick={e => addOptions(e, 1, 31)} {...register('day', {required: true})}>
-                        <option value="">День</option>
-                    </select>
-                    <select onClick={e => addOptions(e, 1, 12)} {...register('month', {required: true})}>
-                        <option value="">Месяц</option>
-                    </select>
-                    <select onClick={e => addYears(e)} {...register('year', {required: true})}>
-                        <option value="">Год</option>
-                    </select>
-                    {(errors['day'] || errors['month'] || errors ['year']) &&
-                    <small>Необходимо выбрать дату рождения</small>}
-                </div>
+                    <br/>
+                    <div className={`row start ${css.select}`}>
+                        <p className={`row start`}>Дата рождения</p>
+                        <select onClick={e => addOptions(e, 1, 31)} {...register('day', {required: true})}>
+                            <option value="">День</option>
+                        </select>
+                        <select onClick={e => addOptions(e, 1, 12)} {...register('month', {required: true})}>
+                            <option value="">Месяц</option>
+                        </select>
+                        <select onClick={e => addYears(e)} {...register('year', {required: true})}>
+                            <option value="">Год</option>
+                        </select>
+                        {(errors['day'] || errors['month'] || errors ['year']) &&
+                        <small>Необходимо выбрать дату рождения</small>}
+                    </div>
 
-                <br/>
-                <div className={`row start center ${css.radios}`}>
-                    <p>Ваш пол</p>
-                    <label htmlFor="man">М
-                        <input id="man" type="radio" name="gender" value="m" {...register('gender', {maxLength: 1})}/>
-                    </label>
-                    <label htmlFor="woman">Ж
-                        <input id="woman" type="radio" name="gender" value="w" {...register('gender', {maxLength: 1})}/>
-                    </label>
-                </div>
-                {errMsg('gender')}
+                    <br/>
+                    <div className={`row start center ${css.radios}`}>
+                        <p>Ваш пол</p>
+                        <label htmlFor="man">М
+                            <input id="man" type="radio" name="gender" value="m" {...register('gender', {maxLength: 1})}/>
+                        </label>
+                        <label htmlFor="woman">Ж
+                            <input id="woman" type="radio" name="gender" value="w" {...register('gender', {maxLength: 1})}/>
+                        </label>
+                    </div>
+                    {errMsg('gender')}
 
-                <input type="text" {...register('login', {required: true, maxLength: 70})} placeholder="Ваш email"/>
-                {errMsg('login', 70)}
-                {showErr && <small>{showErr}</small>}
+                    <input type="text" {...register('login', {required: true, maxLength: 70})} placeholder="Ваш email"/>
+                    {errMsg('login', 70)}
+                    {showErr && <small>{showErr}</small>}
 
-                <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
-                {errMsg('password', 32)}
+                    <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
+                    {errMsg('password', 32)}
 
-                <input type="password" {...register('password_confirm', {
-                    required: true,
-                    maxLength: 32,
-                    validate: {
-                        sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
-                    }
-                })} placeholder="Повторите пароль"/>
-                {errMsg('password_confirm', 32)}
+                    <input type="password" {...register('password_confirm', {
+                        required: true,
+                        maxLength: 32,
+                        validate: {
+                            sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
+                        }
+                    })} placeholder="Повторите пароль"/>
+                    {errMsg('password_confirm', 32)}
 
-                <input type="submit" value="Зарегистрироваться"/>
-            </form>
-        </div>
+                    <input type="submit" value="Зарегистрироваться"/>
+                </form>
+            </main>
+        </PublicLayout>
     )
 }
+
+export default Registration

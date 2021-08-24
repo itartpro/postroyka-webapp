@@ -6,7 +6,7 @@ const Scratch = () => {
 
     useEffect(() => {
         const instructions = {
-            password: btoa("a guy dude")
+            password: btoa("password")
         };
         const goData = {
             address: 'auth:50003',
@@ -17,9 +17,8 @@ const Scratch = () => {
     }, []);
 
     useEffect(() => {
-        if(!wsMsg || wsMsg.type !== "info") return false;
-        const res = JSON.parse(wsMsg.data);
-        console.log(res);
+        if(!wsMsg) return false;
+        console.log("it is", wsMsg);
     }, [wsMsg]);
 
     return (
