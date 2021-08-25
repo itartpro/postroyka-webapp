@@ -4,11 +4,10 @@
 }
 
 .form input, .form select {
-    margin-top: 10px;
     font-size: 1rem
 }
 
-.radios {
+.form input, .radios {
     margin-top: 10px
 }
 
