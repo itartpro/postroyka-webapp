@@ -13,7 +13,7 @@
     font-size: 1rem;
 }
 
-.form input[type=text] {
+.form input[type=text], .form select {
     margin-top: 10px;
     border: 1px solid #EBEBEB;
     border-radius: 4px;
@@ -24,9 +24,13 @@
     margin-top: 30px;
     border-radius: 4px;
     color: white;
-    padding: 15px;
-    max-width: 120px;
+    padding: 15px 30px;
+    max-width: max-content;
     background: #47CB43;
+}
+
+.form select {
+
 }
 
 .form input, .radios {
@@ -35,6 +39,7 @@
     border-radius: 4px;
     padding: 15px 350px 15px 15px;
 }
+
 
 
 /*.radios input {*/
