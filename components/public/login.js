@@ -1,7 +1,6 @@
 import css from "styles/forms.module.css";
 import { useForm } from "react-hook-form";
 import {useContext, useEffect} from 'react';
-import {useRouter} from 'next/router';
 import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
 
@@ -10,7 +9,6 @@ export const Login = ({loginAction}) => {
 
     const { register, handleSubmit, formState: {errors} } = useForm();
     const { request, wsMsg, verifiedJwt } = useContext(WsContext);
-    const router = useRouter();
 
     useEffect(() => {
         const check = window.localStorage.getItem('User');
@@ -31,7 +29,7 @@ export const Login = ({loginAction}) => {
             if(user.id !== id) {
                 window.localStorage.removeItem('User');
             } else {
-                return router.push('/profile/'+user.id)
+                return loginAction(user)
             }
         }
         if(id !== 0 && verifiedJwt && !check) {

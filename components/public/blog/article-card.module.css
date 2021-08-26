@@ -1,0 +1,32 @@
+.li {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 15px
+}
+
+.li img {
+    border-radius: 15px;
+    transition: all .3s
+}
+
+.li span {
+    margin-top: 10px;
+    padding: 0 10px;
+    line-height: 160%;
+    font-family: geometric, Arial, "Helvetica Neue", sans-serif
+}
+
+.li span:nth-of-type(2) {
+    color: #CCC;
+    font-family: Arial, sans-serif;
+    margin-top: 4px;
+    font-size: .9rem
+}
+
+.li:hover img {
+    cursor: pointer;
+    filter: brightness(1.1)
+}

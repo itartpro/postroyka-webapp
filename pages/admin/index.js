@@ -15,22 +15,11 @@ export default function Admin() {
                     <p className={css.point}><a target="_blank" href="https://golang.org">Язык Go</a> использован для строения бинарных файлов для бэк-энда</p>
                     <p className={css.point}><a target="_blank" href="https://www.mongodb.com">MongoDB</a> база данных</p>
                 </div>
-                <div className={'col start '+css.div}>
-                    <h3>Структура сайта (папки):</h3>
-                    <p className={css.point}><span className={css.folder}>certs</span>сертификаты openssl</p>
-                    <p className={css.point}><span className={css.folder}>mongodbdata</span>база данных</p>
-                    <p className={css.point}><span className={css.folder}>front</span>фронт-энд</p>
-                    <p className={css.point}><span className={css.folder}>goservices</span>микросервисы Go</p>
-                    <p className={css.point}><span className={css.folder}>gowebbackend</span>бинарный файл бэк-энд для сайта</p>
-                    <p className={css.point}><span className={css.folder}>uploads</span>предназначення папка для пользовательских загрузок</p>
-                    <p className={css.point}>allvars.env - Файл с переменными окружения (environmet variables)</p>
-                    <p className={css.point}>docker-compose.yml - Файл для запуска всей системы</p>
-                </div>
                 <div className={css.div+' '+css.lines}>
                     <h3>Схема работы сайта, по принципу Backends for Frontends:</h3>
                     <p className={css.point}><a target="_blank" href="https://docs.microsoft.com/ru-ru/azure/architecture/patterns/backends-for-frontends">Статья от Микрософта</a></p>
                     <p className={css.point}><a target="_blank" href="https://developer.ibm.com/depmodels/microservices/patterns/create-backend-for-frontend-application-architecture/">Статья от IBM</a></p>
-                    <img src="/images/techstack.svg" alt="Backends for Frontends" width={960} style={{maxWidth: '100%'}}/>
+                    <img src="https://itart.pro/images/techstack.svg" alt="Backends for Frontends" width={960} style={{maxWidth: '100%'}}/>
                     <br/>
                     <h4>Схема работы для сайта следующая:</h4><br/>
                     <p>Браузер посылает сообщения через веб-сокет, которые, в свою очередь, отфильтровываются через Next.js (в файле front/context/WsProvider.js). Next.Js отправляет сообщения веб сокет в бэк-энд (gowebbackend/gowebbackend) а бэк-энд уже присылает сообщения используя gRPC для послания инструкций для микросервисов.</p>

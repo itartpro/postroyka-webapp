@@ -1,4 +1,5 @@
-import goPost from './go-post'
+import goPost from './go-post';
+import {organizeCats} from './arrs';
 
 export const getPageBySlug = slug => {
     return goPost(JSON.stringify({
@@ -63,4 +64,46 @@ export const getTowns = (region_id = 1) => {
             return null
         }
     })
+}
+
+export const getCats = (url = null) => {
+    return goPost(JSON.stringify({
+        address: 'cats:50004',
+        action: 'read_all',
+        instructions: "{}"
+    }), url)
+        .then(res => {
+            try {
+                const parsed = JSON.parse(res);
+                return parsed.data
+            } catch (e) {
+                console.log("getCats error:" + e + res);
+                return null
+            }
+        })
+}
+
+export const getLatestArticles = (limit = null, url = null) => {
+    return getCats(url)
+        .then(data => organizeCats(data))
+        .then(cats => {
+            if(!Array.isArray(cats) || !cats.length) return null;
+            const allArticles = [];
+            cats && cats[2] && cats[2].children.forEach(e => e.children.forEach(c => {
+                if(!c.extra.includes('inactive')) {
+                    allArticles.push(c)
+                }
+            }));
+            const sorted = allArticles.sort((a,b) => b['id'] - a['id']);
+            if(limit) {
+                const limited = [];
+                const li = parseInt(limit);
+                sorted.forEach((e,i) => {
+                    if(i < li) limited.push(e)
+                });
+                return limited
+            } else {
+                return sorted
+            }
+        })
 }

@@ -1,11 +1,17 @@
 import PublicLayout from "components/public/public-layout";
 import {Login as LoginComponent} from "components/public/login";
 import css from 'styles/login.module.css';
+import {useRouter} from 'next/router';
 
 const Login = () => {
 
-    const doLogin = userData => {
-        console.log(userData)
+    const router = useRouter();
+
+    const doLogin = user => {
+        if(!user) return false;
+        if(user.level === 9) return router.push('/admin');
+        alert('Вы уже залогинены и когда будет сделана страница профиля Вас закинет на страницу профиля')
+        //return router.push('/profile/'+user.id)
     }
 
     return (
