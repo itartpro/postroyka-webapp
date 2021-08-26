@@ -1,14 +1,16 @@
 import css from "styles/forms.module.css";
 import { useForm } from "react-hook-form";
 import {useContext, useEffect} from 'react';
+import {useRouter} from 'next/router';
 import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
 
 
-export const Login = ({loginAction}) => {
+export const Login = () => {
 
     const { register, handleSubmit, formState: {errors} } = useForm();
     const { request, wsMsg, verifiedJwt } = useContext(WsContext);
+    const router = useRouter();
 
     useEffect(() => {
         const check = window.localStorage.getItem('User');
@@ -29,7 +31,7 @@ export const Login = ({loginAction}) => {
             if(user.id !== id) {
                 window.localStorage.removeItem('User');
             } else {
-                return loginAction(user)
+                return router.push('/profile/'+user.id)
             }
         }
         if(id !== 0 && verifiedJwt && !check) {
@@ -65,14 +67,14 @@ export const Login = ({loginAction}) => {
             const user = res.data;
             const essentialUserData = {
                 id: user.id,
-                level: user.level,
+                level: user.id,
                 avatar: user.avatar,
                 first_name: user.first_name,
                 last_name: user.last_name,
                 gender: user.gender
             }
             window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-            return loginAction(essentialUserData)
+            router.push('/profile/'+user.id)
         }
     }, [wsMsg])
 

@@ -1,7 +1,42 @@
 .d1 {
-    max-width: 400px
+    max-width: 400px;
+    position: relative;
 }
+
+.d1 > h1 {
+    margin-bottom: 10px;
+}
+
+.d1 a {
+    color: #0092c5
+}
+
+.d1 a:hover {
+    color: #00688c;
+    text-decoration: underline;
+    transition: all .3s;
+}
+
 
 .p1 {
     font-size: 1rem;
+    position: absolute;
+    left: 275px;
+    top: 207px;
+}
+
+.a1 {
+    width: calc(90% - 370px);
+}
+
+.a1 p:first-of-type {
+    margin: 0;
+}
+
+.a1 p {
+    margin: 20px 0;
+}
+
+.a1 p:nth-child(1) {
+    font-weight: bold;
 }
