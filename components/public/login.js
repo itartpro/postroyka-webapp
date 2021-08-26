@@ -6,7 +6,7 @@ import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
 
 
-export const Login = () => {
+export const Login = ({loginAction}) => {
 
     const { register, handleSubmit, formState: {errors} } = useForm();
     const { request, wsMsg, verifiedJwt } = useContext(WsContext);
@@ -67,14 +67,14 @@ export const Login = () => {
             const user = res.data;
             const essentialUserData = {
                 id: user.id,
-                level: user.id,
+                level: user.level,
                 avatar: user.avatar,
                 first_name: user.first_name,
                 last_name: user.last_name,
                 gender: user.gender
             }
             window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-            router.push('/profile/'+user.id)
+            return loginAction(essentialUserData)
         }
     }, [wsMsg])
 

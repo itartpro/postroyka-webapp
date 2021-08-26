@@ -35,6 +35,7 @@ const Registration = ({regions, defaultTowns}) => {
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
+        console.log(wsMsg);
         if (wsMsg.type === "error") {
             if(wsMsg.data.includes("duplicate user") && showErr === null) {
                 setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном");
@@ -71,10 +72,10 @@ const Registration = ({regions, defaultTowns}) => {
                     action: 'login',
                     instructions: JSON.stringify(instructions)
                 };
-                request(JSON.stringify(goData), 'jwt-auth');
+                request(JSON.stringify(goData), 'jwt-auth')
             }
         }
-        setRegData({});
+        setRegData({})
     }, [rs, wsMsg]);
 
     //submit registration form
@@ -87,28 +88,25 @@ const Registration = ({regions, defaultTowns}) => {
 
     //registration
     const registerAttempt = d => {
+        if(!validateEmailPhoneInput(d.email)) {
+            return setShowErr("не похоже на Email")
+        }
+
         const created = nowToISO();
         const checked = {
             first_name: d.first_name,
             last_name: d.last_name,
             paternal_name: d.paternal_name,
             email: d.email,
+            phone: '',
             password: d.password,
             town_id: parseInt(d.town),
             created: created,
             last_online: created,
-            legal: parseInt(d.legal),
-            login:""
+            legal: parseInt(d.legal)
         };
-        //Пока что только email
-        const login = validateEmailPhoneInput(d.email);
-        if(login && login.type === 'email') {
-            checked.login = login.value;
-        } else {
-            setShowErr("не похоже на Email")
-        }
 
-        setRegData(checked)
+        return setRegData(checked)
     };
 
     //send registration data to server
@@ -119,8 +117,7 @@ const Registration = ({regions, defaultTowns}) => {
             action: 'register',
             instructions: JSON.stringify(regData)
         };
-        //request(JSON.stringify(goData))
-        console.log('testing data for registration', regData);
+        request(JSON.stringify(goData))
     }, [regData])
 
     //html stuff
@@ -186,18 +183,24 @@ const Registration = ({regions, defaultTowns}) => {
                     <br/>
                     <b>Ваш адрес</b>
                     <p>Выберите Вашу область</p>
-                    <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
-                        {regions.map(e => (
-                            <option key={e.id} value={e.id}>{e.name}</option>
-                        ))}
-                    </select>
+                    <div className={'rel '+css.sel}>
+                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
+                            {regions.map(e => (
+                                <option key={e.id} value={e.id}>{e.name}</option>
+                            ))}
+                        </select>
+                        <span><IoIosArrowDown/></span>
+                    </div>
 
                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
-                    <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})}>
-                        {towns && towns.map(e => (
-                            <option key={e.id} value={e.id}>{e.name}</option>
-                        ))}
-                    </select>
+                    <div className={'rel '+css.sel}>
+                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
+                            {towns && towns.map(e => (
+                                <option key={e.id} value={e.id}>{e.name}</option>
+                            ))}
+                        </select>
+                        <span><IoIosArrowDown/></span>
+                    </div>
 
                     <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg('email', 50)}

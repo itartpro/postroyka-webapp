@@ -3,13 +3,18 @@ import {Login as LoginComponent} from "components/public/login";
 import css from 'styles/login.module.css';
 
 const Login = () => {
+
+    const doLogin = userData => {
+        console.log(userData)
+    }
+
     return (
         <PublicLayout>
 
             <main className={`row bet max center`}>
                 <div className={'col start '+css.d1}>
                     <h1>Вход</h1>
-                    <LoginComponent/>
+                    <LoginComponent loginAction={doLogin}/>
                     <p className={css.p1}><a href="https://www.google.ru/">Забыли пароль?</a></p>
                 </div>
                 <style global jsx>{`
