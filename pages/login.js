@@ -8,7 +8,6 @@ const Login = () => {
                 <LoginComponent/>
                 <p>Какой то текст</p>
             </main>
-
         </PublicLayout>
     )
 }
