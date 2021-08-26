@@ -31,26 +31,26 @@
 
 .d1 div:nth-child(2) > span {
     position: absolute;
-    left: 113px;
+    left: 118px;
     top: 120px;
     font-size: 0.8rem;
-    color: #9D9D9D;
+    color: #9D9D9D
 }
 
 .d1 div:nth-child(2) > b {
-    max-width: calc(100% - 107px);
+    max-width: calc(100% - 120px);
     margin-bottom: 10px
 }
 
 .d1 p:nth-child(3) {
     line-height: 1.4rem;
-    margin-top: 10px;
+    margin-top: 10px
 }
 
 .d1 span:nth-child(4) {
     margin-top: 10px;
     font-size: 0.8rem;
-    color: #9D9D9D;
+    color: #9D9D9D
 }
 
 @media all and (max-width: 390px) {
