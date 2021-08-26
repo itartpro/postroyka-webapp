@@ -2,10 +2,19 @@ import PublicLayout from "components/public/public-layout";
 import {Login as LoginComponent} from "components/public/login";
 import css from 'styles/login.module.css';
 import {useRouter} from 'next/router';
+import {useContext} from 'react'
+import {WsContext} from 'context/WsProvider';
 
 const Login = () => {
 
+    const { logOut } = useContext(WsContext);
+
     const router = useRouter();
+
+    if(router.query.hasOwnProperty('out')) {
+        logOut();
+        router.push('/login')
+    }
 
     const doLogin = user => {
         if(!user) return false;
