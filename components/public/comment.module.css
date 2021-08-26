@@ -24,22 +24,24 @@
     border: 2px solid #47CB43
 }
 
-.d1 div:nth-child(2) > svg {
+.d1 div:nth-child(2) svg {
     font-size: 1.2rem;
-    color: #47CB43
+    color: #47CB43;
+    margin-left: 10px
 }
 
 .d1 div:nth-child(2) > span {
     position: absolute;
     left: 118px;
-    top: 120px;
+    top: 130px;
     font-size: 0.8rem;
     color: #9D9D9D
 }
 
-.d1 div:nth-child(2) > b {
-    max-width: calc(100% - 120px);
-    margin-bottom: 10px
+.d1 div:nth-child(2) > p {
+    max-width: calc(100% - 90px);
+    line-height: 100%;
+    margin-bottom: 15px
 }
 
 .d1 p:nth-child(3) {
