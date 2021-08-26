@@ -4,24 +4,44 @@
 }
 
 .form input, .form select {
-    font-size: 1rem
+    font-size: 1rem;
+}
+
+.form input[type=text] {
+    margin-top: 10px;
+    border: 1px solid #EBEBEB;
+    border-radius: 4px;
+    padding: 15px 350px 15px 15px;
+}
+
+.form input[type=submit] {
+    margin-top: 30px;
+    border-radius: 4px;
+    color: white;
+    padding: 15px;
+    max-width: 120px;
+    background: #47CB43;
 }
 
 .form input, .radios {
-    margin-top: 10px
+    margin-top: 10px;
+    border: 1px solid #EBEBEB;
+    border-radius: 4px;
+    padding: 15px 350px 15px 15px;
 }
 
-.radios input {
-    margin: 0 0 0 5px
-}
 
-.radios label {
-    margin-left: 20px;
-    cursor: pointer
-}
+/*.radios input {*/
+/*    margin: 0 0 0 5px;*/
+/*}*/
 
-.select select {
-    margin-right: 15px;
-    min-width: 60px;
-    cursor: pointer
-}
+/*.radios label {*/
+/*    margin-left: 20px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.select select {*/
+/*    margin-right: 15px;*/
+/*    min-width: 60px;*/
+/*    cursor: pointer*/
+/*}*/
