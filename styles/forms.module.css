@@ -1,3 +1,7 @@
+.form {
+    width: 100%
+}
+
 .form small {
     color: red;
     width: 100%
@@ -7,12 +11,12 @@
     font-size: 1rem;
 }
 
-.form input[type=text], .form select {
+.form input, .form select {
     margin-top: 10px;
     border: 1px solid #EBEBEB;
     border-radius: 4px;
-    padding: 15px 350px 15px 15px;
-    width: 100%
+    width: 100%;
+    padding: 15px 30px
 }
 
 .form select:focus {
@@ -43,9 +47,7 @@
 
 .form input[type=submit] {
     margin-top: 30px;
-    border-radius: 4px;
     color: white;
-    padding: 15px 30px;
     max-width: max-content;
     background: #47CB43;
     transition: all .3s
@@ -53,11 +55,4 @@
 
 .form input[type=submit]:hover {
     background: #067800
-}
-
-.form input, .radios {
-    margin-top: 10px;
-    border: 1px solid #EBEBEB;
-    border-radius: 4px;
-    padding: 15px 350px 15px 15px;
 }

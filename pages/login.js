@@ -7,27 +7,19 @@ const Login = () => {
         <PublicLayout>
 
             <main className={`row bet max center`}>
-                <div>
+                <div className={'col start '+css.d1}>
                     <h1>Вход</h1>
                     <LoginComponent/>
                     <p className={css.p1}><a href="https://www.google.ru/">Забыли пароль?</a></p>
                 </div>
+                <style global jsx>{`
+                    form > input[type=submit] {
+                        width: 100%!important;
+                        max-width: 300px!important
+                    }
+                `}</style>
                 <p>Впервые на Построй Ке?</p>
             </main>
-            {/*<style jsx global>{`*/}
-            {/*    // main {*/}
-            {/*    //     position: relative;*/}
-            {/*    // } */}
-            {/*    // main > p {*/}
-            {/*    //     position: absolute;  */}
-            {/*    // }*/}
-            {/*    // h1 {*/}
-            {/*    //     margin-bottom: 15px*/}
-            {/*    // }*/}
-            {/*    // p {*/}
-            {/*    //     color: red  */}
-            {/*    // }*/}
-            {/*`}</style>*/}
         </PublicLayout>
     )
 }
