@@ -25,6 +25,7 @@
 }
 
 .d1 div:nth-child(2) > svg {
+    font-size: 1.2rem;
     color: #47CB43
 }
 
@@ -38,6 +39,7 @@
 
 .d1 div:nth-child(2) > b {
     max-width: calc(100% - 107px);
+    margin-bottom: 10px
 }
 
 .d1 p:nth-child(3) {
