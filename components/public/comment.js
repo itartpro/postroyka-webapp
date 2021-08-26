@@ -15,9 +15,9 @@ export const Comment = () => {
             </div>
             <div className="row center bet">
                 <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76" loading="lazy"/>
-                <b>Фамилия Имя Отчество</b>
-                <IoIosCheckmarkCircleOutline/>{/*Я думаю это надо сделать позитион абсолют*/}
-                <span>17 отзывов</span>{/*Я думаю это надо сделать позитион абсолют*/}
+                <b>Арсёнов Михаил Александрович</b>
+                <IoIosCheckmarkCircleOutline/>
+                <span>17 отзывов</span>
             </div>
             <p>Порядочный, аккуратный мастер. Делает на совесть. Весь инструмент свой, в т.ч. фрезер. Делает, чтобы было
                 удобно. Работой довольна. Заказ был, чтобы перила были надежны, с..</p>
