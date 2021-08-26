@@ -1,11 +1,33 @@
-export const isoToRus = ISOString => {
+export const getNavigatorLanguage = () => (navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.userLanguage || navigator.language || navigator.browserLanguage || 'ru-RU';
+
+export const getCurrentTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const isoToLocale = (ISOString, LocaleString = getNavigatorLanguage()) => {
     try {
         const stamp = Date.parse(ISOString);
-        return new Date(stamp).toLocaleString('ru-RU')
+        return new Date(stamp).toLocaleString(LocaleString)
     } catch (e) {
         return null
     }
-}
+};
+
+export const nowToLocaleString = (LocaleString = getNavigatorLanguage()) => new Date(Date.now()).toLocaleString(LocaleString);
+
+export const nowToISO = () => new Date().toISOString();
+
+export const localeToISO = string => new Date(string).toISOString()
+
+//formatting
+export const isoToRusDate = ISOString => {
+    const rus = isoToLocale(ISOString, 'ru-RU');
+    if(rus) return rus.split(", ")[0];
+    return null
+};
+
+export const rusDateToIso = str => {
+    const fullStr = `${str}, 12:00:00`;
+    return rusToISO(fullStr)
+};
 
 export const rusToISO = str => {
     const halves = str.split(", ");
@@ -20,19 +42,4 @@ export const rusToISO = str => {
     } catch (e) {
         return null
     }
-}
-
-export const nowToISO = () => new Date(Date.now()).toISOString();
-
-export const nowToRus = () => new Date(Date.now()).toLocaleString('ru-RU');
-
-export const isoToRusDate = ISOString => {
-    const rus = isoToRus(ISOString);
-    if(rus) return rus.split(", ")[0];
-    return null
-}
-
-export const rusDateToIso = str => {
-    const fullStr = `${str}, 12:00:00`;
-    return rusToISO(fullStr)
 }

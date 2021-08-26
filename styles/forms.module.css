@@ -3,6 +3,12 @@
     width: 100%
 }
 
+.select select {
+    margin-right: 15px;
+    min-width: 60px;
+    cursor: pointer
+}
+
 .form input, .form select {
     font-size: 1rem;
 }

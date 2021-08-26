@@ -3,7 +3,7 @@ import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
-import {nowToISO, rusDateToIso} from 'libs/js-time-to-psql';
+import {nowToISO, rusDateToIso, isoToLocale, nowToLocaleString, localeToISO, rusToISO} from 'libs/js-time-to-psql';
 import {validateEmailPhoneInput} from 'libs/email-phone-input';
 import PublicLayout from "../components/public/public-layout";
 import {getRegions, getTowns, getPageBySlug} from "libs/static-rest";
@@ -86,18 +86,23 @@ const Registration = ({regions, defaultTowns}) => {
 
     //registration
     const registerAttempt = d => {
+        const created = nowToISO();
         const checked = {
-            full_name: d.full_name,
-            email: '',
+            first_name: d.first_name,
+            last_name: d.last_name,
+            paternal_name: d.paternal_name,
+            email: d.email,
             password: d.password,
-            gender: d.gender || '',
-            created: nowToISO(),
-            last_online: '',
-            country_id: 1
+            town_id: parseInt(d.town),
+            created: created,
+            last_online: created,
+            legal: parseInt(d.legal),
+            login:""
         };
-        const login = validateEmailPhoneInput(d.login);
+        //Пока что только email
+        const login = validateEmailPhoneInput(d.email);
         if(login && login.type === 'email') {
-            checked[login.type] = login.value
+            checked.login = login.value;
         } else {
             setShowErr("не похоже на Email")
         }
@@ -116,7 +121,6 @@ const Registration = ({regions, defaultTowns}) => {
         //request(JSON.stringify(goData))
         console.log('testing data for registration', regData);
     }, [regData])
-
 
     //html stuff
     const errMsg = (field = '', maxLength = 0) => {
@@ -140,7 +144,6 @@ const Registration = ({regions, defaultTowns}) => {
             instructions: JSON.stringify({region_id: parseInt(regionWatch)})
         };
         request(JSON.stringify(goData));
-        console.log('changed region', regionWatch);
     }, [regionWatch])
 
     return (
@@ -150,7 +153,7 @@ const Registration = ({regions, defaultTowns}) => {
                 <h1>Регистрироваться как мастер</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
                     <select {...register('legal', {required: true})} defaultValue="1">
-                        <option value="1" onSelect={e => console.log(e)}>Частное лицо</option>
+                        <option value="1">Частное лицо</option>
                         <option value="2">ИП</option>
                         <option value="3">Юридическое лицо</option>
                     </select>
@@ -161,7 +164,7 @@ const Registration = ({regions, defaultTowns}) => {
                             {errMsg('last_name', 70)}
 
                             <input type="text" {...register('paternal_name', {required: true, maxLength: 70})} placeholder="Точное полное наименование юридического лица"/>
-                            {errMsg('last_name', 70)}
+                            {errMsg('paternal_name', 70)}
                         </>
                     ) || (
                         <>
@@ -171,8 +174,8 @@ const Registration = ({regions, defaultTowns}) => {
                             <input type="text" {...register('last_name', {required: true, maxLength: 40})} placeholder="Ваша фамилия"/>
                             {errMsg('last_name', 40)}
 
-                            <input type="text" {...register('paternal_name', {required: true, maxLength: 40})} placeholder="Ваше отчество"/>
-                            {errMsg('last_name', 40)}
+                            <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество (не обязательно)"/>
+                            {errMsg('paternal_name', 40)}
                         </>
                     )}
 
@@ -186,14 +189,14 @@ const Registration = ({regions, defaultTowns}) => {
                     </select>
 
                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
-                    <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
+                    <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})}>
                         {towns && towns.map(e => (
                             <option key={e.id} value={e.id}>{e.name}</option>
                         ))}
                     </select>
 
-                    <input type="text" {...register('login', {required: true, maxLength: 70})} placeholder="Ваш email"/>
-                    {errMsg('login', 70)}
+                    <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
+                    {errMsg('email', 50)}
 
                     <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
                     {errMsg('password', 32)}
