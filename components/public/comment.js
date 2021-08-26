@@ -8,12 +8,12 @@ export const Comment = () => {
     return (
         <div className={`row bet ${css.d1}`}>
             <div className="row bet">
-                <p>Положительный отзыв</p>{/*Тут просто надо marign-right чтобы сделать место от надписи до звезды*/}
+                <p>Положительный отзыв</p>
                 <BsStar/>
                 <span>8.2</span>
                 <div></div>
             </div>
-            <div className="row bet">
+            <div className="row center bet">
                 <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76" loading="lazy"/>
                 <b>Фамилия Имя Отчество</b>
                 <IoIosCheckmarkCircleOutline/>{/*Я думаю это надо сделать позитион абсолют*/}

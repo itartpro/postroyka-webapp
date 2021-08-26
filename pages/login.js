@@ -8,11 +8,7 @@ const Login = () => {
                 <LoginComponent/>
                 <p>Какой то текст</p>
             </main>
-            <style jsx global>{`
-                main > p {
-                    color: red
-                }
-            `}</style>
+
         </PublicLayout>
     )
 }
