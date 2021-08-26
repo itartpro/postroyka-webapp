@@ -3,7 +3,7 @@ import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
-import {nowToISO, rusDateToIso} from 'libs/js-time-to-psql';
+import {nowToISO, rusDateToIso, isoToLocale, nowToLocaleString, localeToISO, rusToISO} from 'libs/js-time-to-psql';
 import {validateEmailPhoneInput} from 'libs/email-phone-input';
 import PublicLayout from "../components/public/public-layout";
 import {getRegions, getTowns, getPageBySlug} from "libs/static-rest";
@@ -86,13 +86,14 @@ const Registration = ({regions, defaultTowns}) => {
 
     //registration
     const registerAttempt = d => {
+        const created = nowToISO();
         const checked = {
             full_name: d.full_name,
             email: '',
             password: d.password,
             gender: d.gender || '',
-            created: nowToISO(),
-            last_online: '',
+            created: created,
+            last_online: created,
             country_id: 1
         };
         const login = validateEmailPhoneInput(d.login);
@@ -117,7 +118,6 @@ const Registration = ({regions, defaultTowns}) => {
         console.log('testing data for registration', regData);
     }, [regData])
 
-
     //html stuff
     const errMsg = (field = '', maxLength = 0) => {
         if (!errors || !errors[field]) return null;
@@ -140,7 +140,6 @@ const Registration = ({regions, defaultTowns}) => {
             instructions: JSON.stringify({region_id: parseInt(regionWatch)})
         };
         request(JSON.stringify(goData));
-        console.log('changed region', regionWatch);
     }, [regionWatch])
 
     return (
@@ -150,7 +149,7 @@ const Registration = ({regions, defaultTowns}) => {
                 <h1>Регистрироваться как мастер</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
                     <select {...register('legal', {required: true})} defaultValue="1">
-                        <option value="1" onSelect={e => console.log(e)}>Частное лицо</option>
+                        <option value="1">Частное лицо</option>
                         <option value="2">ИП</option>
                         <option value="3">Юридическое лицо</option>
                     </select>
@@ -171,7 +170,7 @@ const Registration = ({regions, defaultTowns}) => {
                             <input type="text" {...register('last_name', {required: true, maxLength: 40})} placeholder="Ваша фамилия"/>
                             {errMsg('last_name', 40)}
 
-                            <input type="text" {...register('paternal_name', {required: true, maxLength: 40})} placeholder="Ваше отчество"/>
+                            <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество (не обязательно)"/>
                             {errMsg('last_name', 40)}
                         </>
                     )}
