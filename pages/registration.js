@@ -1,6 +1,7 @@
 import css from 'styles/forms.module.css';
 import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
+import {IoIosArrowDown} from 'react-icons/io';
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
 import {nowToISO, rusDateToIso, isoToLocale, nowToLocaleString, localeToISO, rusToISO} from 'libs/js-time-to-psql';
@@ -152,11 +153,14 @@ const Registration = ({regions, defaultTowns}) => {
             <main className={`col start max`}>
                 <h1>Регистрироваться как мастер</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
-                    <select {...register('legal', {required: true})} defaultValue="1">
-                        <option value="1">Частное лицо</option>
-                        <option value="2">ИП</option>
-                        <option value="3">Юридическое лицо</option>
-                    </select>
+                    <div className={'rel '+css.sel}>
+                        <select {...register('legal', {required: true})} defaultValue="1">
+                            <option value="1">Частное лицо</option>
+                            <option value="2">ИП</option>
+                            <option value="3">Юридическое лицо</option>
+                        </select>
+                        <span><IoIosArrowDown/></span>
+                    </div>
 
                     {legalWatch === "3" && (
                         <>
