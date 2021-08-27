@@ -1,0 +1,65 @@
+.wrap {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.d1 {
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    z-index: 1;
+    color: #71C36E;
+    position: relative;
+}
+
+.d1 > div {
+    transition: all .5s;
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    opacity: 0
+}
+
+.d1 > div.show {
+    opacity: 1
+}
+
+.d1 > div > div {
+    max-width: 380px;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+    line-height: 140%
+}
+
+.d1 b {
+    font-size: 1.1rem;
+    margin-bottom: 5px
+}
+
+.arr {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 100px;
+    z-index: 3;
+    font-size: 1.2rem;
+    color: #71C36E
+}
+
+.arrow {
+    width: 12px;
+    height: 12px;
+    fill: #71C36E;
+    cursor: pointer
+}
+
+.arrow:hover {
+    fill: #17ee0e
+}
+
+.arrow_disabled {
+    fill: #97d094
+}

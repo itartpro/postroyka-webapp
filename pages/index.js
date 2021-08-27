@@ -2,6 +2,7 @@ import PublicLayout from 'components/public/public-layout';
 import Order from "components/public/order";
 import css from 'styles/home.module.css';
 import Comments from "components/public/home/comments";
+import {Hero} from "../components/public/home/hero";
 
 const Home = () => {
     const page = {
@@ -16,26 +17,13 @@ const Home = () => {
             <main className={`col start`}>
                 <header className={`row ${css.hr1}`}>
                     <div className="col start max rel">
-                        <h1>Найдите мастера под Ваши работы</h1>
-                        <form>
-                            <input type="text" placeholder="Что требуется сделать?"/>
-                            <input type="submit" value="Найти мастера"/>
-                        </form>
-                        <div className={css.d2}>
-                            <div className={'row bet'}>
-                                <div className="col start">
-                                    <b>С нами легко</b>
-                                    <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
-                                </div>
-                                <img src="/images/home/people.png" alt="Слайд 1" width="365" height="300" loading="lazy"/>
-                            </div>
-                        </div>
-                        <div className={'row center bet '+css.pg}>
-                            <button>&lsaquo;</button>
-                            <span>1</span>
-                            <span>/</span>
-                            <span>5</span>
-                            <button>&rsaquo;</button>
+                        <Hero/>
+                        <div className={css.d1}>
+                            <h1>Найдите мастера под Ваши работы</h1>
+                            <form>
+                                <input type="text" placeholder="Что требуется сделать?"/>
+                                <input type="submit" value="Найти мастера"/>
+                            </form>
                         </div>
                     </div>
                 </header>
