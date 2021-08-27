@@ -18,7 +18,7 @@ export const Hero = () => {
     })
 
     useEffect(() => {
-        timer.current = setInterval(() => slider && slider.next(), 3000);
+        timer.current = setInterval(() => slider && slider.next(), 4000);
         return () => clearInterval(timer.current);
     }, [slider]);
 
