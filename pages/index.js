@@ -15,18 +15,7 @@ const Home = () => {
     return (
         <PublicLayout page={page} ogImage={ogImage}>
             <main className={`col start`}>
-                <header className={`row ${css.hr1}`}>
-                    <div className="col start max rel">
-                        <Hero/>
-                        <div className={css.d1}>
-                            <h1>Найдите мастера под Ваши работы</h1>
-                            <form>
-                                <input type="text" placeholder="Что требуется сделать?"/>
-                                <input type="submit" value="Найти мастера"/>
-                            </form>
-                        </div>
-                    </div>
-                </header>
+                <header className={`row ${css.hr1}`}><Hero/></header>
                 <div className={'row center bet max '+css.best}>
                     <div className="col start rel">
                         <b>Добавьте заказ</b>

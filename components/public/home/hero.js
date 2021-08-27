@@ -28,45 +28,54 @@ export const Hero = () => {
     }, [currentSlide])
 
     return (
-        <div className={css.wrap}>
-            <div ref={sliderRef} className={css.d1}>
-                <div key={0} className={'row bet '+css.show} ref={el => slides.current[0] = el}>
-                    <div className="col start">
-                        <b>С нами легко</b>
-                        <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
-                    </div>
-                    <img src="/images/home/people1.png" alt="построить дом" width="365" height="300" loading="lazy"/>
-                </div>
-                <div key={1} className={'row bet'} ref={el => slides.current[1] = el}>
-                    <div className="col start">
-                        <b>Большой спектр услуг</b>
-                        <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
-                    </div>
-                    <img src="/images/home/people2.png" alt="найти работу" width="366" height="299" loading="lazy"/>
-                </div>
-                <div key={2} className={'row bet'} ref={el => slides.current[2] = el}>
-                    <div className="col start">
-                        <b>Абсолютно безопасно</b>
-                        <p>Выберите мастера по выгодной цене или отзывам. Мы не скрываем негативные отзывы и проверяем каждый из них.</p>
-                    </div>
-                    <img src="/images/home/people3.png" alt="Выбрать мастера" width="366" height="299" loading="lazy"/>
-                </div>
+        <div className="col start max rel">
+            <div className={css.d2}>
+                <h1>Найдите мастера под Ваши работы</h1>
+                <form>
+                    <input type="text" placeholder="Что требуется сделать?"/>
+                    <input type="submit" value="Найти мастера"/>
+                </form>
             </div>
-            {slider  && (
-                <div className={'row center bet '+css.arr}>
-                    <ArrowLeft
-                        onClick={(e) => e.stopPropagation() || slider.prev()}
-                        disabled={currentSlide === 0}
-                    />
-                    <span>{currentSlide + 1}</span>
-                    <span>/</span>
-                    <span>3</span>
-                    <ArrowRight
-                        onClick={(e) => e.stopPropagation() || slider.next()}
-                        disabled={currentSlide === slider.details().size - 1}
-                    />
+            <div className={css.wrap}>
+                <div ref={sliderRef} className={css.d1}>
+                    <div key={0} className={'row bet '+css.show} ref={el => slides.current[0] = el}>
+                        <div className="col start">
+                            <b>С нами легко</b>
+                            <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
+                        </div>
+                        <img src="/images/home/people1.png" alt="построить дом" width="365" height="300" loading="lazy"/>
+                    </div>
+                    <div key={1} className={'row bet'} ref={el => slides.current[1] = el}>
+                        <div className="col start">
+                            <b>Большой спектр услуг</b>
+                            <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
+                        </div>
+                        <img src="/images/home/people2.png" alt="найти работу" width="366" height="299" loading="lazy"/>
+                    </div>
+                    <div key={2} className={'row bet'} ref={el => slides.current[2] = el}>
+                        <div className="col start">
+                            <b>Абсолютно безопасно</b>
+                            <p>Выберите мастера по выгодной цене или отзывам. Мы не скрываем негативные отзывы и проверяем каждый из них.</p>
+                        </div>
+                        <img src="/images/home/people3.png" alt="Выбрать мастера" width="366" height="299" loading="lazy"/>
+                    </div>
                 </div>
-            )}
+                {slider  && (
+                    <div className={'row center bet '+css.arr}>
+                        <ArrowLeft
+                            onClick={(e) => e.stopPropagation() || slider.prev()}
+                            disabled={currentSlide === 0}
+                        />
+                        <span>{currentSlide + 1}</span>
+                        <span>/</span>
+                        <span>3</span>
+                        <ArrowRight
+                            onClick={(e) => e.stopPropagation() || slider.next()}
+                            disabled={currentSlide === slider.details().size - 1}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

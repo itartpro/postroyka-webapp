@@ -10,51 +10,6 @@
     min-height: 300px
 }
 
-.d1 {
-    position: absolute;
-    left: 0;
-    top: 30px;
-    max-width: max-content
-}
-
-.d1 h1 {
-    font-size: 2rem;
-    margin-bottom: 15px
-}
-
-.d1 form {
-    width: 100%;
-    max-width: 680px;
-    position: relative;
-    z-index: 2;
-}
-
-.d1 input[type=text] {
-    width: 100%;
-    min-height: 70px;
-    font-size: 1rem;
-    text-indent: 30px;
-    border-radius: 8px;
-    border: 1px solid #47CB43
-}
-
-.d1 input[type=text]:focus {
-    outline: transparent;
-    box-shadow: inset 0 5px 10px #d6fed5;
-}
-
-.d1 input[type=submit] {
-    position: absolute;
-    color: #47CB43;
-    text-shadow: 0 0 0 #47CB43;
-    height: 100%;
-    width: max-content;
-    right: 4%;
-    background-color: transparent;
-    border: none;
-    font-size: 1rem
-}
-
 .best {
     min-height: 256px
 }
