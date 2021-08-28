@@ -1,44 +1,45 @@
 import css from "styles/forms.module.css";
 import { useForm } from "react-hook-form";
 import {useContext, useEffect} from 'react';
-import {useRouter} from 'next/router';
 import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
 
 
-export const Login = () => {
+export const Login = ({loginAction}) => {
 
     const { register, handleSubmit, formState: {errors} } = useForm();
     const { request, wsMsg, verifiedJwt } = useContext(WsContext);
-    const router = useRouter();
 
     useEffect(() => {
         const check = window.localStorage.getItem('User');
-        let id = 0;
+        let idFromJWT = 0;
         if(verifiedJwt) {
             const str = window.localStorage.getItem('AccessJWT');
             let debased64 = null;
             try {
                 debased64 = atob(str.split('.')[1])
             } catch (err) {
-                return console.log( "Error decoding refresh token: " + err);
+                console.log( "Error decoding refresh token: " + err);
+                return loginAction(null)
             }
             const parsed = JSON.parse(debased64);
-            id = parseInt(parsed.sub);
+            idFromJWT = parseInt(parsed.sub);
         }
         if(verifiedJwt && check) {
             const user = JSON.parse(check);
-            if(user.id !== id) {
+            if(user.id !== idFromJWT) {
                 window.localStorage.removeItem('User');
+                return loginAction(null)
             } else {
-                return router.push('/profile/'+user.id)
+                return loginAction(user)
             }
         }
-        if(id !== 0 && verifiedJwt && !check) {
+
+        if(idFromJWT !== 0 && verifiedJwt && !check) {
             const goData = {
                 address: 'auth:50003',
                 action: 'get-profile',
-                instructions: JSON.stringify({id})
+                instructions: JSON.stringify({idFromJWT})
             };
             request(JSON.stringify(goData))
         }
@@ -46,7 +47,7 @@ export const Login = () => {
 
     const onSubmit = d => {
         const login = validateEmailPhoneInput(d.login);
-        {/* login returns {type, value} type is 'email' or 'phone' */}
+        {/* login returns {type, value} type is 'email' or 'phone' (this check fails if other type of login is used) */}
         if(!login) return false;
         const instructions = {
             login: btoa(login.value),
@@ -74,7 +75,7 @@ export const Login = () => {
                 gender: user.gender
             }
             window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-            router.push('/profile/'+user.id)
+            return loginAction(user)
         }
     }, [wsMsg])
 

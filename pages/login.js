@@ -13,6 +13,7 @@ const Login = () => {
 
     if (router.query.hasOwnProperty('out')) {
         logOut();
+        window.localStorage.removeItem('User');
         router.push('/login')
     }
 
