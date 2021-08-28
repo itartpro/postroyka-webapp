@@ -4,7 +4,7 @@ import {useState, useContext, useEffect, useRef} from 'react'
 import {WsContext} from 'context/WsProvider'
 import {translit, slugify} from 'libs/slugify'
 import {useRouter} from 'next/router'
-import {nowToISO, isoToRusDate, RusDateToIso} from 'libs/js-time-to-psql'
+import {nowToISO, isoToRusDate, rusDateToIso} from 'libs/js-time-to-psql'
 import {FaAngleDown, FaInfoCircle, FaCheck} from 'react-icons/fa'
 import Link from 'next/link'
 import {toggleDown} from 'libs/sfx'
@@ -69,7 +69,7 @@ export default function Update() {
         const checked = {...dbData, ...data};
         checked.slug = slugify(translit(checked.slug || checked.name));
         const rusDate = checked.created_at;
-        checked.created_at = RusDateToIso(rusDate) || nowToISO();
+        checked.created_at = rusDateToIso(rusDate) || nowToISO();
         const goData = {
             address: 'cats:50004',
             action: 'update',

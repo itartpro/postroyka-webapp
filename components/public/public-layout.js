@@ -12,7 +12,7 @@ const PublicLayout = ({page, user, children, ogImage}) => {
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <meta name="robots" content="index, follow"/>
-                <title>{page && page.title}</title>
+                <title>{(page && page.title) || "Постройка"}</title>
                 {page &&
                 <>
                     {page.description && <meta name="description" content={page.description}/>}

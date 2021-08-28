@@ -54,12 +54,12 @@ export default function Cats() {
                 <div className={css.indicator}><span><FaImages/></span> = Редактировать фотографии</div>
                 <div className={css.indicator}><span><FaTrashAlt/></span> = Ликвидировать весь раздел</div>
                 <div className={css.indicator}><span><FaBars/></span> = Развернуть раздел</div>
-                {/*<Link href={`/admin/cats/create/[parent_id]`} as={`/admin/cats/create/0`}>
+                <Link href={`/admin/cats/create/[parent_id]`} as={`/admin/cats/create/0`}>
                     <a className={css.link}>
                         <span><FaCodeBranch/></span>
                         <span>Добавить новый главный раздел</span>
                     </a>
-                </Link>*/}
+                </Link>
                 <br/>
                 {Array.isArray(cats) && cats.length &&
                 <ul className={css.list}>

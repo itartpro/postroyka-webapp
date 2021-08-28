@@ -10,14 +10,17 @@
   "dependencies": {
     "babel-plugin-inline-react-svg": "^2.0.1",
     "classnames": "^2.3.1",
-    "next": "^11.0.1",
+    "keen-slider": "^5.5.1",
+    "next": "^11.1.0",
     "photoswipe": "^4.1.3",
+    "probe-image-size": "^7.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-hook-form": "^7.12.2",
+    "react-hook-form": "^7.14.0",
     "react-icons": "^4.2.0",
     "react-photoswipe-gallery": "^1.3.6",
-    "sharp": "^0.28.3",
-    "keen-slider": "^5.5.1"
+    "sharp": "^0.29.0",
+    "suneditor": "^2.41.3",
+    "suneditor-react": "3.1.2"
   }
 }

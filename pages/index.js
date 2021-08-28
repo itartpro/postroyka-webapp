@@ -1,19 +1,25 @@
 import PublicLayout from 'components/public/public-layout';
-import Order from "components/public/order";
+import Order from 'components/public/order';
+import Comments from 'components/public/home/comments';
+import {Hero} from 'components/public/home/hero';
+import {getPageBySlug} from 'libs/static-rest';
 import css from 'styles/home.module.css';
-import Comments from "components/public/home/comments";
-import {Hero} from "../components/public/home/hero";
 
-const Home = () => {
-    const page = {
-        'title':'',
-        'description':'',
-        'keywords':''
-    };
-    const ogImage = '';
+export async function getStaticProps() {
+    const page = await getPageBySlug('home');
+
+    return {
+        props: {
+            page
+        },
+        revalidate: 120
+    }
+}
+
+const Home = ({page}) => {
 
     return (
-        <PublicLayout page={page} ogImage={ogImage}>
+        <PublicLayout page={page}>
             <main className={`col start`}>
                 <header className={`row ${css.hr1}`}><Hero/></header>
                 <div className={'row center bet max '+css.best}>
