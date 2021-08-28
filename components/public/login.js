@@ -23,7 +23,7 @@ export const Login = ({loginAction}) => {
                 return loginAction(null)
             }
             const parsed = JSON.parse(debased64);
-            idFromJWT = parseInt(parsed.sub);
+            idFromJWT = parseInt(parsed.sub)
         }
         if(verifiedJwt && check) {
             const user = JSON.parse(check);
@@ -35,11 +35,12 @@ export const Login = ({loginAction}) => {
             }
         }
 
+        //if JWT is present - then get user data
         if(idFromJWT !== 0 && verifiedJwt && !check) {
             const goData = {
                 address: 'auth:50003',
                 action: 'get-profile',
-                instructions: JSON.stringify({idFromJWT})
+                instructions: JSON.stringify({id:idFromJWT})
             };
             request(JSON.stringify(goData))
         }
@@ -68,14 +69,14 @@ export const Login = ({loginAction}) => {
             const user = res.data;
             const essentialUserData = {
                 id: user.id,
-                level: user.id,
+                level: user.level,
                 avatar: user.avatar,
                 first_name: user.first_name,
                 last_name: user.last_name,
                 gender: user.gender
-            }
+            };
             window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-            return loginAction(user)
+            loginAction(essentialUserData)
         }
     }, [wsMsg])
 

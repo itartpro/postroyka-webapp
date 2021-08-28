@@ -44,7 +44,7 @@ export default function WsProvider(props) {
                         request(JSON.stringify({
                             acs: parsed[0],
                             ref: parsed[1]
-                        }), 'verify-jwt-auth')
+                        }), 'verify-jwt-auth');
                         break
 
                     case "valid-tokens":
