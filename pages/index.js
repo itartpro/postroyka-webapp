@@ -4,7 +4,7 @@ import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
 import {getCats, getPageBySlug} from 'libs/static-rest';
 import css from 'styles/home.module.css';
-import {organizeCats} from "../libs/arrs";
+import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
 
 export async function getStaticProps() {

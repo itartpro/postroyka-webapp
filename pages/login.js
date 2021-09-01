@@ -4,6 +4,7 @@ import css from 'styles/login.module.css';
 import {useRouter} from 'next/router';
 import {useContext} from 'react'
 import {WsContext} from 'context/WsProvider';
+import Link from 'next/link';
 
 const Login = () => {
 
@@ -41,7 +42,7 @@ const Login = () => {
                 <div className={css.a1}>
                     <p>Впервые на Построй Ке?</p>
                     <p><a href="#">Добавить заказ</a> – если вы ищете исполнителя работ</p>
-                    <p><a href="#">Стать исполнителем</a> – если вы ищете заказы</p>
+                    <p><Link href={'/for-masters'}><a>Стать исполнителем</a></Link> – если вы ищете заказы</p>
                     <style>{`
                     div:nth-child(2) a {
                         color: #47CB43;

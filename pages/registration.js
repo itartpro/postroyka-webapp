@@ -7,35 +7,47 @@ import {WsContext} from 'context/WsProvider';
 import {nowToISO, rusDateToIso, isoToLocale, nowToLocaleString, localeToISO, rusToISO} from 'libs/js-time-to-psql';
 import {validateEmailPhoneInput} from 'libs/email-phone-input';
 import PublicLayout from "../components/public/public-layout";
-import {getRegions, getTowns, getPageBySlug} from "libs/static-rest";
+import {getRegions, getTowns, getPageBySlug, getCats} from "libs/static-rest";
+import {organizeCats} from "../libs/arrs";
+import {toggleDown} from "../libs/sfx";
 
 export async function getStaticProps() {
     //const page = await getPageBySlug('blog');
     const regions = await getRegions();
     const defaultTowns = await getTowns();
+    const cats = await getCats();
+    const services = organizeCats(cats)[1].children.map(e => ({
+        id: e.id,
+        parent_id: e.parent_id,
+        name: e.name,
+        children: e.children.map(c => ({
+            id: c.id,
+            parent_id: c.parent_id,
+            name: c.name
+        }))
+    }));
     return {
         props: {
-            //page,
             regions,
-            defaultTowns
+            defaultTowns,
+            services
         },
         revalidate: 120
     }
 }
 
-const Registration = ({regions, defaultTowns}) => {
+const Registration = ({regions, defaultTowns, services}) => {
     const {wsMsg, rs, setWsMsg, request} = useContext(WsContext);
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
     const [regData, setRegData] = useState({});
-    const [select, setSelect] = useState(1);
     const [towns, setTowns] = useState(defaultTowns);
+    const [chosenServices, setChosenServices] = useState([]);
 
 
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
-        console.log(wsMsg);
         if (wsMsg.type === "error") {
             if(wsMsg.data.includes("duplicate user") && showErr === null) {
                 setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном");
@@ -57,6 +69,10 @@ const Registration = ({regions, defaultTowns}) => {
 
         //for IMMEDIATE login after registration (no email/phone check)
         if(msg.data && msg.data.hasOwnProperty('refresh')) {
+            //TODO listen for an auth register success and send the array of
+            //chosen services to auth mini-service in the form of
+            //user id (msg.data.id) and an array of chosenServices (ex: [106, 107, 108])
+            //no need to wait for anything else, can proceed to login
             if(msg.data.refresh === null) {
                 const instructions = {
                     login: '',
@@ -67,12 +83,17 @@ const Registration = ({regions, defaultTowns}) => {
                 } else {
                     instructions.login = btoa(regData.phone)
                 }
-                const goData = {
+
+                //the msg.data.id and chosenServices may be sent with goData and request right bellow
+                //const goData...
+                //request(JSON...
+
+                const goData2 = {
                     address: 'auth:50003',
                     action: 'login',
                     instructions: JSON.stringify(instructions)
                 };
-                request(JSON.stringify(goData), 'jwt-auth')
+                request(JSON.stringify(goData2), 'jwt-auth')
             }
         }
         setRegData({})
@@ -90,6 +111,13 @@ const Registration = ({regions, defaultTowns}) => {
     const registerAttempt = d => {
         if(!validateEmailPhoneInput(d.email)) {
             return setShowErr("не похоже на Email")
+        }
+
+        if(d.services.length > 0) {
+            let newChoices = d.services.map(e => parseInt(e));
+            setChosenServices(newChoices);
+        } else {
+            setChosenServices([]);
         }
 
         const created = nowToISO();
@@ -117,7 +145,9 @@ const Registration = ({regions, defaultTowns}) => {
             action: 'register',
             instructions: JSON.stringify(regData)
         };
-        request(JSON.stringify(goData))
+        console.log('wow you almost registered', chosenServices)
+        //TODO listen for an auth register success
+        //request(JSON.stringify(goData))
     }, [regData])
 
     //html stuff
@@ -141,7 +171,7 @@ const Registration = ({regions, defaultTowns}) => {
             action: 'read-towns',
             instructions: JSON.stringify({region_id: parseInt(regionWatch)})
         };
-        request(JSON.stringify(goData));
+        request(JSON.stringify(goData))
     }, [regionWatch])
 
     return (
@@ -217,6 +247,27 @@ const Registration = ({regions, defaultTowns}) => {
                     })} placeholder="Повторите пароль"/>
                     {errMsg('password_confirm', 32)}
 
+                    <br/>
+                    <b>Выберите категории заказов которые Вам интересно выполнять</b>
+                    <ul className={'col start'}>
+                        {services && services.map(parent => (
+                            <li key={'s'+parent.id}>
+                                <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
+                                <ul>
+                                    {parent.children.map(e => (
+                                        <li key={'s'+e.id}>
+                                            <label htmlFor={'srv_'+e.id} className={css.check}>
+                                                {e.name}
+                                                <input id={'srv_'+e.id} type="checkbox" {...register('services')} value={e.id}/>
+                                                <span></span>
+                                            </label>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+
                     <input type="submit" value="Зарегистрироваться"/>
                     {showErr && <small>{showErr}</small>}
                 </form>
@@ -228,6 +279,37 @@ const Registration = ({regions, defaultTowns}) => {
                     form > p {
                         margin: 10px 0 2px 0;
                         color: #777
+                    }
+                    
+                    form ul {
+                        list-style: none
+                    }
+                    
+                    form > ul {
+                        margin-top: 10px
+                    }
+                    
+                    form ul li a {
+                        display: block;
+                        width: 100%
+                    }
+                    
+                    form > ul > li > a {
+                        padding: 15px;
+                        background: #f8f8f8;
+                        border-bottom: 1px solid #DDD
+                    }
+                    
+                    form > ul ul {
+                        transition: all .3s;
+                        max-height: 0;
+                        background: white;
+                        overflow: hidden
+                    }
+                    
+                    form > ul ul li {
+                        border-bottom: 1px solid #DDD;
+                        padding: 10px
                     }
                 `}</style>
             </main>

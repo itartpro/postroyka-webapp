@@ -56,3 +56,66 @@
 .form input[type=submit]:hover {
     background: #067800
 }
+
+.check {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    min-height: 25px;
+}
+
+.check input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0
+}
+
+.check span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 4px;
+    box-shadow: inset 0 3px 10px #DDD
+}
+
+.container:hover input ~ .checkmark {
+    background-color: #CCC
+}
+
+.check input:checked ~ span {
+    background-color: #2196F3
+}
+
+.check span:after {
+    content: "";
+    position: absolute;
+    display: none
+}
+
+.check input:checked ~ span:after {
+    display: block
+}
+
+.check span:after {
+    left: 9px;
+    top: 4px;
+    width: 8px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg)
+}
