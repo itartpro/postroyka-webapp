@@ -30,17 +30,36 @@
     margin-bottom: 5px
 }
 
-.best > div span {
-    position: absolute;
-    right: 30px;
-    bottom: 30px;
-    color: #5ED25A
-}
-
 .best > div:nth-child(2) {
     background-position: 31px -192px
 }
 
 .best > div:nth-child(3) {
     background-position: 31px -428px
+}
+
+.headline {
+    font-size: 1.5rem;
+    font-weight: normal
+}
+
+.sv > p {
+    margin-bottom: 20px
+}
+
+.sv div > p {
+    font-size: 1.1rem;
+    text-shadow: 0 0 0 black;
+    margin-bottom: 15px
+}
+
+.sv ul {
+    list-style: none;
+    margin-bottom: 40px
+}
+
+.sv li {
+    width: 100%;
+    max-width: 300px;
+    line-height: 150%
 }

@@ -1,4 +1,4 @@
-const goPost = (body, url) => {
+const goPost = (body, url = null) => {
     if(!url) url = process.env.GO_REST;
     return fetch(url, {
         headers:{'Content-Type':'application/json', 'Cookie':'ab6e2ed0caebf9e43227682823bf77c2'},

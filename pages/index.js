@@ -2,21 +2,26 @@ import PublicLayout from 'components/public/public-layout';
 import Order from 'components/public/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
-import {getPageBySlug} from 'libs/static-rest';
+import {getCats, getPageBySlug} from 'libs/static-rest';
 import css from 'styles/home.module.css';
+import {organizeCats} from "../libs/arrs";
+import Link from 'next/link';
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
+    const cats = await getCats();
+    const services = organizeCats(cats)[1].children;
 
     return {
         props: {
-            page
+            page,
+            services
         },
         revalidate: 120
     }
 }
 
-const Home = ({page}) => {
+const Home = ({page, services}) => {
 
     return (
         <PublicLayout page={page}>
@@ -26,17 +31,14 @@ const Home = ({page}) => {
                     <div className="col start rel">
                         <b>Добавьте заказ</b>
                         <p>Никаких лишних звонков – мы никому не показываем ваш номер</p>
-                        <span>1</span>
                     </div>
                     <div className="col start rel">
                         <b>Сравните предложения</b>
                         <p>Связывайтесь с кандидатами и обсуждайте детали заказа по телефону или в чате</p>
-                        <span>2</span>
                     </div>
                     <div className="col start rel">
                         <b>Договоритесь напрямую</b>
                         <p>Изучите отзывы об исполнителях, сравните их условия и цены на вашу работу</p>
-                        <span>3</span>
                     </div>
                 </div>
                 <div className={`row ${css.bg}`}>
@@ -46,6 +48,23 @@ const Home = ({page}) => {
                     <Order/>
                     <Order/>
                     <Order/>
+                </div>
+                <div className={'col start max '+css.sv}>
+                    <p className={css.headline}>Какие виды работ можно заказать?</p>
+                    {services && services.map(e => (
+                        <div className="col start">
+                            <p>{e.name}</p>
+                            <ul className="row start">
+                                {e.children.map(e => (
+                                    <li>
+                                        <Link href={'/service/'+e.slug}>
+                                            <a>{e.name}</a>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
                 </div>
             </main>
             <style jsx global>{`

@@ -66,12 +66,12 @@ export const getTowns = (region_id = 1) => {
     })
 }
 
-export const getCats = (url = null) => {
+export const getCats = () => {
     return goPost(JSON.stringify({
         address: 'cats:50004',
         action: 'read_all',
         instructions: "{}"
-    }), url)
+    }))
         .then(res => {
             try {
                 const parsed = JSON.parse(res);
