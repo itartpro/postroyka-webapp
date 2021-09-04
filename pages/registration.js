@@ -270,6 +270,7 @@ const Registration = ({regions, defaultTowns, services}) => {
 
                     <input type="submit" value="Зарегистрироваться"/>
                     {showErr && <small>{showErr}</small>}
+                    <br/><br/>
                 </form>
                 <style jsx>{`
                     form > b {
@@ -313,7 +314,6 @@ const Registration = ({regions, defaultTowns, services}) => {
                     }
                 `}</style>
             </main>
-            {}
         </PublicLayout>
     )
 }

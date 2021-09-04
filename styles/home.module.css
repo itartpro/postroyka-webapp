@@ -63,3 +63,11 @@
     max-width: 300px;
     line-height: 150%
 }
+
+.sv li a {
+    transition: all .3s
+}
+
+.sv li a:hover {
+    color: #0088ff
+}

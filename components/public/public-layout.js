@@ -2,6 +2,7 @@ import Head from 'next/head';
 import {useRouter} from 'next/router';
 import css from './public-layout.module.css';
 import Link from 'next/link';
+import {toggleDown} from 'libs/sfx';
 
 const PublicLayout = ({page, user, children, ogImage}) => {
     const {asPath} = useRouter();
@@ -33,6 +34,14 @@ const PublicLayout = ({page, user, children, ogImage}) => {
                             <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
                         </a>
                     </Link>
+                    <div className={'row start '+css.hbg} onClick={e => {e.target.classList.toggle(css.change);toggleDown(e)}}>
+                        <div>
+                            <div className={css.b1}/>
+                            <div className={css.b2}/>
+                            <div className={css.b3}/>
+                        </div>
+                        <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
+                    </div>
                     <ul className={`row center init`}>
                         <li><Link href="/orders"><a>Заказы</a></Link></li>
                         <li><Link href="/masters"><a>Мастера и бригады</a></Link></li>

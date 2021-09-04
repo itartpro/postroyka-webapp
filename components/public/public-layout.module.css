@@ -20,3 +20,92 @@
     text-shadow: 0 0 0 black;
     color: black
 }
+
+.hbg {
+    display: none;
+}
+
+@media all and (max-width: 1230px){
+    .top {
+        padding: 0 15px
+    }
+}
+
+@media all and (max-width: 910px){
+    .hbg {
+        display: block;
+        cursor: pointer;
+        padding: 15px;
+        position: relative
+    }
+
+    .hbg > * {
+        pointer-events: none
+    }
+
+    .hbg > img {
+        position: absolute;
+        left: 90px;
+        top: 6px
+    }
+
+    .hbg > div {
+        -webkit-transition: all 1s;
+        transition: all 1s;
+        width: 35px;
+        height: 22px
+    }
+
+    .b1,.b2,.b3 {
+        width: 35px;
+        height: 3px;
+        background-color: #47cb43;
+        margin: 6px 0;
+        -webkit-transition: 0.4s;
+        transition: 0.4s
+    }
+
+    .change > div {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+
+    .change .b1 {
+        -webkit-transform: rotate(-45deg) translate(-9px,5px);
+        transform: rotate(-45deg) translate(-9px,5px)
+    }
+
+    .change .b2 {
+        opacity: 0
+    }
+
+    .change .b3 {
+        -webkit-transform: rotate(45deg) translate(-8px,-4px);
+        transform: rotate(45deg) translate(-8px,-4px)
+    }
+
+    .top {
+        min-height: initial;
+        padding: 0
+    }
+
+    .top ul {
+        display: block;
+        width: 100%;
+        max-height: 0;
+        transition: all .3s;
+        overflow: hidden
+    }
+
+    .top ul li {
+        margin: 0;
+        width: 100%;
+        padding: 10px;
+        border-bottom: 1px solid #EEE;
+        text-align: center
+    }
+
+    .top > div > a {
+        display: none
+    }
+}
