@@ -6,6 +6,8 @@ import {toggleDown} from 'libs/sfx';
 
 const PublicLayout = ({page, user, children, ogImage}) => {
     const {asPath} = useRouter();
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
     return (
         <>
             <Head>
@@ -53,6 +55,42 @@ const PublicLayout = ({page, user, children, ogImage}) => {
                 </div>
             </nav>
             {children}
+            <footer className={'row '+css.ft}>
+                <div className={'row bet max'}>
+                    <div className="col start">
+                        <a itemProp="url" href="/">
+                        <span itemProp="logo" itemScope itemType="http://schema.org/ImageObject">
+                            <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
+                            <meta itemProp="representativeOfPage" content="true"/>
+                            <meta itemProp="thumbnail" content="/android-chrome-192x192.png"/>
+                        </span>
+                        </a>
+                        <span>© 2021{currentYear !== 2021 ? ' - '+currentYear : null}</span>
+                    </div>
+                    <ul className={`col start`}>
+                        <li><Link href="/orders"><a>Заказы</a></Link></li>
+                        <li><Link href="/masters"><a>Мастера и бригады</a></Link></li>
+                        <li><Link href="/for-clients"><a>Для заказчиков</a></Link></li>
+                        <li><Link href="/for-masters"><a>Для мастеров</a></Link></li>
+                        <li><Link href="/blog"><a>Блог</a></Link></li>
+                        <li><Link href="/login"><a>Личный кабинет</a></Link></li>
+                    </ul>
+                    <div className="col start">
+                        <a href="tel:+79621231212" rel="nofollow" itemProp="telephone">+7 962 123 12 12</a>
+                        <span itemProp="email">mail@itart.pro</span>
+                        <p itemProp="address" itemScope itemType="http://schema.org/PostalAddress">
+                            <span itemProp="addressLocality">Москва</span>,
+                            <span itemProp="streetAddress">улица Большая Молчановка, 21А</span>
+                        </p>
+                    </div>
+                    <div className={'col start'}>
+                        <a>Вконтакте</a>
+                        <a>Инстаграм</a>
+                        <a>Одноклассники</a>
+                        <a>Facebook</a>
+                    </div>
+                </div>
+            </footer>
             <style jsx global>{`
                 @font-face {
                     font-family: Roboto;

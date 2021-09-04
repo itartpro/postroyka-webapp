@@ -150,3 +150,21 @@
         text-align: center
     }
 }
+
+@media all and (max-width: 400px) {
+    .d2 input[type=text] {
+        min-height: 40px;
+        text-align: center;
+        text-indent: 0
+    }
+
+    .d2 input[type=submit] {
+        display: block;
+        position: initial;
+        padding: 10px 20px;
+        background-color: #47CB43;
+        color: white;
+        border-radius: 4px;
+        margin: 5px auto 0 auto
+    }
+}

@@ -41,14 +41,25 @@ const Home = ({page, services}) => {
                         <p>Изучите отзывы об исполнителях, сравните их условия и цены на вашу работу</p>
                     </div>
                 </div>
-                <div className={`row ${css.bg}`}>
+                <section className={`row ${css.bg}`}>
+                    <header className={'row start max '+css.blu}>
+                        <p className={css.headline}>Последние отзывы о выполненных работах</p>
+                        <a>Рекомендации по выбору исполнителя</a>
+                    </header>
                     <Comments/>
-                </div>
-                <div className="col start max">
+                </section>
+                <section className="col start max">
+                    <br/><br/>
+                    <header className={'row start '+css.blu}>
+                        <p className={css.headline}>Актуальные заказы</p>
+                        <a>Смотреть все ›</a>
+                    </header>
+                    <br/>
                     <Order/>
                     <Order/>
                     <Order/>
-                </div>
+                </section>
+                <br/><br/>
                 <div className={'col start max '+css.sv}>
                     <p className={css.headline}>Какие виды работ можно заказать?</p>
                     {services && services.map(e => (

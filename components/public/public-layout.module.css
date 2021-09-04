@@ -21,6 +21,22 @@
     color: black
 }
 
+.ft {
+    background-color: #555
+}
+
+.ft > div {
+    padding: 20px 0
+}
+
+.ft > div > * {
+    max-width: 250px;
+    color: white;
+    list-style: none;
+    line-height: 160%;
+    font-size: 0.9rem
+}
+
 .hbg {
     display: none;
 }
@@ -28,6 +44,18 @@
 @media all and (max-width: 1230px){
     .top {
         padding: 0 15px
+    }
+    .ft > div {
+        justify-content: space-around;
+        padding: 20px 15px
+    }
+}
+
+@media all and (max-width: 1050px) {
+    .ft > div > * {
+        text-align: center;
+        margin-bottom: 20px;
+        line-height: 180%
     }
 }
 
@@ -108,4 +136,5 @@
     .top > div > a {
         display: none
     }
+
 }

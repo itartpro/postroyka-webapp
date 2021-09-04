@@ -4,6 +4,22 @@
     width: 100%
 }
 
+.blu {
+    align-items: flex-end
+}
+
+.blu a {
+    color: #4DA8FE!important;
+    margin-bottom: 2px;
+    margin-left: 30px
+}
+
+.bg .blu {
+    max-width: 1100px;
+    margin-bottom: 20px;
+    justify-content: space-between
+}
+
 .hr1 {
     background-color: #E2FFE1;
     width: 100%;
@@ -70,4 +86,44 @@
 
 .sv li a:hover {
     color: #0088ff
+}
+
+@media all and (max-width: 1230px) {
+    .sv, .blu {
+        padding: 0 15px
+    }
+}
+
+@media all and (max-width: 1152px) {
+    .best {
+        min-height: initial
+    }
+    .best > div {
+        max-width: 100%;
+        padding: 15px;
+        padding-left: 60px;
+        min-height: initial;
+        background-position: 10px 15px;
+        box-shadow: none;
+        border-bottom: 1px solid #B9B9B9;
+        border-radius: 0
+    }
+    .best > div:nth-child(2) {
+        background-position: 10px -215px
+    }
+    .best > div:nth-child(3) {
+        background-position: 10px -450px;
+        border-bottom: 0
+    }
+}
+
+@media all and (max-width: 880px) {
+    .blu > *:nth-child(1) {
+        width: 100%;
+        margin-bottom: 10px
+    }
+
+    .blu > *:nth-child(2) {
+        margin-left: 0
+    }
 }
