@@ -8,12 +8,12 @@ import Link from 'next/link';
 
 const Login = () => {
 
-    const {logOut} = useContext(WsContext);
+    const {revokeJWT} = useContext(WsContext);
 
     const router = useRouter();
 
     if (router.query.hasOwnProperty('out')) {
-        logOut();
+        revokeJWT();
         window.localStorage.removeItem('User');
         router.push('/login')
     }
@@ -21,6 +21,7 @@ const Login = () => {
     const doLogin = user => {
         if (!user) return false;
         if (user.level === 9) return router.push('/admin');
+        if (user.level === 2) return router.push('/orders');
         alert('Вы уже залогинены и когда будет сделана страница профиля Вас закинет на страницу профиля')
         //return router.push('/profile/'+user.id)
     }

@@ -3,11 +3,24 @@ import {useRouter} from 'next/router';
 import css from './public-layout.module.css';
 import Link from 'next/link';
 import {toggleDown} from 'libs/sfx';
+import {useState, useEffect} from 'react';
 
-const PublicLayout = ({page, user, children, ogImage}) => {
+const PublicLayout = ({page, children, ogImage}) => {
     const {asPath} = useRouter();
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const userString = window.localStorage.getItem('User');
+        try {
+            const user = JSON.parse(userString);
+            user && setUser(user)
+        } catch (e) {
+            return false
+        }
+    }, [])
+
     return (
         <>
             <Head>
@@ -50,8 +63,17 @@ const PublicLayout = ({page, user, children, ogImage}) => {
                         <li><Link href="/for-clients"><a>Для заказчиков</a></Link></li>
                         <li><Link href="/for-masters"><a>Для мастеров</a></Link></li>
                         <li><Link href="/blog"><a>Блог</a></Link></li>
-                        <li><Link href="/login"><a>Войти</a></Link></li>
+                        {!user && <li><Link href="/login"><a>Войти</a></Link></li>}
                     </ul>
+                    {user && (
+                        <div className={css.usr}>
+                            <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
+                            <ul>
+                                <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
+                                <li><Link href="/login?out"><a>Выход</a></Link></li>
+                            </ul>
+                        </div>
+                    )}
                 </div>
             </nav>
             {children}

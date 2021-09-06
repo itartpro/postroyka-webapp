@@ -72,8 +72,7 @@ export const Login = ({loginAction}) => {
                 level: user.level,
                 avatar: user.avatar,
                 first_name: user.first_name,
-                last_name: user.last_name,
-                gender: user.gender
+                last_name: user.last_name
             };
             window.localStorage.setItem('User', JSON.stringify(essentialUserData));
             loginAction(essentialUserData)

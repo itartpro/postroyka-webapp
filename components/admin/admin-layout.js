@@ -52,7 +52,6 @@ export default function AdminLayout({children}) {
         ["/login", "Логин", <FaIdCard/>],
         ["/admin/banners", "Баннеры", <FaFileImage/>],
         ["/admin/cats", "Разделы", <FaSitemap/>],
-        ["/admin/filters", "Фильтры", <FaFilter/>],
         ["/login?out", "Выход", <FaSignOutAlt/>]
     ]
     return (

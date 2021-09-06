@@ -63,11 +63,11 @@ const Home = ({page, services}) => {
                 <div className={'col start max '+css.sv}>
                     <p className={css.headline}>Какие виды работ можно заказать?</p>
                     {services && services.map(e => (
-                        <div className="col start">
+                        <div key={'s'+e.id} className="col start">
                             <p>{e.name}</p>
                             <ul className="row start">
                                 {e.children.map(e => (
-                                    <li>
+                                    <li key={'s'+e.id}>
                                         <Link href={'/service/'+e.slug}>
                                             <a>{e.name}</a>
                                         </Link>

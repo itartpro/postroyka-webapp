@@ -13,8 +13,9 @@ export default function WsProvider(props) {
 
     //send stuff to Go
     const request = async (data, type = 'crud') => {
+        const payload = {data, type}
         if (ws && ws['readyState'] === 1) {
-            ws.send(JSON.stringify({data, type}));
+            ws.send(JSON.stringify(payload));
             return true
         }
         return false
@@ -56,7 +57,7 @@ export default function WsProvider(props) {
 
                     case "jwt-token-invalid":
                         setWsMsg({type: 'error', data: msgObj.data});
-                        logOut();
+                        revokeJWT();
                         break
 
                     case "stored-jwt-token-valid":
@@ -77,7 +78,7 @@ export default function WsProvider(props) {
         }
     }
 
-    const logOut = () => {
+    const revokeJWT = () => {
         setVerifiedJwt(false);
         window.localStorage.removeItem('AccessJWT');
         window.localStorage.removeItem('RefreshJWT');
@@ -92,7 +93,7 @@ export default function WsProvider(props) {
             debased64 = atob(storedJWT.split('.')[1])
         } catch (err) {
             setWsMsg({type: 'error', data: `error decoding ${key}: ${err}`});
-            return logOut()
+            return revokeJWT()
         }
         return JSON.parse(debased64);
     }
@@ -110,7 +111,7 @@ export default function WsProvider(props) {
         const now = new Date().getTime();
         if (exp < now) {
             setWsMsg({type: 'info', data: "Refresh token expired"});
-            return logOut()
+            return revokeJWT()
         }
         const str = window.localStorage.getItem('RefreshJWT')
         request(str, 'refresh-attempt')
@@ -146,7 +147,7 @@ export default function WsProvider(props) {
             wsMsg,
             setWsMsg,
             checkAccess,
-            logOut,
+            revokeJWT,
         }}>
             {props.children}
         </WsContext.Provider>

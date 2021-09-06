@@ -37,6 +37,34 @@
     font-size: 0.9rem
 }
 
+.usr {
+    padding: 5px 10px;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    position: relative
+}
+
+.usr ul {
+    max-height: 0;
+    transition: all .3s;
+    overflow: hidden;
+    position: absolute;
+    left: -1px;
+    top: 28px;
+    width: calc(100% + 2px);
+    background-color: white
+}
+
+.usr > ul > li {
+    margin: 0;
+    padding: 10px;
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+
+
+
 .hbg {
     display: none;
 }

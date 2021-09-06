@@ -4,15 +4,15 @@ import {translit} from 'libs/slugify';
 import {IoIosArrowDown} from 'react-icons/io';
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
-import {nowToISO, rusDateToIso, isoToLocale, nowToLocaleString, localeToISO, rusToISO} from 'libs/js-time-to-psql';
+import {nowToISO} from 'libs/js-time-to-psql';
 import {validateEmailPhoneInput} from 'libs/email-phone-input';
-import PublicLayout from "../components/public/public-layout";
-import {getRegions, getTowns, getPageBySlug, getCats} from "libs/static-rest";
-import {organizeCats} from "../libs/arrs";
-import {toggleDown} from "../libs/sfx";
+import PublicLayout from 'components/public/public-layout';
+import {getRegions, getTowns, getCats} from 'libs/static-rest';
+import {organizeCats} from 'libs/arrs';
+import {toggleDown} from 'libs/sfx';
+import {useRouter} from 'next/router';
 
 export async function getStaticProps() {
-    //const page = await getPageBySlug('blog');
     const regions = await getRegions();
     const defaultTowns = await getTowns();
     const cats = await getCats();
@@ -37,13 +37,13 @@ export async function getStaticProps() {
 }
 
 const Registration = ({regions, defaultTowns, services}) => {
-    const {wsMsg, rs, setWsMsg, request} = useContext(WsContext);
+    const {wsMsg, rs, request} = useContext(WsContext);
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
     const [regData, setRegData] = useState({});
     const [towns, setTowns] = useState(defaultTowns);
     const [chosenServices, setChosenServices] = useState([]);
-
+    const router = useRouter();
 
     //handle info from server
     useEffect(() => {
@@ -57,54 +57,76 @@ const Registration = ({regions, defaultTowns, services}) => {
         }
         if (wsMsg.type !== "info") return false;
 
-        const msg = JSON.parse(wsMsg.data);
+        let msg = null;
+        try {
+            msg = JSON.parse(wsMsg.data);
+        } catch (err) {
+            console.log("could not parse data: ",wsMsg.data, err)
+            return false;
+        }
 
         //parse towns
-        if(msg.data && msg.data.hasOwnProperty(0)) {
+        if(msg && msg.data && msg.data.hasOwnProperty(0)) {
             if(msg.data[0].hasOwnProperty('region_id')) {
                 setTowns(msg.data);
                 return true
             }
         }
 
-        //for IMMEDIATE login after registration (no email/phone check)
-        if(msg.data && msg.data.hasOwnProperty('refresh')) {
-            //TODO listen for an auth register success and send the array of
-            //chosen services to auth mini-service in the form of
-            //user id (msg.data.id) and an array of chosenServices (ex: [106, 107, 108])
-            //no need to wait for anything else, can proceed to login
+        if(msg && msg.data && msg.data.hasOwnProperty('refresh')) {
             if(msg.data.refresh === null) {
-                const instructions = {
-                    login: '',
-                    password: btoa(regData.password)
-                };
-                if(regData.email !== '') {
-                    instructions.login = btoa(regData.email)
-                } else {
-                    instructions.login = btoa(regData.phone)
-                }
-
-                //the msg.data.id and chosenServices may be sent with goData and request right bellow
-                //const goData...
-                //request(JSON...
-
-                const goData2 = {
+                //record the service ids the new master has chosen
+                const goData = {
                     address: 'auth:50003',
-                    action: 'login',
-                    instructions: JSON.stringify(instructions)
-                };
-                request(JSON.stringify(goData2), 'jwt-auth')
+                    action: 'update_service_choices',
+                    instructions: JSON.stringify({
+                        login_id: msg.data.id,
+                        service_ids: chosenServices
+                    })
+                }
+                request(JSON.stringify(goData));
+
+                //for IMMEDIATE login after registration (no email/phone check)
+                doStuffOnRegistration(msg.data)
             }
         }
         setRegData({})
     }, [rs, wsMsg]);
+
+    const doStuffOnRegistration = user => {
+        const instructions = {
+            login: '',
+            password: btoa(regData.password)
+        };
+        if(regData.email !== '') {
+            instructions.login = btoa(regData.email)
+        } else {
+            instructions.login = btoa(regData.phone)
+        }
+        const goData2 = {
+            address: 'auth:50003',
+            action: 'login',
+            instructions: JSON.stringify(instructions)
+        };
+        request(JSON.stringify(goData2), 'jwt-auth');
+        const essentialUserData = {
+            id: user.id,
+            level: user.level,
+            avatar: user.avatar,
+            first_name: user.first_name,
+            last_name: user.last_name
+        };
+        window.localStorage.setItem('User', JSON.stringify(essentialUserData));
+        if (user.level === 2) return router.push('/orders');
+    }
 
     //submit registration form
     const onSubmit = d => {
         setShowErr(null);
         d.password = translit(d.password);
         d.password_confirm = translit(d.password_confirm);
-        registerAttempt(d)
+        registerAttempt(d);
+        return false
     };
 
     //registration
@@ -126,6 +148,7 @@ const Registration = ({regions, defaultTowns, services}) => {
             last_name: d.last_name,
             paternal_name: d.paternal_name,
             email: d.email,
+            level: 2,
             phone: '',
             password: d.password,
             town_id: parseInt(d.town),
@@ -145,9 +168,7 @@ const Registration = ({regions, defaultTowns, services}) => {
             action: 'register',
             instructions: JSON.stringify(regData)
         };
-        console.log('wow you almost registered', chosenServices)
-        //TODO listen for an auth register success
-        //request(JSON.stringify(goData))
+        request(JSON.stringify(goData))
     }, [regData])
 
     //html stuff
