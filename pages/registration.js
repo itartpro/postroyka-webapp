@@ -195,6 +195,10 @@ const Registration = ({regions, defaultTowns, services}) => {
         request(JSON.stringify(goData))
     }, [regionWatch])
 
+    //TODO something when master is ALREADY in-system
+    //TODO compile new webbackend and git push along with new auth and send Alexey new database
+    //TODO reset ids in database in logins and choices
+
     return (
         <PublicLayout>
             <br/>
