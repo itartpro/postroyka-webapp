@@ -10,13 +10,13 @@ export async function getServerSideProps({params}) {
 
     return {
         props: {
-            profile,
-            id: params.id
+            profile
         }
     }
 }
 
 const Master = ({profile}) => {
+    console.log('profile: ', profile);
     return (
         <PublicLayout>
             <br/>

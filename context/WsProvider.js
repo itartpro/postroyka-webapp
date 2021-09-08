@@ -26,6 +26,7 @@ export default function WsProvider(props) {
             setRs(1);
             ws.onmessage = onMsgEv => {
                 const msgObj = JSON.parse(onMsgEv.data);
+                console.log(msgObj);
                 let parsed = [];
                 switch (msgObj.type) {
                     case "client-websocket-id":

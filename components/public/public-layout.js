@@ -64,16 +64,16 @@ const PublicLayout = ({page, children, ogImage}) => {
                         <li><Link href="/for-masters"><a>Для мастеров</a></Link></li>
                         <li><Link href="/blog"><a>Блог</a></Link></li>
                         {!user && <li><Link href="/login"><a>Войти</a></Link></li>}
+                        {user && (
+                            <li className={css.usr}>
+                                <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
+                                <ul>
+                                    <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
+                                    <li><Link href="/login?out"><a>Выход</a></Link></li>
+                                </ul>
+                            </li>
+                        )}
                     </ul>
-                    {user && (
-                        <div className={css.usr}>
-                            <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
-                            <ul>
-                                <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
-                                <li><Link href="/login?out"><a>Выход</a></Link></li>
-                            </ul>
-                        </div>
-                    )}
                 </div>
             </nav>
             {children}
