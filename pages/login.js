@@ -29,6 +29,7 @@ const Login = () => {
         const userString = window.localStorage.getItem('User');
         const JWTString = window.localStorage.getItem('AccessJWT');
         if(!userString && !JWTString) return logOut();
+
         let idFromJWT = 0;
         let debased64 = null;
         let user = {id:null};
