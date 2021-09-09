@@ -45,6 +45,24 @@ const Registration = ({regions, defaultTowns, services}) => {
     const [chosenServices, setChosenServices] = useState([]);
     const router = useRouter();
 
+    //if User is found in localstorage - kick them to their appropriate area
+    useEffect(() => {
+        const userStr = window.localStorage.getItem('User');
+        if(!userStr) return false;
+        try {
+            const user = JSON.parse(userStr);
+            if(user.level === 9) {
+                return router.push('/admin')
+            }
+            if(user.level === 2) {
+                return router.push('/orders')
+            }
+        } catch (e) {
+            window.localStorage.removeItem('User');
+            return false
+        }
+    }, [])
+
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
@@ -86,14 +104,14 @@ const Registration = ({regions, defaultTowns, services}) => {
                 }
                 request(JSON.stringify(goData));
 
-                //for IMMEDIATE login after registration (no email/phone check)
-                doStuffOnRegistration(msg.data)
+                doAfterRegistration(msg.data)
             }
         }
         setRegData({})
     }, [rs, wsMsg]);
 
-    const doStuffOnRegistration = user => {
+    //for IMMEDIATE login after registration (no email/phone check)
+    const doAfterRegistration = user => {
         const instructions = {
             login: '',
             password: btoa(regData.password)
@@ -117,7 +135,9 @@ const Registration = ({regions, defaultTowns, services}) => {
             last_name: user.last_name
         };
         window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-        if (user.level === 2) return router.push('/orders');
+        setTimeout(() => {
+            router.push('/master/'+user.id);
+        }, 1000)
     }
 
     //submit registration form
@@ -194,10 +214,6 @@ const Registration = ({regions, defaultTowns, services}) => {
         };
         request(JSON.stringify(goData))
     }, [regionWatch])
-
-    //TODO something when master is ALREADY in-system
-    //TODO compile new webbackend and git push along with new auth and send Alexey new database
-    //TODO reset ids in database in logins and choices
 
     return (
         <PublicLayout>
