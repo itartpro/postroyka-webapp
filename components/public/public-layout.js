@@ -69,7 +69,7 @@ const PublicLayout = ({page, children, ogImage}) => {
                                 <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
                                 <ul>
                                     <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
-                                    <li><Link href="/login?out"><a>Выход</a></Link></li>
+                                    <li><a href="/login?out">Выход</a></li>
                                 </ul>
                             </li>
                         )}

@@ -26,7 +26,6 @@ export default function WsProvider(props) {
             setRs(1);
             ws.onmessage = onMsgEv => {
                 const msgObj = JSON.parse(onMsgEv.data);
-                console.log(msgObj);
                 let parsed = [];
                 switch (msgObj.type) {
                     case "client-websocket-id":
@@ -58,7 +57,7 @@ export default function WsProvider(props) {
 
                     case "jwt-token-invalid":
                         setWsMsg({type: 'error', data: msgObj.data});
-                        revokeJWT();
+                        logOut();
                         break
 
                     case "stored-jwt-token-valid":
@@ -79,11 +78,11 @@ export default function WsProvider(props) {
         }
     }
 
-    const revokeJWT = () => {
+    const logOut = () => {
         setVerifiedJwt(false);
         window.localStorage.removeItem('AccessJWT');
         window.localStorage.removeItem('RefreshJWT');
-        return false
+        window.localStorage.removeItem('User')
     }
 
     const decodeJWT = key => {
@@ -94,7 +93,7 @@ export default function WsProvider(props) {
             debased64 = atob(storedJWT.split('.')[1])
         } catch (err) {
             setWsMsg({type: 'error', data: `error decoding ${key}: ${err}`});
-            return revokeJWT()
+            return logOut()
         }
         return JSON.parse(debased64);
     }
@@ -112,7 +111,7 @@ export default function WsProvider(props) {
         const now = new Date().getTime();
         if (exp < now) {
             setWsMsg({type: 'info', data: "Refresh token expired"});
-            return revokeJWT()
+            return logOut()
         }
         const str = window.localStorage.getItem('RefreshJWT')
         request(str, 'refresh-attempt')
@@ -148,7 +147,7 @@ export default function WsProvider(props) {
             wsMsg,
             setWsMsg,
             checkAccess,
-            revokeJWT,
+            logOut,
         }}>
             {props.children}
         </WsContext.Provider>

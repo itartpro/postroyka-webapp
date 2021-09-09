@@ -52,7 +52,6 @@ export default function AdminLayout({children}) {
         ["/login", "Логин", <FaIdCard/>],
         ["/admin/banners", "Баннеры", <FaFileImage/>],
         ["/admin/cats", "Разделы", <FaSitemap/>],
-        ["/login?out", "Выход", <FaSignOutAlt/>]
     ]
     return (
         <>
@@ -70,6 +69,12 @@ export default function AdminLayout({children}) {
                                     </Link>
                                 </li>
                             ))}
+                            <li>
+                                <a href="/login?out">
+                                    <span><FaSignOutAlt/></span>
+                                    <span>Выход</span>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                     <div className={css.burger} onClick={burgerFlip}>
