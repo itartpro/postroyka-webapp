@@ -12,12 +12,18 @@ const PublicLayout = ({page, children, ogImage}) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        const str = window.localStorage.getItem('User');
+        if(!str) return setUser(null);
         try {
-            setUser(JSON.parse(window.localStorage.getItem('User')))
+            const parsed = JSON.parse(str);
+            setTimeout(() => {
+                const check = window.localStorage.getItem('User');
+                if(check) setUser(parsed)
+            }, 200)
         } catch (e) {
             setUser(null)
         }
-    }, [user]);
+    }, []);
 
     return (
         <>
