@@ -7,10 +7,35 @@
     margin-top: 5px
 }
 
-.d3 {
-    max-width: 570px
+.d2 {
+    margin-left: 60px;
+    padding-top: 20px
 }
 
 .d2 h1 {
-    font-size: 1.4rem
+    font-size: 1.4rem;
+    font-weight: normal;
+    text-shadow: 0 0 0 black
 }
+
+.d2 > p:nth-child(2) {
+    color: #AAA;
+    margin: 10px 0 20px 0
+}
+
+.d2 > button {
+    color: #47CB43;
+    border: 1px solid #47CB43;
+    border-radius: 4px;
+    padding: 15px 30px;
+    background-color: transparent;
+    width: max-content;
+    margin-top: 20px;
+    transition: all .3s
+}
+
+.d2 > button:hover {
+    color: white;
+    background-color: #47CB43
+}
+
