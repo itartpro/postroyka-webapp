@@ -34,6 +34,22 @@ export const getProfileById = id => {
     })
 }
 
+export const getProfileComments = id => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-profile-comments',
+        instructions: JSON.stringify({id})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getCommentsById error:" + e + res);
+            return null
+        }
+    })
+}
+
 export const getRegions = (country_id = 1) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
