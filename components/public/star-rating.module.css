@@ -1,0 +1,10 @@
+.d1 > span {
+    color: #47CB43;
+    margin: 0 1px;
+    float: left
+}
+.d1 > p {
+    color: #47CB43;
+    float: left;
+    margin-left: 10px
+}

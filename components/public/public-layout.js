@@ -117,25 +117,6 @@ const PublicLayout = ({page, children, ogImage}) => {
                     </div>
                 </div>
             </footer>
-            <style jsx global>{`
-                @font-face {
-                    font-family: Roboto;
-                    src: url(/fonts/Roboto-Regular.ttf);
-                    font-weight: normal;
-                    font-display: swap
-                }
-                
-                @font-face {
-                    font-family: Roboto;
-                    src: url(/fonts/Roboto-Bold.ttf);
-                    font-weight: bold;
-                    font-display: swap
-                }
-                
-                * {
-                    font-family: Roboto, Arial, "Helvetica Neue", sans-serif
-                }
-            `}</style>
         </>
     )
 };
