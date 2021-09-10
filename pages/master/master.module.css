@@ -1,3 +1,16 @@
 .d1 img {
     margin-bottom: 15px
 }
+
+.d1 > p {
+    color: #AAA;
+    margin-top: 5px
+}
+
+.d3 {
+    max-width: 570px
+}
+
+.d2 h1 {
+    font-size: 1.4rem
+}
