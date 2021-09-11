@@ -1,6 +1,7 @@
 .wrap {
     position: relative;
-    overflow-x: hidden
+    overflow-x: hidden;
+    max-width: 1200px;
 }
 
 .wrap > div:nth-child(1) {

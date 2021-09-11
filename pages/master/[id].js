@@ -90,6 +90,21 @@ const Master = ({profile, comments}) => {
                         <button>Предложить заказ</button>
                     </div>
                 </div>
+                <div className={'row start '+css.tabs}>
+                    <button>Информация</button>
+                    <button>Отзывы</button>
+                    <button>Портфолио</button>
+                </div>
+                <section>
+                    <b>Об исполнителе</b>
+                    <p>{profile.about}</p>
+                </section>
+                <section>
+                    <b>Отзывы</b>
+                </section>
+                <section>
+                    <b>Портфолио</b>
+                </section>
             </main>
         </PublicLayout>
     )

@@ -71,12 +71,9 @@
 }
 
 @media all and (max-width: 1230px){
-    .top {
-        padding: 0 15px
-    }
     .ft > div {
         justify-content: space-around;
-        padding: 20px 15px
+        padding: 20px 0
     }
 }
 
