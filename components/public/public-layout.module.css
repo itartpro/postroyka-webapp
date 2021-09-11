@@ -3,11 +3,11 @@
 }
 
 .fff {
-    background-color: white;
+    background-color: white
 }
 
 .f8 {
-    background-color: #f8f8f8;
+    background-color: #f8f8f8
 }
 
 .top ul {
@@ -50,7 +50,7 @@
 }
 
 .usr > a {
-    color: #4DA8FE!important;
+    color: #4DA8FE!important
 }
 
 .usr ul {
@@ -70,11 +70,11 @@
 .usr > ul > li {
     margin: 0;
     padding: 10px;
-    border-top: 1px solid #DDD;
+    border-top: 1px solid #DDD
 }
 
 .hbg {
-    display: none;
+    display: none
 }
 
 @media all and (max-width: 1230px){
