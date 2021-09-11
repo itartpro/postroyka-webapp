@@ -1,10 +1,30 @@
-import {useEffect, useContext} from 'react';
+import {useEffect, useContext, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
+import {organizeCats} from "libs/arrs";
 
 const Scratch = () => {
     const { request, wsMsg } = useContext(WsContext);
+    const [cats, setCats] = useState([]);
 
-    //start at id 5, reset database after failures
+    //check out cats
+    useEffect(() => {
+        cats.length > 0 && console.log(cats)
+    }, [cats])
+
+    //check out incoming data
+    useEffect(() => {
+        if(!wsMsg) return false;
+        if(wsMsg.type !== "info") {
+            console.log(wsMsg);
+            return false
+        }
+        const msg = JSON.parse(wsMsg.data);
+        if(Array.isArray(msg.data)) {
+            if(msg.data[1].hasOwnProperty('created_at')) {
+                setCats(organizeCats(msg.data)[1].children)
+            }
+        }
+    }, [wsMsg]);
 
     const checkStuff = () => {
         const goData = {
@@ -14,21 +34,6 @@ const Scratch = () => {
         };
         request(JSON.stringify(goData));
     }
-
-    useEffect(() => {
-        if(!wsMsg) return false;
-        if(wsMsg.type !== "info") {
-            console.log(wsMsg);
-            return false
-        }
-        const msg = JSON.parse(wsMsg.data);
-        if(Array.isArray(msg.data)) {
-            console.log(msg.data);
-            return true
-        }
-    }, [wsMsg]);
-
-    //parent_id, name, slug, title, description, keywords, author, h1, text, image, sort_order, created_at, extra
 
     return (
         <main className={'row center'}>
