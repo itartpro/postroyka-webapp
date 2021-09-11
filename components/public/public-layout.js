@@ -6,7 +6,7 @@ import {toggleDown} from 'libs/sfx';
 import {useState, useEffect} from 'react';
 
 const PublicLayout = ({page, children, ogImage}) => {
-    const {asPath} = useRouter();
+    const router = useRouter();
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const [user, setUser] = useState(null);
@@ -24,6 +24,8 @@ const PublicLayout = ({page, children, ogImage}) => {
             setUser(null)
         }
     }, []);
+
+    const topColor = router.pathname === '/' ? css.fff : css.f8;
 
     return (
         <>
@@ -44,9 +46,9 @@ const PublicLayout = ({page, children, ogImage}) => {
                 <meta property="og:site_name" content={process.env.NEXT_PUBLIC_SITE_NAME}/>
                 <meta property="og:image" content={ogImage || "/images/logo.png"}/>
                 <meta property="og:type" content="website"/>
-                <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL + asPath}/>
+                <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL + router.asPath}/>
             </Head>
-            <nav className={`row center ${css.top}`}>
+            <nav className={`row center ${css.top} ${topColor}`}>
                 <div className={`row center bet max`}>
                     <Link href="/">
                         <a>

@@ -1,6 +1,13 @@
 .top {
-    background-color: #f8f8f8;
     min-height: 100px
+}
+
+.fff {
+    background-color: white;
+}
+
+.f8 {
+    background-color: #f8f8f8;
 }
 
 .top ul {
