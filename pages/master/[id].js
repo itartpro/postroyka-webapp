@@ -59,7 +59,7 @@ const Master = ({profile, comments}) => {
                 <div className={'row start'}>
                     <div className={'col start init center '+css.d1}>
                         <img src="/images/silhouette.jpg" alt="Мастер не добавил фото" width="150" height="150" loading="lazy"/>
-                        <StarRating rating={7}/>
+                        <StarRating rating={profile.rating}/>
                         <p>{(comments && comments.length) || 0} отзывов</p>
                     </div>
                     <div className={'col start init '+css.d2}>

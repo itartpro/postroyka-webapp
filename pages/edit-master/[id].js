@@ -1,27 +1,22 @@
 import PublicLayout from "components/public/public-layout";
-import {useState} from 'react';
 import css from "./edit.module.css";
-import {getProfileById, getProfileComments} from "../../libs/static-rest";
-import Master from "../master/[id]";
+import {getProfileById} from "libs/static-rest";
 import Link from 'next/link'
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
-    const comments = await getProfileComments(parseInt(params.id));
     delete profile['password'];
     delete profile['refresh'];
 
     return {
         props: {
-            profile,
-            comments
+            profile
         }
     }
 }
 
 const EditMaster = ({profile}) => {
     console.log(profile);
-    const [showSection, setShowSection] = useState(1)
 
     return (
         <PublicLayout>
