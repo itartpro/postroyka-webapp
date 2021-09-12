@@ -2,6 +2,8 @@ import {getProfileById, getProfileComments} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
 import StarRating from "components/public/star-rating";
+import {timeDiff, timeInRus} from "libs/time-stuff";
+import {useState} from 'react';
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
@@ -17,33 +19,9 @@ export async function getServerSideProps({params}) {
     }
 }
 
-const timeDifference = (olderStamp, newerStamp) => {
-    const diffTime = Math.abs(olderStamp - newerStamp);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const diffMonths = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30));
-    let timeOnSite = null;
-    if(diffDays < 2) timeOnSite = diffDays + ' день';
-    if(diffDays > 1 && diffDays < 4) timeOnSite = diffDays + ' дня';
-    if(diffDays > 4 && diffDays < 31) timeOnSite = diffDays + ' дней';
-    if(diffDays > 31 && diffDays < 120) timeOnSite = diffMonths + ' месяца';
-    if(diffDays > 120 && diffDays < 365) timeOnSite = diffMonths + ' месяцев';
-    if(diffDays > 365) {
-        let years = Math.floor(diffDays / 365)
-        if(years < 2) timeOnSite = '1 год';
-        if(years > 1 && years < 4) timeOnSite = years + ' года';
-        if(years > 4) timeOnSite = years + ' лет';
-        let months = Math.floor((diffDays - years * 365) / 30);
-        if(months > 0 && months < 2) timeOnSite += ' и 1 месяц';
-        if(months > 2 && months < 4) timeOnSite += ', '+months+' месяца';
-        if(months > 4) timeOnSite += ', '+months+' месяцев';
-    }
-    return timeOnSite
-}
-
 const Master = ({profile, comments}) => {
-    console.log('profile: ', profile);
     const fullName = profile.last_name + ' ' + profile.first_name + ' ' + profile.paternal_name;
-    const timeOnSite = timeDifference(Date.parse(profile.created), Date.now())
+    const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
     let legal = null;
     let company = null;
     switch(profile.legal) {
@@ -72,6 +50,7 @@ const Master = ({profile, comments}) => {
         default:
             break;
     }
+    const [showSection, setShowSection] = useState(1)
 
     return (
         <PublicLayout>
@@ -91,20 +70,26 @@ const Master = ({profile, comments}) => {
                     </div>
                 </div>
                 <div className={'row start '+css.tabs}>
-                    <button>Информация</button>
-                    <button>Отзывы</button>
-                    <button>Портфолио</button>
+                    <button onClick={() => setShowSection(1)} className={showSection === 1 ? css.on : null}>Информация</button>
+                    <button onClick={() => setShowSection(2)} className={showSection === 2 ? css.on : null}>Отзывы</button>
+                    <button onClick={() => setShowSection(3)} className={showSection === 3 ? css.on : null}>Портфолио</button>
                 </div>
-                <section>
-                    <b>Об исполнителе</b>
-                    <p>{profile.about}</p>
-                </section>
-                <section>
-                    <b>Отзывы</b>
-                </section>
-                <section>
-                    <b>Портфолио</b>
-                </section>
+                {showSection === 1 && (
+                    <section>
+                        <b>Об исполнителе</b>
+                        <p>{profile.about}</p>
+                    </section>
+                )}
+                {showSection === 2 && (
+                    <section>
+                        <b>Отзывы</b>
+                    </section>
+                )}
+                {showSection === 3 && (
+                    <section>
+                        <b>Портфолио</b>
+                    </section>
+                )}
             </main>
         </PublicLayout>
     )

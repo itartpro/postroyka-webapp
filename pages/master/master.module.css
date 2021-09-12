@@ -39,3 +39,32 @@
     background-color: #47CB43
 }
 
+.tabs {
+    margin: 40px 0 20px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #CCC
+}
+
+.tabs > button {
+    background-color: white;
+    border: none;
+    box-shadow: 0 5px 15px -5px #CCC;
+    height: 60px;
+    width: 200px;
+    max-width: 25vw;
+    transition: all .3s;
+    margin-right: 10px
+}
+
+.tabs > button:hover {
+    box-shadow: none;
+    border: 1px solid #CCC;
+}
+
+.tabs > button.on {
+    border: 1px solid #CCC;
+    transform: translateY(5px);
+    border-radius: 10px 10px 0 0;
+    box-shadow: none;
+    border-bottom: none;
+}
