@@ -228,12 +228,12 @@ export default function Update() {
                             address={'gpics:50001'}
                             action={'process'}
                             instructions={{
-                                location: 'cats/' + urlId,
+                                folder: 'cats/' + urlId,
                                 width: 320,
                                 height: 200,
                                 fit: 'Fill', //Fit or Fill (with crop)
                                 position: 'Center',
-                                newname: urlId.toString(),
+                                new_name: urlId.toString(),
                                 table: '',
                                 album_id: urlId
                             }}>
@@ -245,7 +245,7 @@ export default function Update() {
                                 action: 'delete',
                                 instructions: JSON.stringify({
                                     id: urlId,
-                                    location: 'cats/' + urlId,
+                                    folder: 'cats/' + urlId,
                                     name: dbData.image,
                                     table: 'cats'
                                 })

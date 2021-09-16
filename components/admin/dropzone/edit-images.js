@@ -11,11 +11,11 @@ export default function EditImages({ins}) {
     const {request, rs, wsMsg, setWsMsg} = useContext(WsContext);
     const [images, setImages] = useState([]);
     const [wait, setWait] = useState(false);
-    const imgApi = '/api/images/'+ins.location.split('/').join('-');
+    const imgApi = '/api/images/'+ins.folder.split('/').join('-');
 
     const readImages = () => {
         if(wait || rs !== 1) return false;
-        if(ins && ins.location && ins.table && ins.album_id) {
+        if(ins && ins.folder && ins.table && ins.album_id) {
             const instructions = {
                 table: ins.table,
                 album_id: ins.album_id
@@ -27,7 +27,7 @@ export default function EditImages({ins}) {
             };
             return request(JSON.stringify(goData));
         }
-        if(ins && !ins.table && ins.location) {
+        if(ins && !ins.table && ins.folder) {
             return fetch(imgApi)
                 .then(res => res.json())
                 .then(data => setImages(data))
@@ -87,8 +87,8 @@ export default function EditImages({ins}) {
                     <Gallery>
                         {images.map((el, i) =>
                                 <Item key={el.id || i}
-                                      original={process.env.NEXT_PUBLIC_STATIC_URL+ins.location+"/"+el.name}
-                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+ins.location+"/"+el.name}
+                                      original={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/"+el.name}
+                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/"+el.name}
                                       width={el.width || ins.width}
                                       height={el.height || ins.height}
                                 >
@@ -101,7 +101,7 @@ export default function EditImages({ins}) {
                                                 {...el}
                                                 width={el.width || ins.width}
                                                 height={el.height || ins.height}
-                                                location={ins.location}
+                                                folder={ins.folder}
                                                 table={ins.table}/>
                                         </div>
                                     )}

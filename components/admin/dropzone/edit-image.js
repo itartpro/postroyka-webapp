@@ -2,12 +2,12 @@ import css from './edit-image.module.css'
 import {useState, useEffect, useContext} from 'react'
 import {WsContext} from 'context/WsProvider'
 
-export default function EditImage({table,id,PhotoSwipe,location,alt,title,text,link,sort_order,name,width,height,removeImage,updateImage}) {
+export default function EditImage({table,id,PhotoSwipe,folder,alt,title,text,link,sort_order,name,width,height,removeImage,updateImage}) {
 
     const formData = {table,id,alt,title,text,link,sort_order}
     const {request, wsMsg, setWsMsg} = useContext(WsContext);
     const [form, setForm] = useState(formData);
-    const loc = process.env.NEXT_PUBLIC_STATIC_URL+location+"/"+name;
+    const loc = process.env.NEXT_PUBLIC_STATIC_URL+folder+"/"+name;
 
     const handleChange = e => {
         const t = e.target
@@ -32,7 +32,7 @@ export default function EditImage({table,id,PhotoSwipe,location,alt,title,text,l
         const goData = {
             address: 'gpics:50001',
             action: 'delete',
-            instructions: JSON.stringify({...form,"table":table,"location":location,"name":name})
+            instructions: JSON.stringify({...form,"table":table,"folder":folder,"name":name})
         }
         request(JSON.stringify(goData));
     }
@@ -111,7 +111,7 @@ export default function EditImage({table,id,PhotoSwipe,location,alt,title,text,l
                     <input type="submit" value="Удалить" onClick={deleteImage}/>
                 </div>
             </form>}
-            {!table && location && <input type="submit" value="Удалить" onClick={deleteImage}/>}
+            {!table && folder && <input type="submit" value="Удалить" onClick={deleteImage}/>}
         </div>
     )
 }

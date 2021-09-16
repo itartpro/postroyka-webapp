@@ -60,7 +60,7 @@ export default function Admin() {
                     goData = {
                         name: 'somefilename.jpg',
                         type: 'image/jpg',
-                        location: 'banners'
+                        folder: 'banners'
                         size: 1048576,
                         address: 'gpics:50051',
                         action: 'insert'
