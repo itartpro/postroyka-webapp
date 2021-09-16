@@ -23,11 +23,11 @@ const EditMaster = ({profile}) => {
     const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
     const initAva = profile.avatar && masterAva || '/images/silhouette.jpg';
-    const [image, setImage] = useState(initAva);
+    const [image, setImage] = useState(null);
+    useEffect(() => setImage(initAva + '?' + Date.now()), []);
 
     useEffect(() => {
         if(!wsMsg) return false;
-        console.log(wsMsg);
         if(wsMsg.type === "info") {
             if(wsMsg.data.substr(9, 5) === "gpics") {
                 const res = JSON.parse(wsMsg.data);
@@ -46,6 +46,8 @@ const EditMaster = ({profile}) => {
                     setImage(masterAva + '?' + Date.now())
                 }
             }
+        } else {
+            console.log(wsMsg.data)
         }
     }, [wsMsg])
 
@@ -58,7 +60,7 @@ const EditMaster = ({profile}) => {
                     <Link href={'/edit-portfolio/'+profile.id}><a>Портфолио</a></Link>
                 </div>
                 <div className="row bet">
-                    <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>
+                    {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
                     <p>Фото профиля не заполнено.</p>
                     <UploadProvider
                         chunkSize={1048576}
