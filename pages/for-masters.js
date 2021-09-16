@@ -33,7 +33,7 @@ const ForMasters = () => {
                 </div>
 
                 <div className={`max bet ${css.g1}`}>
-                    <h1>Возьмите заказ на раз – два</h1>
+                    <h2>Возьмите заказ на раз – два</h2>
                     <div className={`row bet`}>
                         <div>
                             <div className={`row bet ${css.ho}`}>
@@ -59,7 +59,7 @@ const ForMasters = () => {
 
                 <div className={`row`}>
                     <div className={`col bet`}>
-                        <h1>Получите заказы уже сегодня</h1>
+                        <h2>Получите заказы уже сегодня</h2>
                         <div className={`col ${css.m3}`}>
 
                             <div>

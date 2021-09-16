@@ -96,13 +96,6 @@
     margin-top: 20px
 }
 
-
-
-
-
-
-
-
 .m3 > div {
     position: relative;
 }
@@ -137,35 +130,11 @@
     font-weight: bold;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .i3 {
     padding: 70px 0 50px 0;
     margin-left: auto;
     margin-right: auto
 }
-
-
 
 @media screen and (max-width: 1200px) {
     .i2 {
@@ -177,8 +146,13 @@
         width: calc(100% - 300px)
     }
 
-    .g1 {
-        width: calc(100% - 300px);
+    .g1 h1 {
+        text-align: center
+    }
+
+    .g1, .g1 > div {
+        width: 100%;
+        justify-content: space-around
     }
 
     .g1 span img {
@@ -194,10 +168,6 @@
 
     .m1 {
         display: block;
-        width: 100%
-    }
-
-    .g1 {
         width: 100%
     }
 
@@ -247,10 +217,10 @@
 
     .g1 p:nth-child(2) {
         max-width: 100%;
-        margin: 0  0 10px 0;
+        margin: 0 0 10px 0;
     }
 
-    .g1 div:nth-child(1){
+    .g1 div:nth-child(1) {
         margin-bottom: 15px;
     }
 
