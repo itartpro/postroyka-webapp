@@ -2,8 +2,10 @@ import PublicLayout from "components/public/public-layout";
 import css from "./edit.module.css";
 import {getProfileById} from "libs/static-rest";
 import Link from 'next/link'
-import InputUpload from "../../components/input-upload";
-import UploadProvider from "../../context/UploadProvider";
+import InputUpload from "components/input-upload";
+import UploadProvider from "context/UploadProvider";
+import {useContext, useEffect, useState} from "react";
+import {WsContext} from "context/WsProvider";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
@@ -18,7 +20,19 @@ export async function getServerSideProps({params}) {
 }
 
 const EditMaster = ({profile}) => {
-    console.log(profile);
+    const {wsMsg} = useContext(WsContext);
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
+    const [image, setImage] = useState('/images/silhouette.jpg')
+
+    useEffect(() => {
+        if(!wsMsg) return false;
+        if(wsMsg.type === "info") {
+            if(wsMsg.data.substr(9, 5) === "gpics") {
+                const res = JSON.parse(wsMsg.data);
+                if(res.status && res.data.name !== "") setImage('masters/' + profile.id + '/ava.jpg')
+            }
+        }
+    }, [wsMsg])
 
     return (
         <PublicLayout>
@@ -29,7 +43,7 @@ const EditMaster = ({profile}) => {
                     <Link href={'/edit-portfolio/'+profile.id}><a>Портфолио</a></Link>
                 </div>
                 <div className="row bet">
-                    <img src="/images/silhouette.jpg" alt="Мастер не добавил фото" width="150" height="150" loading="lazy"/>
+                    <img src={image} alt="Мастер не добавил фото" width="150" height="150" loading="lazy"/>
                     <p>Фото профиля не заполнено.</p>
                     <UploadProvider
                         chunkSize={1048576}
@@ -41,10 +55,8 @@ const EditMaster = ({profile}) => {
                             width: 150,
                             height: 150,
                             fit: 'Fill', //Fit or Fill (with crop)
-                            position: 'Center',
+                            position: 'Top',
                             new_name: 'ava',
-                            table: '',
-                            album_id: profile.id,
                             copy:{
                                 folder:'masters/' + profile.id + '/mini',
                                 height:70,
