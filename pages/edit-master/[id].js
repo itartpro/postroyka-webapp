@@ -20,16 +20,31 @@ export async function getServerSideProps({params}) {
 }
 
 const EditMaster = ({profile}) => {
-    const {wsMsg} = useContext(WsContext);
+    const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
-    const [image, setImage] = useState('/images/silhouette.jpg')
+    const initAva = profile.avatar && masterAva || '/images/silhouette.jpg';
+    const [image, setImage] = useState(initAva);
 
     useEffect(() => {
         if(!wsMsg) return false;
+        console.log(wsMsg);
         if(wsMsg.type === "info") {
             if(wsMsg.data.substr(9, 5) === "gpics") {
                 const res = JSON.parse(wsMsg.data);
-                if(res.status && res.data.name !== "") setImage('masters/' + profile.id + '/ava.jpg')
+                if(res.status && res.data.name !== "") {
+                    setImage(masterAva);
+                    const goData = {
+                        address: 'auth:50003',
+                        action: 'update-cell',
+                        instructions: JSON.stringify({
+                            id: profile.id,
+                            column: "avatar",
+                            value: "true"
+                        })
+                    };
+                    request(JSON.stringify(goData));
+                    setImage(masterAva + '?' + Date.now())
+                }
             }
         }
     }, [wsMsg])
@@ -43,7 +58,7 @@ const EditMaster = ({profile}) => {
                     <Link href={'/edit-portfolio/'+profile.id}><a>Портфолио</a></Link>
                 </div>
                 <div className="row bet">
-                    <img src={image} alt="Мастер не добавил фото" width="150" height="150" loading="lazy"/>
+                    <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>
                     <p>Фото профиля не заполнено.</p>
                     <UploadProvider
                         chunkSize={1048576}
