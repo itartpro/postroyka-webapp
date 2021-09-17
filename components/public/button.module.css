@@ -1,0 +1,17 @@
+.but button {
+    display: block;
+    background: none;
+    color: #7A7A7A;
+    border: 1px solid #EBEBEB;
+    border-radius: 4px;
+    padding: 11px 30px 12px 30px;
+    margin: 0 auto;
+}
+
+.but button:hover {
+    background: #5e5e5e;
+    color: #EEEEEE;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
