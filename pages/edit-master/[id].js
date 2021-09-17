@@ -6,28 +6,48 @@ import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import UploadProvider from "context/UploadProvider";
 import {useContext, useEffect, useState} from "react";
+import {getRegions, getTowns, getCats} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
 import {BsPencil} from "react-icons/bs"
 import {useForm} from "react-hook-form";
+import {organizeCats} from "libs/arrs";
+import {IoIosArrowDown} from 'react-icons/io';
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
     delete profile['password'];
     delete profile['refresh'];
+    const regions = await getRegions();
+    const defaultTowns = await getTowns();
+    const cats = await getCats();
+    const services = organizeCats(cats)[1].children.map(e => ({
+        id: e.id,
+        parent_id: e.parent_id,
+        name: e.name,
+        children: e.children.map(c => ({
+            id: c.id,
+            parent_id: c.parent_id,
+            name: c.name
+        }))
+    }));
 
     return {
         props: {
-            profile
+            profile,
+            regions,
+            defaultTowns,
+            services
         }
     }
 }
 
-const EditMaster = ({profile}) => {
+const EditMaster = ({profile, defaultTowns, regions, services}) => {
     const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
     const initAva = profile.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
     const [edits, setEdits] = useState({name:false, contacts:false})
+    const [towns, setTowns] = useState(defaultTowns);
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
@@ -47,22 +67,37 @@ const EditMaster = ({profile}) => {
     useEffect(() => {
         if(!wsMsg) return false;
         if(wsMsg.type === "info") {
+            let msg = null;
+            try {
+                msg = JSON.parse(wsMsg.data);
+            } catch (err) {
+                console.log("could not parse data: ",wsMsg.data, err)
+                return false;
+            }
+
+            console.log(msg);
+
             //update profile image and avatar status to true upon successful avatar upload
-            if(wsMsg.data.substr(9, 5) === "gpics") {
-                const res = JSON.parse(wsMsg.data);
-                if(res.status && res.data.name !== "") {
-                    setImage(masterAva);
-                    const goData = {
-                        address: 'auth:50003',
-                        action: 'update-cell',
-                        instructions: JSON.stringify({
-                            id: profile.id,
-                            column: "avatar",
-                            value: "true"
-                        })
-                    };
-                    request(JSON.stringify(goData));
-                    setImage(masterAva + '?' + Date.now())
+            if(msg.name === "gpics" && msg.status && msg.data.name === "ava.jpg") {
+                setImage(masterAva);
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'update-cell',
+                    instructions: JSON.stringify({
+                        id: profile.id,
+                        column: "avatar",
+                        value: "true"
+                    })
+                };
+                request(JSON.stringify(goData));
+                setImage(masterAva + '?' + Date.now())
+            }
+
+            //parse towns
+            if(msg && msg.data && msg.data.hasOwnProperty(0)) {
+                if(msg.data[0].hasOwnProperty('region_id')) {
+                    setTowns(msg.data);
+                    return true
                 }
             }
         } else {
@@ -70,7 +105,18 @@ const EditMaster = ({profile}) => {
         }
     }, [wsMsg])
 
+    const regionWatch = watch('region');
+    useEffect(() => {
+        const goData = {
+            address: 'auth:50003',
+            action: 'read-towns',
+            instructions: JSON.stringify({region_id: parseInt(regionWatch)})
+        };
+        request(JSON.stringify(goData))
+    }, [regionWatch])
+
     const submitEditName = d => console.log(d)
+    const submitEditContacts = d => console.log(d)
 
     const editBackground = ({target}) => {
         const parent = target.parentElement;
@@ -165,13 +211,35 @@ const EditMaster = ({profile}) => {
                             </div>
                         ) || (
                             <div>
-                                <form style={{height:'300px'}} onSubmit={handleSubmit(submitEditName)} className={`col start ${formCSS.form}`}>
+                                <form onSubmit={handleSubmit(submitEditContacts)} className={`col start ${formCSS.form}`}>
 
-                                    <input type="text" {...register('phone', {required: true, maxLength: 40})} defaultValue={profile.phone} placeholder="Ваш телефон"/>
+                                    <input type="text" {...register('phone', {maxLength: 40})} defaultValue={profile.phone} placeholder="Ваш телефон"/>
                                     {errMsg('phone', 40)}
 
                                     <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={profile.email} placeholder="Ваш email"/>
                                     {errMsg('email', 40)}
+
+
+                                    <b>Ваш город/нас. пункт</b>
+                                    <p>Выберите Вашу область</p>
+                                    <div className={'rel '+css.sel}>
+                                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
+                                            {regions.map(e => (
+                                                <option key={e.id} value={e.id}>{e.name}</option>
+                                            ))}
+                                        </select>
+                                        <span><IoIosArrowDown/></span>
+                                    </div>
+
+                                    <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
+                                    <div className={'rel '+css.sel}>
+                                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
+                                            {towns && towns.map(e => (
+                                                <option key={e.id} value={e.id}>{e.name}</option>
+                                            ))}
+                                        </select>
+                                        <span><IoIosArrowDown/></span>
+                                    </div>
 
                                     <input type="submit" value="Изменить"/>
                                     {showErr && <small>{showErr}</small>}
