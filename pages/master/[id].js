@@ -20,7 +20,7 @@ export async function getServerSideProps({params}) {
 }
 
 const Master = ({profile, comments}) => {
-    const fullName = profile.last_name + ' ' + profile.first_name + ' ' + profile.paternal_name;
+    const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
     let legal = null;
     let company = null;

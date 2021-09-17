@@ -62,9 +62,12 @@ const Home = ({page, services}) => {
                     <Order/>
                     <Order/>
                     <Button/>
-                    <Block300/>
                 </section>
-                <br/><br/>
+                <div className="row max">
+                    <Block300/>
+                </div>
+                <br/>
+                <br/>
                 <div className={'col start max '+css.sv}>
                     <p className={css.headline}>Какие виды работ можно заказать?</p>
                     {services && services.map(e => (

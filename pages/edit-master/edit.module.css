@@ -1,7 +1,6 @@
 .tabs {
-    margin: 40px 0 20px 0;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #CCC
+    margin-top: 40px;
+    padding-bottom: 5px
 }
 
 .tabs > a {
@@ -29,4 +28,67 @@
     border-radius: 10px 10px 0 0;
     box-shadow: none;
     border-bottom: none;
+}
+
+.list {
+    border: 1px solid #CCC
+}
+
+.list > li {
+    margin: 10px 0;
+    padding: 0 15px
+}
+
+.list > li > *:first-child {
+    width: 100%;
+    max-width: 200px;
+}
+
+.list > li > div {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: max-content;
+    transition: all .3s
+}
+
+.list li > button, .ava label {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: none;
+    border-bottom: 1px dashed #4DA8FE;
+    color: #4DA8FE;
+    transition: all .3s;
+    background-color: transparent;
+    width: 70px;
+    height: 30px;
+}
+
+.list li > button:hover {
+    background-color: #4DA8FE;
+    border-radius: 4px;
+    color: white;
+}
+
+.ava img {
+    border-radius: 75px
+}
+
+.ava > label {
+    cursor: pointer;
+    overflow: hidden;
+    position: relative
+}
+
+.ava > label input {
+    position: absolute;
+    bottom: 30px
+}
+
+.list .edit {
+    background-color: #EEE;
+    padding: 15px
 }

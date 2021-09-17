@@ -232,11 +232,11 @@ const Registration = ({regions, defaultTowns, services}) => {
 
                     {legalWatch === "3" && (
                         <>
-                            <input type="text" {...register('last_name', {required: true, maxLength: 70})} placeholder="Краткое наименование (публикуется на странице)"/>
-                            {errMsg('last_name', 70)}
+                            <input type="text" {...register('first_name', {required: true, maxLength: 70})} placeholder="Краткое наименование (публикуется на странице)"/>
+                            {errMsg('first_name', 70)}
 
-                            <input type="text" {...register('paternal_name', {required: true, maxLength: 70})} placeholder="Точное полное наименование юридического лица"/>
-                            {errMsg('paternal_name', 70)}
+                            <input type="text" {...register('last_name', {required: true, maxLength: 70})} placeholder="Точное полное наименование юридического лица"/>
+                            {errMsg('last_name', 70)}
                         </>
                     ) || (
                         <>
