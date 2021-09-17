@@ -6,6 +6,7 @@ import {getCats, getPageBySlug} from 'libs/static-rest';
 import css from 'styles/home.module.css';
 import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
+import {Block300} from "../components/public/block300";
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
@@ -54,6 +55,8 @@ const Home = ({page, services}) => {
                         <p className={css.headline}>Актуальные заказы</p>
                         <a>Смотреть все ›</a>
                     </header>
+                    <br/>
+                    <Block300/>
                     <br/>
                     <Order/>
                     <Order/>
