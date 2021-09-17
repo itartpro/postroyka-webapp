@@ -31,6 +31,11 @@ export const Hero = () => {
         <div className="col start max rel">
             <div className={css.d2}>
                 <h1>Найдите мастера под Ваши работы</h1>
+                <div className={`row bet`}>
+                    <p>Мастеров онлайн: <span>312</span></p>
+                    <p>Заказов в неделю: <span>1 714</span></p>
+                    <p>Предложений в сутки: <span>615</span></p>
+                </div>
                 <form>
                     <input type="text" placeholder="Что требуется сделать?"/>
                     <input type="submit" value="Найти мастера"/>

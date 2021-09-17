@@ -20,7 +20,7 @@ const Order = () => {
                 <span>1 час 8 минут назад</span>
             </div>
         </div>
-    )
+        )
 }
 
 export default Order
