@@ -1,7 +1,7 @@
 import css from "./block300.module.css";
 
 
-export const Comment = () => {
+export const block300 = () => {
 
     return (
         <div className={`row bet ${css.bl1}`}>
