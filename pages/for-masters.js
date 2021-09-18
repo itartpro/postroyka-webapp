@@ -58,7 +58,7 @@ const ForMasters = () => {
                 </div>
 
                 <div className={`row bet`}>
-                    <div>
+                    <div className={css.m4}>
                         <h2>Вам доступен весь функционал сервиса</h2>
                         <div className={`col ${css.m3}`}>
                             <div>
