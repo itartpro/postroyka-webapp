@@ -61,54 +61,7 @@ const Registration = ({regions, defaultTowns, services}) => {
             window.localStorage.removeItem('User');
             return false
         }
-    }, [])
-
-    //handle info from server
-    useEffect(() => {
-        if (rs !== 1 || !wsMsg) return false;
-        if (wsMsg.type === "error") {
-            if(wsMsg.data.includes("duplicate user") && showErr === null) {
-                setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном");
-            }
-            setRegData({});
-            return false
-        }
-        if (wsMsg.type !== "info") return false;
-
-        let msg = null;
-        try {
-            msg = JSON.parse(wsMsg.data);
-        } catch (err) {
-            console.log("could not parse data: ",wsMsg.data, err)
-            return false;
-        }
-
-        //parse towns
-        if(msg && msg.data && msg.data.hasOwnProperty(0)) {
-            if(msg.data[0].hasOwnProperty('region_id')) {
-                setTowns(msg.data);
-                return true
-            }
-        }
-
-        if(msg && msg.data && msg.data.hasOwnProperty('refresh')) {
-            if(msg.data.refresh === null) {
-                //record the service ids the new master has chosen
-                const goData = {
-                    address: 'auth:50003',
-                    action: 'update_service_choices',
-                    instructions: JSON.stringify({
-                        login_id: msg.data.id,
-                        service_ids: chosenServices
-                    })
-                }
-                request(JSON.stringify(goData));
-
-                doAfterRegistration(msg.data)
-            }
-        }
-        setRegData({})
-    }, [rs, wsMsg]);
+    }, []);
 
     //for IMMEDIATE login after registration (no email/phone check)
     const doAfterRegistration = user => {
@@ -138,7 +91,57 @@ const Registration = ({regions, defaultTowns, services}) => {
         setTimeout(() => {
             router.push('/master/'+user.id);
         }, 1000)
-    }
+    };
+
+    //handle info from server
+    useEffect(() => {
+        if (rs !== 1 || !wsMsg) return false;
+        if (wsMsg.type === "error") {
+            if(wsMsg.data.includes("duplicate user") && showErr === null) {
+                setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном")
+            } else {
+                setShowErr(wsMsg.data)
+            }
+            setRegData({});
+            return false
+        }
+        if (wsMsg.type !== "info") return false;
+
+        let msg = null;
+        try {
+            msg = JSON.parse(wsMsg.data);
+        } catch (err) {
+            console.log("could not parse data: ",wsMsg.data, err)
+            return false;
+        }
+
+        //parse towns
+        if(msg && msg.data && msg.data.hasOwnProperty(0)) {
+            if(msg.data[0].hasOwnProperty('region_id')) {
+                setTowns(msg.data);
+                return true
+            }
+        }
+
+        //looks like the master registered and got into the database
+        if(msg && msg.data && msg.data.hasOwnProperty('refresh')) {
+            if(msg.data.refresh === null) {
+                //record the service ids the new master has chosen
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'update_service_choices',
+                    instructions: JSON.stringify({
+                        login_id: msg.data.id,
+                        service_ids: chosenServices
+                    })
+                }
+                request(JSON.stringify(goData));
+
+                doAfterRegistration(msg.data)
+            }
+        }
+        setRegData({})
+    }, [rs, wsMsg]);
 
     //submit registration form
     const onSubmit = d => {
@@ -172,6 +175,7 @@ const Registration = ({regions, defaultTowns, services}) => {
             phone: '',
             password: d.password,
             town_id: parseInt(d.town),
+            region_id: parseInt(d.region),
             created: created,
             last_online: created,
             legal: parseInt(d.legal)

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import UploadProvider from "context/UploadProvider";
 import {useContext, useEffect, useState} from "react";
-import {getRegions, getTowns, getCats} from 'libs/static-rest';
+import {getRegions, getTowns, getCats, getMastersTownAndRegion} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
 import {BsPencil} from "react-icons/bs"
 import {useForm} from "react-hook-form";
@@ -17,6 +17,8 @@ export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
     delete profile['password'];
     delete profile['refresh'];
+    //TODO
+    const townsAndRegion = getMastersTownAndRegion(profile.town_id);
     const regions = await getRegions();
     const defaultTowns = await getTowns();
     const cats = await getCats();
@@ -62,7 +64,10 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
             <small>У поля "{e.ref.placeholder || e.ref.name}" максимальная длинна {maxLength} символов</small>);
     }
 
-    useEffect(() => setImage(initAva + '?' + Date.now()), []);
+    useEffect(() => {
+        console.log(profile);
+        setImage(initAva + '?' + Date.now())
+    },[]);
 
     useEffect(() => {
         if(!wsMsg) return false;
@@ -77,25 +82,30 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
 
             console.log(msg);
 
-            //update profile image and avatar status to true upon successful avatar upload
-            if(msg.name === "gpics" && msg.status && msg.data.name === "ava.jpg") {
-                setImage(masterAva);
-                const goData = {
-                    address: 'auth:50003',
-                    action: 'update-cell',
-                    instructions: JSON.stringify({
-                        id: profile.id,
-                        column: "avatar",
-                        value: "true"
-                    })
-                };
-                request(JSON.stringify(goData));
-                setImage(masterAva + '?' + Date.now())
+            if(msg.name === "gpics") {
+                //update profile image and avatar status to true upon successful avatar upload
+                if (msg.status && msg.data.name === "ava.jpg") {
+                    setImage(masterAva);
+                    const goData = {
+                        address: 'auth:50003',
+                        action: 'update-cell',
+                        instructions: JSON.stringify({
+                            id: profile.id,
+                            column: "avatar",
+                            value: "true"
+                        })
+                    };
+                    request(JSON.stringify(goData));
+                    setImage(masterAva + '?' + Date.now())
+                } else {
+                    console.log(msg);
+                }
             }
 
-            //parse towns
-            if(msg && msg.data && msg.data.hasOwnProperty(0)) {
-                if(msg.data[0].hasOwnProperty('region_id')) {
+
+            if(msg.name === "auth") {
+                //parse towns
+                if(msg.data && msg.data.hasOwnProperty(0) && msg.data[0].hasOwnProperty('region_id')) {
                     setTowns(msg.data);
                     return true
                 }
@@ -219,10 +229,11 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                     <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={profile.email} placeholder="Ваш email"/>
                                     {errMsg('email', 40)}
 
-
+                                    <br/>
+                                    <br/>
                                     <b>Ваш город/нас. пункт</b>
                                     <p>Выберите Вашу область</p>
-                                    <div className={'rel '+css.sel}>
+                                    <div className={'rel '+formCSS.sel}>
                                         <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
                                             {regions.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
@@ -231,8 +242,9 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                         <span><IoIosArrowDown/></span>
                                     </div>
 
+                                    <br/>
                                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
-                                    <div className={'rel '+css.sel}>
+                                    <div className={'rel '+formCSS.sel}>
                                         <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
                                             {towns && towns.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
