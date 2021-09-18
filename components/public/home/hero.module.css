@@ -13,6 +13,7 @@
 }
 
 .d1 > div {
+    top: 36px;
     position: absolute;
     width: 100%;
     filter: grayscale(1);
@@ -26,6 +27,7 @@
 }
 
 .d1 > div > div {
+    padding-bottom: 30px;
     max-width: 380px;
     justify-content: flex-end;
     line-height: 140%
@@ -133,7 +135,8 @@
 
     .d1 > div {
         justify-content: space-around;
-        height: 400px
+        height: 400px;
+        top: 0
     }
 
     .d1 > div > div {
@@ -158,6 +161,7 @@
 }
 
 @media all and (max-width: 400px) {
+
     .d2 input[type=text] {
         min-height: 40px;
         text-align: center;
