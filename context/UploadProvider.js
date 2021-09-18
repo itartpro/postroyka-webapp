@@ -3,7 +3,7 @@ import {WsContext} from 'context/WsProvider'
 
 export const UploadContext = createContext(null)
 
-export default function UploadProvider(props) {
+export const UploadProvider = props => {
     const {rs, request, wsMsg, setWsMsg} = useContext(WsContext)
     const [remains, setRemains] = useState([])
     const [upload, setUpload] = useState(null)

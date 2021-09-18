@@ -8,7 +8,7 @@ import {nowToISO, isoToRusDate, rusDateToIso} from 'libs/js-time-to-psql'
 import {FaAngleDown, FaInfoCircle, FaCheck} from 'react-icons/fa'
 import Link from 'next/link'
 import {toggleDown} from 'libs/sfx'
-import UploadProvider from 'context/UploadProvider'
+import {UploadProvider} from 'context/UploadProvider'
 import {InputUpload} from 'components/input-upload'
 import dynamic from 'next/dynamic'
 import { useForm } from "react-hook-form";

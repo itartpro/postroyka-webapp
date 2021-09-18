@@ -1,6 +1,6 @@
 import DropUpload from './drop-upload'
 import EditImages from './edit-images'
-import UploadProvider from 'context/UploadProvider'
+import {UploadProvider} from 'context/UploadProvider'
 
 export default function DropImages(props) {
     return (
