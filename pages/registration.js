@@ -98,7 +98,7 @@ const Registration = ({regions, defaultTowns, services}) => {
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
         if (wsMsg.type === "error") {
-            if(wsMsg.data.includes("duplicate user") && showErr === null) {
+            if(wsMsg.data.includes("is taken") && showErr === null) {
                 setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном")
             } else {
                 setShowErr(wsMsg.data)

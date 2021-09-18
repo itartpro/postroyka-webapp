@@ -4,7 +4,7 @@ import formCSS from 'styles/forms.module.css';
 import {getProfileById} from "libs/static-rest";
 import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
-import UploadProvider from "context/UploadProvider";
+import {UploadProvider} from "context/UploadProvider";
 import {useContext, useEffect, useState} from "react";
 import {getRegions, getTowns, getCats} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
@@ -15,13 +15,13 @@ import {IoIosArrowDown} from 'react-icons/io';
 import {errMsg} from "libs/form-stuff";
 
 export async function getServerSideProps({params}) {
-    const profile = await getProfileById(parseInt(params.id));
-    delete profile['password'];
-    delete profile['refresh'];
+    const defaultProfile = await getProfileById(parseInt(params.id));
+    delete defaultProfile['password'];
+    delete defaultProfile['refresh'];
     //TODO below AND compile and upload new gowebbackend and gpics + their respective Dockerfiles + new database
     //TODO then get service choices
     const regions = await getRegions();
-    const defaultTowns = await getTowns(profile.region_id);
+    const defaultTowns = await getTowns(defaultProfile.region_id);
     const cats = await getCats();
     const services = organizeCats(cats)[1].children.map(e => ({
         id: e.id,
@@ -36,7 +36,7 @@ export async function getServerSideProps({params}) {
 
     return {
         props: {
-            profile,
+            defaultProfile,
             regions,
             defaultTowns,
             services
@@ -44,22 +44,20 @@ export async function getServerSideProps({params}) {
     }
 }
 
-const EditMaster = ({profile, defaultTowns, regions, services}) => {
+const EditMaster = ({defaultProfile, defaultTowns, regions, services}) => {
     const {wsMsg, request} = useContext(WsContext);
-    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
-    const initAva = profile.avatar && masterAva || '/images/silhouette.jpg';
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+defaultProfile.id+'/ava.jpg';
+    const initAva = defaultProfile.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
     const [edits, setEdits] = useState({name:false, contacts:false})
     const [towns, setTowns] = useState(defaultTowns);
+    const [profile, setProfile] = useState(defaultProfile)
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
 
-    useEffect(() => {
-        console.log(profile);
-        setImage(initAva + '?' + Date.now())
-    },[]);
+    useEffect(() => setImage(initAva + '?' + Date.now()),[]);
 
     useEffect(() => {
         if(!wsMsg) return false;
@@ -71,8 +69,6 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                 console.log("could not parse data: ",wsMsg.data, err)
                 return false;
             }
-
-            console.log(msg);
 
             if(msg.name === "gpics") {
                 //update profile image and avatar status to true upon successful avatar upload
@@ -117,8 +113,27 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
         request(JSON.stringify(goData))
     }, [regionWatch])
 
-    const submitEditName = d => console.log(d)
-    const submitEditContacts = d => console.log(d)
+    const submitEdit = d => {
+        const safe = {
+            about: d.about,
+            company: parseInt(d.company),
+            email: d.email,
+            last_name: d.last_name,
+            legal: parseInt(d.legal),
+            paternal_name: d.paternal_name,
+            phone: d.phone,
+            region_id: parseInt(d.region_id),
+            town_id: parseInt(d.town_id)
+        }
+        const merged = {...defaultProfile, ...safe};
+        const goData = {
+            address: 'auth:50003',
+            action: 'update-login',
+            instructions: JSON.stringify(merged)
+        };
+        request(JSON.stringify(goData));
+        setProfile(merged)
+    }
 
     const editBackground = ({target}) => {
         const parent = target.parentElement;
@@ -170,7 +185,7 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                         {!edits.name && <div><p>{fullName}</p></div>}
                         {edits.name && (
                             <div>
-                                <form onSubmit={handleSubmit(submitEditName)} className={`col start ${formCSS.form}`}>
+                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
 
                                     {profile.legal === "3" && (
                                         <>
@@ -213,7 +228,7 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                             </div>
                         ) || (
                             <div>
-                                <form onSubmit={handleSubmit(submitEditContacts)} className={`col start ${formCSS.form}`}>
+                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
 
                                     <input type="text" {...register('phone', {maxLength: 40})} defaultValue={profile.phone} placeholder="Ваш телефон"/>
                                     {errMsg(errors.phone, 40)}
@@ -226,7 +241,7 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                     <b>Ваш город/нас. пункт</b>
                                     <p>Выберите Вашу область</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue={profile.region_id}>
+                                        <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={profile.region_id}>
                                             {regions.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
@@ -237,7 +252,7 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                     <br/>
                                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})} defaultValue={profile.town_id}>
+                                        <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})} defaultValue={profile.town_id}>
                                             {towns && towns.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
