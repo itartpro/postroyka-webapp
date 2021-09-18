@@ -57,11 +57,10 @@ const ForMasters = () => {
                     </div>
                 </div>
 
-                <div className={`row`}>
-                    <div className={`col bet`}>
-                        <h2>Получите заказы уже сегодня</h2>
+                <div className={`row bet`}>
+                    <div>
+                        <h2>Вам доступен весь функционал сервиса</h2>
                         <div className={`col ${css.m3}`}>
-
                             <div>
                                 <p><span>Биржа заказов</span><br/>Отправка предложений заказчикам в любой категории выбранной Вами без ограничений.</p>
                             </div>
@@ -75,11 +74,11 @@ const ForMasters = () => {
                 </div>
                         </div>
                     </div>
-                    <img className={css.i2} src="/images/formasters/formasters.png" alt="formasters" width="572" height="477" loading="lazy"/>
+                    <img className={css.img3} src="/images/formasters/niceblock.png" alt="formasters" width="705" height="367" loading="lazy"/>
                 </div>
 
                 <section className={css.i3}>
-                    <img src="/images/we.png" width="280" height="30" alt="one" loading="lazy"/>
+                    <img src="/images/formasters/we.png" width="280" height="30" alt="one" loading="lazy"/>
                 </section>
 
             </main>

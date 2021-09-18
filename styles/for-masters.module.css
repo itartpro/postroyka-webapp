@@ -4,6 +4,7 @@
 }
 
 .m1 h1 {
+    font-size: 1.5rem;
     margin-top: 50px;
 }
 
@@ -52,14 +53,11 @@
 }
 
 .g1 {
-    margin-top: 40px
+    margin-top: 40px;
+    padding: 0;
 }
 
 .g1 img {
-    margin-bottom: 20px;
-}
-
-.g1 h1 {
     margin-bottom: 20px;
 }
 
@@ -81,7 +79,12 @@
 }
 
 .g1 {
+    margin-top: 50px;
     margin-bottom: 50px;
+}
+
+.g1 h2 {
+    margin-bottom: 20px;
 }
 
 .g1 span img {
@@ -96,13 +99,11 @@
     margin-top: 20px
 }
 
+
 .m3 > div {
     position: relative;
 }
 
-.m3 h1 {
-    margin-top: 50px;
-}
 
 .m3 > div p {
     margin-top: 20px;
@@ -130,6 +131,15 @@
     font-weight: bold;
 }
 
+
+.img3 {
+    margin: 80px 0;
+    padding: 0;
+}
+
+
+
+
 .i3 {
     padding: 70px 0 50px 0;
     margin-left: auto;
@@ -137,18 +147,21 @@
 }
 
 @media screen and (max-width: 1200px) {
+    .m1 h1 {
+        margin-top: 50px;
+        margin-bottom: 20px;
+        line-height: normal;
+    }
+
     .i2 {
         display: none;
     }
 
     .m1 {
         display: block;
-        width: calc(100% - 300px)
+        width: calc(100% - 0px)
     }
 
-    .g1 h1 {
-        text-align: center
-    }
 
     .g1, .g1 > div {
         width: 100%;
@@ -162,6 +175,16 @@
     .g1 p:nth-child(2) {
         margin: 20px 18px;
     }
+
+    .img3 {
+        display: none;
+    }
+
+    .m3 {
+        max-width: 100%;
+    }
+
+
 }
 
 @media screen and (max-width: 850px) {
@@ -185,24 +208,6 @@
         padding: 15px 15px 15px 140px
     }
 
-}
-
-
-@media screen and (max-width: 520px) {
-    .m1 h1 {
-        margin-top: 50px;
-        margin-bottom: 20px;
-        font-size: 1.5rem;
-        line-height: normal;
-    }
-
-    .g1 h1 {
-        margin-top: 50px;
-        margin-bottom: 20px;
-        font-size: 1.5rem;
-        line-height: normal;
-    }
-
     .b1 {
         margin-top: 20px;
         padding: 13px 60px 15px 60px;
@@ -210,9 +215,24 @@
         margin-left: auto;
         margin-right: auto
     }
+}
+
+
+@media screen and (max-width: 520px) {
+
+    .g1 h2 {
+        margin-top: 50px;
+        margin-bottom: 20px;
+        line-height: normal;
+    }
+
 
     .ho img {
-        margin: 0 auto
+        margin: 20px auto;
+    }
+
+    .ho p {
+        text-align: center;
     }
 
     .g1 p:nth-child(2) {
