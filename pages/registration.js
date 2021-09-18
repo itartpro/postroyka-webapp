@@ -11,6 +11,7 @@ import {getRegions, getTowns, getCats} from 'libs/static-rest';
 import {organizeCats} from 'libs/arrs';
 import {toggleDown} from 'libs/sfx';
 import {useRouter} from 'next/router';
+import {errMsg} from "libs/form-stuff";
 
 export async function getStaticProps() {
     const regions = await getRegions();
@@ -195,17 +196,6 @@ const Registration = ({regions, defaultTowns, services}) => {
         request(JSON.stringify(goData))
     }, [regData])
 
-    //html stuff
-    const errMsg = (field = '', maxLength = 0) => {
-        if (!errors || !errors[field]) return null;
-        const e = errors[field]
-        if (e.message !== "") return (<small>{e.message}</small>);
-        if (e.type === "required") return (
-            <small>Поле "{e.ref.placeholder || e.ref.name}" необходимо заполнить</small>);
-        if (e.type === "maxLength") return (
-            <small>У поля "{e.ref.placeholder || e.ref.name}" максимальная длинна {maxLength} символов</small>);
-    }
-
     const passwordWatch = watch('password');
     const legalWatch = watch('legal');
     const regionWatch = watch('region');
@@ -237,21 +227,21 @@ const Registration = ({regions, defaultTowns, services}) => {
                     {legalWatch === "3" && (
                         <>
                             <input type="text" {...register('first_name', {required: true, maxLength: 70})} placeholder="Краткое наименование (публикуется на странице)"/>
-                            {errMsg('first_name', 70)}
+                            {errMsg(errors.first_name, 70)}
 
                             <input type="text" {...register('last_name', {required: true, maxLength: 70})} placeholder="Точное полное наименование юридического лица"/>
-                            {errMsg('last_name', 70)}
+                            {errMsg(errors.last_name, 70)}
                         </>
                     ) || (
                         <>
                             <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя"/>
-                            {errMsg('first_name', 40)}
+                            {errMsg(errors.first_name, 40)}
 
                             <input type="text" {...register('last_name', {required: true, maxLength: 40})} placeholder="Ваша фамилия"/>
-                            {errMsg('last_name', 40)}
+                            {errMsg(errors.last_name, 40)}
 
                             <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество (не обязательно)"/>
-                            {errMsg('paternal_name', 40)}
+                            {errMsg(errors.paternal_name, 40)}
                         </>
                     )}
 
@@ -278,10 +268,10 @@ const Registration = ({regions, defaultTowns, services}) => {
                     </div>
 
                     <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
-                    {errMsg('email', 50)}
+                    {errMsg(errors.email, 50)}
 
                     <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
-                    {errMsg('password', 32)}
+                    {errMsg(errors.password, 32)}
 
                     <input type="password" {...register('password_confirm', {
                         required: true,
@@ -290,7 +280,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                             sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
                         }
                     })} placeholder="Повторите пароль"/>
-                    {errMsg('password_confirm', 32)}
+                    {errMsg(errors.password_confirm, 32)}
 
                     <br/>
                     <b>Выберите категории заказов которые Вам интересно выполнять</b>

@@ -6,21 +6,22 @@ import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import UploadProvider from "context/UploadProvider";
 import {useContext, useEffect, useState} from "react";
-import {getRegions, getTowns, getCats, getMastersTownAndRegion} from 'libs/static-rest';
+import {getRegions, getTowns, getCats} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
 import {BsPencil} from "react-icons/bs"
 import {useForm} from "react-hook-form";
 import {organizeCats} from "libs/arrs";
 import {IoIosArrowDown} from 'react-icons/io';
+import {errMsg} from "libs/form-stuff";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
     delete profile['password'];
     delete profile['refresh'];
-    //TODO
-    const townsAndRegion = getMastersTownAndRegion(profile.town_id);
+    //TODO below AND compile and upload new gowebbackend and gpics + their respective Dockerfiles + new database
+    //TODO then get service choices
     const regions = await getRegions();
-    const defaultTowns = await getTowns();
+    const defaultTowns = await getTowns(profile.region_id);
     const cats = await getCats();
     const services = organizeCats(cats)[1].children.map(e => ({
         id: e.id,
@@ -54,15 +55,6 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
-    const errMsg = (field = '', maxLength = 0) => {
-        if (!errors || !errors[field]) return null;
-        const e = errors[field]
-        if (e.message !== "") return (<small>{e.message}</small>);
-        if (e.type === "required") return (
-            <small>Поле "{e.ref.placeholder || e.ref.name}" необходимо заполнить</small>);
-        if (e.type === "maxLength") return (
-            <small>У поля "{e.ref.placeholder || e.ref.name}" максимальная длинна {maxLength} символов</small>);
-    }
 
     useEffect(() => {
         console.log(profile);
@@ -183,21 +175,21 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                     {profile.legal === "3" && (
                                         <>
                                             <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={profile.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
-                                            {errMsg('first_name', 70)}
+                                            {errMsg(errors.first_name, 70)}
 
                                             <input type="text" {...register('last_name', {required: true, maxLength: 70})} defaultValue={profile.last_name} placeholder="Точное полное наименование юридического лица"/>
-                                            {errMsg('last_name', 70)}
+                                            {errMsg(errors.last_name, 70)}
                                         </>
                                     ) || (
                                         <>
                                             <input type="text" {...register('first_name', {required: true, maxLength: 40})} defaultValue={profile.first_name} placeholder="Ваше имя"/>
-                                            {errMsg('first_name', 40)}
+                                            {errMsg(errors.first_name, 40)}
 
                                             <input type="text" {...register('last_name', {required: true, maxLength: 40})} defaultValue={profile.last_name} placeholder="Ваша фамилия"/>
-                                            {errMsg('last_name', 40)}
+                                            {errMsg(errors.last_name, 40)}
 
                                             <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} defaultValue={profile.paternal_name} placeholder="Ваше отчество (не обязательно)"/>
-                                            {errMsg('paternal_name', 40)}
+                                            {errMsg(errors.paternal_name, 40)}
                                         </>
                                     )}
 
@@ -224,17 +216,17 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                 <form onSubmit={handleSubmit(submitEditContacts)} className={`col start ${formCSS.form}`}>
 
                                     <input type="text" {...register('phone', {maxLength: 40})} defaultValue={profile.phone} placeholder="Ваш телефон"/>
-                                    {errMsg('phone', 40)}
+                                    {errMsg(errors.phone, 40)}
 
                                     <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={profile.email} placeholder="Ваш email"/>
-                                    {errMsg('email', 40)}
+                                    {errMsg(errors.email, 40)}
 
                                     <br/>
                                     <br/>
                                     <b>Ваш город/нас. пункт</b>
                                     <p>Выберите Вашу область</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
+                                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue={profile.region_id}>
                                             {regions.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
@@ -245,7 +237,7 @@ const EditMaster = ({profile, defaultTowns, regions, services}) => {
                                     <br/>
                                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
+                                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})} defaultValue={profile.town_id}>
                                             {towns && towns.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
