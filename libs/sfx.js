@@ -9,14 +9,15 @@ export const toggleDown = e => {
         }
         bro.style.borderBottom = 'none';
         bro.style.maxHeight = '600px';
-        return setTimeout(() => {
-            bro.style.maxHeight = 'max-content';
+        setTimeout(() => {
+            bro.style.maxHeight = 'initial';
         }, 300);
+    } else {
+        if(svg) svg.style.transform = 'initial';
+        bro.style.maxHeight = '600px';
+        setTimeout(() => {
+            bro.removeAttribute('style');
+            if(svg) svg.removeAttribute('style');
+        }, 300)
     }
-    if(svg) svg.style.transform = 'initial';
-    bro.style.maxHeight = '600px';
-    return setTimeout(() => {
-        bro.removeAttribute('style');
-        if(svg) svg.removeAttribute('style');
-    }, 300)
 }

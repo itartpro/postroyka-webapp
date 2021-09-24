@@ -55,7 +55,10 @@ const PublicLayout = ({page, children, ogImage}) => {
                             <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
                         </a>
                     </Link>
-                    <div className={'row start '+css.hbg} onClick={e => {e.target.classList.toggle(css.change);toggleDown(e)}}>
+                    <div className={'row start '+css.hbg} onClick={e => {
+                        e.target.classList.toggle(css.change);
+                        toggleDown(e)
+                    }}>
                         <div>
                             <div className={css.b1}/>
                             <div className={css.b2}/>

@@ -15,14 +15,16 @@ import {IoIosArrowDown} from 'react-icons/io';
 import {errMsg} from "libs/form-stuff";
 
 export async function getServerSideProps({params}) {
-    const defaultProfile = await getProfileById(parseInt(params.id));
-    delete defaultProfile['password'];
-    delete defaultProfile['refresh'];
+    const fromDB = await getProfileById(parseInt(params.id));
+    delete fromDB['password'];
+    delete fromDB['refresh'];
     //TODO below AND compile and upload new gowebbackend and gpics + their respective Dockerfiles + new database
     //TODO then get service choices
     const regions = await getRegions();
-    const defaultTowns = await getTowns(defaultProfile.region_id);
+    const defaultTowns = await getTowns(fromDB.region_id);
     const cats = await getCats();
+    const homeRegion = regions.find(e => e.id === fromDB.region_id).name;
+    const homeTown = defaultTowns.find(e => e.id === fromDB.town_id).name;
     const services = organizeCats(cats)[1].children.map(e => ({
         id: e.id,
         parent_id: e.parent_id,
@@ -36,26 +38,32 @@ export async function getServerSideProps({params}) {
 
     return {
         props: {
-            defaultProfile,
+            fromDB,
             regions,
             defaultTowns,
-            services
+            services,
+            homeRegion,
+            homeTown
         }
     }
 }
 
-const EditMaster = ({defaultProfile, defaultTowns, regions, services}) => {
+const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTown}) => {
     const {wsMsg, request} = useContext(WsContext);
-    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+defaultProfile.id+'/ava.jpg';
-    const initAva = defaultProfile.avatar && masterAva || '/images/silhouette.jpg';
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+fromDB.id+'/ava.jpg';
+    const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
-    const [edits, setEdits] = useState({name:false, contacts:false})
+    const [edits, setEdits] = useState({name:false, contacts:false, about: false})
     const [towns, setTowns] = useState(defaultTowns);
-    const [profile, setProfile] = useState(defaultProfile)
+    const [profile, setProfile] = useState(fromDB);
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
+
+    useEffect(() => {
+        console.log(edits);
+    }, [edits])
 
     useEffect(() => setImage(initAva + '?' + Date.now()),[]);
 
@@ -114,24 +122,21 @@ const EditMaster = ({defaultProfile, defaultTowns, regions, services}) => {
     }, [regionWatch])
 
     const submitEdit = d => {
-        const safe = {
-            about: d.about,
-            company: parseInt(d.company),
-            email: d.email,
-            last_name: d.last_name,
-            legal: parseInt(d.legal),
-            paternal_name: d.paternal_name,
-            phone: d.phone,
-            region_id: parseInt(d.region_id),
-            town_id: parseInt(d.town_id)
-        }
-        const merged = {...defaultProfile, ...safe};
+        if(d.company) d.company = parseInt(d.company);
+        if(d.legal) d.legal = parseInt(d.legal);
+        if(d.region_id) d.region_id = parseInt(d.region_id);
+        if(d.town_id) d.town_id = parseInt(d.town_id);
+
+        const merged = {...fromDB, ...d};
         const goData = {
             address: 'auth:50003',
             action: 'update-login',
             instructions: JSON.stringify(merged)
         };
         request(JSON.stringify(goData));
+        if(d.town_id || d.region_id) {
+            location.reload();
+        }
         setProfile(merged)
     }
 
@@ -223,8 +228,9 @@ const EditMaster = ({defaultProfile, defaultTowns, regions, services}) => {
                         <b>Контакты</b>
                         {!edits.contacts && (
                             <div>
-                                {profile.phone && <p>{profile.phone}</p>}
+                                {profile.phone && <p>{profile.phone},</p>}
                                 {profile.email && <p>{profile.email}</p>}
+                                {<p>{homeRegion}, {homeTown}</p>}
                             </div>
                         ) || (
                             <div>
@@ -271,7 +277,26 @@ const EditMaster = ({defaultProfile, defaultTowns, regions, services}) => {
                             setEdits({...edits});
                         }}><BsPencil/> Ред.</button>
                     </li>
-                    <li className="row center bet"><hr/></li>
+                    <li className="row center bet">
+                        <b>О себе</b>
+                        {!edits.about && <div>{profile.about || "\"О себе\" не заполнено"}</div>}
+                        {edits.about && (
+                            <div>
+                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                    <textarea {...register('about', {maxLength: 2000})} defaultValue={profile.about || ""} placeholder="Напишите о себе"/>
+                                    {errMsg(errors.about, 2000)}
+
+                                    <input type="submit" value="Изменить"/>
+                                    {showErr && <small>{showErr}</small>}
+                                </form>
+                            </div>
+                        )}
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.about = edits.about === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
+                    </li>
                 </ul>
             </main>
         </PublicLayout>
