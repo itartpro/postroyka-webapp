@@ -243,9 +243,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                 <ul className={css.list}>
                     <li className={'row center bet '+css.ava}>
                         <b>{image && 'Изменить фото профиля' || 'Фото профиля не загружено'}</b>
-                        <div>
-                            {image && <img src={image} alt={user.first_name} width="150" height="150" loading="lazy"/>}
-                        </div>
                         <label htmlFor="ava_upload">
                             <BsPencil/> Ред.
                             <UploadProvider
@@ -269,9 +266,17 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 <InputUpload name="avatar" id="ava_upload" multiple={false}/>
                             </UploadProvider>
                         </label>
+                        <div>
+                            {image && <img src={image} alt={user.first_name} width="150" height="150" loading="lazy"/>}
+                        </div>
                     </li>
                     <li className="row center bet">
                         <b>ФИО и юр. статус</b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.name = edits.name === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
                         {!edits.name && <div><p>{fullName}, {legal(user.legal)}</p></div>}
                         {edits.name && (
                             <div>
@@ -311,14 +316,14 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 </form>
                             </div>
                         )}
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.name = edits.name === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
                     </li>
                     <li className="row center bet">
                         <b>Контакты</b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.contacts = edits.contacts === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
                         {!edits.contacts && (
                             <div>
                                 {user.phone && <p>{user.phone},</p>}
@@ -364,14 +369,14 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 </form>
                             </div>
                         )}
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.contacts = edits.contacts === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
                     </li>
                     <li className="row center bet">
                         <b>О себе</b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.about = edits.about === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
                         {!edits.about && <div>{user.about || "\"О себе\" не заполнено"}</div>}
                         {edits.about && (
                             <div>
@@ -384,14 +389,20 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 </form>
                             </div>
                         )}
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.about = edits.about === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
                     </li>
                     <li className="row center bet">
                         <b>Выбранные специализации</b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            if(edits.choices === false) {
+                                setClickedServices(choices);
+                                edits.choices = true;
+                            } else {
+                                setClickedServices([]);
+                                edits.choices = false;
+                            }
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
                         {!edits.choices && (
                             <div>
                                 <ul className={'col start'}>
@@ -444,20 +455,14 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 </form>
                             </div>
                         )}
-                        <button onClick={e => {
-                            editBackground(e);
-                            if(edits.choices === false) {
-                                setClickedServices(choices);
-                                edits.choices = true;
-                            } else {
-                                setClickedServices([]);
-                                edits.choices = false;
-                            }
-                            setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
                     </li>
                     <li className="row center bet">
                         <b>Состав бригады</b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.company = edits.company === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
                         {!edits.company && <div><p>{company(parseInt(user.company))}</p></div>}
                         {edits.company && (
                             <div>
@@ -476,11 +481,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 </form>
                             </div>
                         )}
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.company = edits.company === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
                     </li>
                 </ul>
             </main>

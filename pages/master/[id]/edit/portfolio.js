@@ -30,7 +30,7 @@ const Portfolio = ({fromDB}) => {
                     <a className={css.on}>Портфолио</a>
                 </div>
                 <div className={css.list}>
-                    <h1>Уже очень скоро я начну разработку редактирования портфолио мастера</h1>
+                    <h1>Редактирование портфолио мастера здесь</h1>
                 </div>
             </main>
         </PublicLayout>

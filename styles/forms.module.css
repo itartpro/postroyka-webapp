@@ -123,6 +123,10 @@
     transform: rotate(45deg)
 }
 
+.form li a > svg {
+    pointer-events: none
+}
+
 .form > b {
     margin-top: 10px;
     font-size: 1.2rem

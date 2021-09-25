@@ -3,11 +3,13 @@ import {getCats, getMastersChoices, getProfileById} from "libs/static-rest";
 import {organizeCats} from "libs/arrs";
 import css from "./edit.module.css";
 import Link from 'next/link';
-import {useState} from "react";
+import {useState, useContext, useEffect} from "react";
 import formCSS from "styles/forms.module.css";
 import {toggleDown} from "libs/sfx";
 import {useForm} from "react-hook-form";
 import {IoIosArrowDown} from 'react-icons/io';
+import {WsContext} from "context/WsProvider";
+import {ShowMessage} from "components/show-message";
 
 export async function getServerSideProps({params}) {
     const fromDB = await getProfileById(parseInt(params.id)).then(e => {
@@ -64,21 +66,50 @@ export async function getServerSideProps({params}) {
 const ServicePrices = ({fromDB, services, choices}) => {
     const [user, setUser] = useState(fromDB);
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const {wsMsg, request} = useContext(WsContext);
+    const [showMsg, setShowMsg] = useState(null);
 
     const updateChoicePrices = d => {
-
+        const choice = [];
         for(let i in d) {
-            console.log(d[i])
+            let price = parseInt(d[i]);
+            if(price > 0) {
+                choice.push({
+                    login_id: fromDB.id,
+                    service_id: parseInt(i),
+                    price: price,
+                    parent: false
+                })
+            }
         }
         const goData = {
             address: 'auth:50003',
             action: 'update-service-prices',
-            instructions: JSON.stringify([])
+            instructions: JSON.stringify(choice)
         }
-        //request(JSON.stringify(goData));
+        request(JSON.stringify(goData));
     }
 
-    console.log(choices)
+    useEffect(() => {
+        if(!wsMsg) return false;
+        if(wsMsg.type === "info") {
+            let msg = null;
+            try {
+                msg = JSON.parse(wsMsg.data);
+            } catch (err) {
+                console.log("could not parse data: ",wsMsg.data, err)
+                return false;
+            }
+
+            if(msg.name === "auth") {
+                if(msg.status && msg.data === 'update-service-prices') {
+                    setShowMsg("Обновлены цены")
+                }
+            }
+        } else {
+            console.log(wsMsg.data)
+        }
+    }, [wsMsg])
 
     return (
         <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
@@ -109,9 +140,11 @@ const ServicePrices = ({fromDB, services, choices}) => {
                                 </li>
                             )))}
                         </ul>
-                        <input type="submit" value="Изменить"/>
+                        <div className="row"><input type="submit" value="Изменить"/></div>
+                        <br/>
                     </form>
                 </div>
+                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
             </main>
         </PublicLayout>
     )
