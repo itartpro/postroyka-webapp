@@ -1,7 +1,8 @@
 export const toggleDown = e => {
-    const bro = e.target.nextElementSibling;
+    let el = e.target || e;
+    let bro = el.nextElementSibling;
     const check = bro.getAttribute('style');
-    const svg = e.target.querySelector('svg');
+    const svg = el.querySelector('svg');
     if(!check) {
         if(svg) {
             svg.style.transition = 'all .3s';

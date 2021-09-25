@@ -22,7 +22,7 @@ export const getProfileById = id => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-profile',
-        instructions: JSON.stringify({id})
+        instructions: JSON.stringify({id:parseInt(id)})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);
@@ -34,11 +34,27 @@ export const getProfileById = id => {
     })
 }
 
+export const getMastersChoices = id => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'masters-choices',
+        instructions: JSON.stringify({id:parseInt(id)})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getMastersChoices error:" + e + res);
+            return null
+        }
+    })
+}
+
 export const getProfileComments = id => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-profile-comments',
-        instructions: JSON.stringify({id})
+        instructions: JSON.stringify({id:parseInt(id)})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);
@@ -54,7 +70,7 @@ export const getRegions = (country_id = 1) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'read-regions',
-        instructions: JSON.stringify({country_id})
+        instructions: JSON.stringify({country_id:parseInt(country_id)})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);
@@ -70,7 +86,7 @@ export const getTowns = (region_id = 1) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'read-towns',
-        instructions: JSON.stringify({region_id})
+        instructions: JSON.stringify({region_id:parseInt(region_id)})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);

@@ -1,0 +1,45 @@
+.d1 {
+    position: fixed;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 15px 15px 30px #cacaca, -15px -15px 30px white;
+    line-height: 160%;
+    padding: 30px 40px;
+    border-radius: 15px;
+    margin: 20px auto;
+    word-break: break-word;
+}
+
+.d1 p {
+    text-align: center
+}
+
+.d1 span {
+    position: absolute;
+    color: red;
+    background: #eee;
+    padding: 0 6px;
+    border-radius: 12px;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px #777, inset 0 0 5px #DDD;
+    cursor: pointer;
+    top: 10px;
+    right: 10px;
+    transition: all .3s
+}
+.d1 span:hover {
+    background: #AAA;
+    color: white;
+    box-shadow: 0 0 5px #777
+}
+
+.red {
+    background: #f0a2a2
+}
+
+.green {
+    background: #9dea9d
+}

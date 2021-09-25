@@ -116,3 +116,43 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg)
 }
+
+.form > b {
+    margin-top: 10px;
+    font-size: 1.2rem
+}
+.form > p {
+    margin: 10px 0 2px 0;
+    color: #777
+}
+
+.form ul {
+    list-style: none
+}
+
+.form > ul {
+    margin-top: 10px
+}
+
+.form ul li a {
+    display: block;
+    width: 100%
+}
+
+.form > ul > li > a {
+    padding: 15px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #DDD
+}
+
+.form > ul ul {
+    transition: all .3s;
+    max-height: 0;
+    background: white;
+    overflow: hidden
+}
+
+.form > ul ul li {
+    border-bottom: 1px solid #DDD;
+    padding: 10px
+}

@@ -1,31 +1,32 @@
 import PublicLayout from "components/public/public-layout";
 import css from "./edit.module.css";
 import formCSS from 'styles/forms.module.css';
-import {getProfileById} from "libs/static-rest";
 import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import {UploadProvider} from "context/UploadProvider";
-import {useContext, useEffect, useState} from "react";
-import {getRegions, getTowns, getCats} from 'libs/static-rest';
+import {useContext, useEffect, useState, useRef} from "react";
+import {getProfileById, getRegions, getTowns, getCats, getMastersChoices} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
 import {BsPencil} from "react-icons/bs"
 import {useForm} from "react-hook-form";
 import {organizeCats} from "libs/arrs";
 import {IoIosArrowDown} from 'react-icons/io';
 import {errMsg} from "libs/form-stuff";
+import {toggleDown} from "libs/sfx";
+import {ShowMessage} from "components/show-message";
 
 export async function getServerSideProps({params}) {
-    const fromDB = await getProfileById(parseInt(params.id));
-    delete fromDB['password'];
-    delete fromDB['refresh'];
-    //TODO below AND compile and upload new gowebbackend and gpics + their respective Dockerfiles + new database
-    //TODO then get service choices
+    const fromDB = await getProfileById(parseInt(params.id)).then(e => {
+        delete e['password'];
+        delete e['refresh'];
+        return e;
+    });
+    const choices = await getMastersChoices(params.id).then(e => e.map(e => e['service_id']));
     const regions = await getRegions();
     const defaultTowns = await getTowns(fromDB.region_id);
-    const cats = await getCats();
     const homeRegion = regions.find(e => e.id === fromDB.region_id).name;
     const homeTown = defaultTowns.find(e => e.id === fromDB.town_id).name;
-    const services = organizeCats(cats)[1].children.map(e => ({
+    const services = await getCats().then(cats => organizeCats(cats)[1].children.map(e => ({
         id: e.id,
         parent_id: e.parent_id,
         name: e.name,
@@ -34,7 +35,7 @@ export async function getServerSideProps({params}) {
             parent_id: c.parent_id,
             name: c.name
         }))
-    }));
+    })));
 
     return {
         props: {
@@ -43,29 +44,52 @@ export async function getServerSideProps({params}) {
             defaultTowns,
             services,
             homeRegion,
-            homeTown
+            homeTown,
+            choices
         }
     }
 }
 
-const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTown}) => {
+const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown}) => {
     const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+fromDB.id+'/ava.jpg';
     const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
-    const [edits, setEdits] = useState({name:false, contacts:false, about: false})
+    const [edits, setEdits] = useState({name:false, contacts:false, about: false, choices: false, company:false})
     const [towns, setTowns] = useState(defaultTowns);
     const [profile, setProfile] = useState(fromDB);
+    const [clickedServices, setClickedServices] = useState([]);
+    const [chosenServices, setChosenServices] = useState([])
+    const simulateClick = useRef([]);
+    const [showMsg, setShowMsg] = useState(null);
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
 
     useEffect(() => {
-        console.log(edits);
-    }, [edits])
+        simulateClick.current.forEach((e, i) => {
+            if(clickedServices.includes(i)) {
+                const ul = e.parentElement;
+                if(!ul.hasAttribute('style')) {
+                    toggleDown(ul.previousElementSibling);
+                }
+            }
+        })
+    }, [clickedServices])
 
-    useEffect(() => setImage(initAva + '?' + Date.now()),[]);
+    useEffect(() => {
+        setImage(initAva + '?' + Date.now());
+        if(choices.length > 0) {
+            const chosen = [];
+            services.forEach(e => {
+                e.children.forEach(c => {
+                    choices.includes(c.id) && chosen.push(c.name)
+                })
+            });
+            setChosenServices(chosen)
+        }
+    },[]);
 
     useEffect(() => {
         if(!wsMsg) return false;
@@ -98,12 +122,19 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTo
                 }
             }
 
-
             if(msg.name === "auth") {
                 //parse towns
                 if(msg.data && msg.data.hasOwnProperty(0) && msg.data[0].hasOwnProperty('region_id')) {
                     setTowns(msg.data);
                     return true
+                }
+
+                if(msg.status && msg.data === 'updated successfully') {
+                    setShowMsg("Успешно обновлены данные")
+                }
+
+                if(msg.status && msg.data === 'update_service_choices') {
+                    setShowMsg("Обновлены выбранные специализации")
                 }
             }
         } else {
@@ -140,11 +171,64 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTo
         setProfile(merged)
     }
 
+    const updateChoices = d => {
+        const serviceIds = d.services.map(e => parseInt(e));
+        const goData = {
+            address: 'auth:50003',
+            action: 'update_service_choices',
+            instructions: JSON.stringify({
+                login_id: parseInt(fromDB.id),
+                service_ids: serviceIds
+            })
+        }
+        request(JSON.stringify(goData));
+    }
+
     const editBackground = ({target}) => {
         const parent = target.parentElement;
         parent.classList.toggle(css.edit)
     }
 
+    const company = e => {
+        let company = '';
+        switch(e) {
+            case 1:
+                company = 'мастер работает один'
+                break;
+            case 2:
+                company = 'бригада 3-4 человека'
+                break;
+            case 3:
+                company = 'бригада 5-20 человека'
+                break;
+            case 4:
+                company = 'бригада более 20 человек'
+                break;
+            default:
+                break;
+        }
+        return company
+    }
+
+    const legal = e => {
+        let legal = '';
+        switch(e) {
+            case 1:
+                legal = 'Частное лицо'
+                break;
+            case 2:
+                legal = 'ИП'
+                break;
+            case 3:
+                legal = 'Юридическое лицо'
+                break;
+            default:
+                break;
+        }
+        return legal
+    }
+
+    const legalWatch = watch('legal');
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
 
     return (
@@ -153,6 +237,7 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTo
             <main className="col start max">
                 <div className={'row start '+css.tabs}>
                     <a className={css.on}>Информация</a>
+                    <Link href={'/edit-services/'+profile.id}><a>Услуги и цены</a></Link>
                     <Link href={'/edit-portfolio/'+profile.id}><a>Портфолио</a></Link>
                 </div>
                 <ul className={css.list}>
@@ -186,13 +271,21 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTo
                         </label>
                     </li>
                     <li className="row center bet">
-                        <b>ФИО</b>
-                        {!edits.name && <div><p>{fullName}</p></div>}
+                        <b>ФИО и юр. статус</b>
+                        {!edits.name && <div><p>{fullName}, {legal(profile.legal)}</p></div>}
                         {edits.name && (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                    <div className={'rel '+formCSS.sel}>
+                                        <select {...register('legal', {required: true})} defaultValue={profile.legal}>
+                                            <option value="1">{legal(1)}</option>
+                                            <option value="2">{legal(2)}</option>
+                                            <option value="3">{legal(3)}</option>
+                                        </select>
+                                        <span><IoIosArrowDown/></span>
+                                    </div>
 
-                                    {profile.legal === "3" && (
+                                    {legalWatch === "3" && (
                                         <>
                                             <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={profile.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
                                             {errMsg(errors.first_name, 70)}
@@ -297,8 +390,101 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, homeRegion, homeTo
                             setEdits({...edits});
                         }}><BsPencil/> Ред.</button>
                     </li>
+                    <li className="row center bet">
+                        <b>Выбранные специализации</b>
+                        {!edits.choices && (
+                            <div>
+                                <ul className={'col start'}>
+                                    <li><b>Выбранные специализации</b></li>
+                                    {chosenServices.length > 0 && chosenServices.map((e,i) => <li key={'cn'+i}>{e}</li>)}
+                                </ul>
+                            </div>
+                        )}
+                        {edits.choices && (
+                            <div>
+                                <form onSubmit={handleSubmit(updateChoices)} className={`col start ${formCSS.form}`}>
+                                    <ul className={'col start'}>
+                                        {services && services.map(parent => (
+                                            <li key={'s'+parent.id}>
+                                                <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
+                                                <ul className={`row start`}>
+                                                    {parent.children.map(e => (
+                                                        <li ref={el => simulateClick.current[e.id] = el} key={'s'+e.id}>
+                                                            <label htmlFor={'srv_'+e.id} className={formCSS.check}>
+                                                                {e.name}
+                                                                <input
+                                                                    id={'srv_'+e.id} type="checkbox"
+                                                                    {...register('services')}
+                                                                    defaultChecked={clickedServices.includes(e.id)}
+                                                                    value={e.id}
+                                                                    onClick={ev => {
+                                                                        if(ev.target.checked) {
+                                                                            if(!clickedServices.includes(e.id)) {
+                                                                                clickedServices.push(e.id);
+                                                                                setClickedServices([...clickedServices])
+                                                                            }
+                                                                        } else {
+                                                                            if(clickedServices.includes(e.id)) {
+                                                                                const newArr = clickedServices.filter(el => el !== e.id);
+                                                                                setClickedServices([...newArr])
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <span></span>
+                                                            </label>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <input type="submit" value="Изменить"/>
+                                    {showErr && <small>{showErr}</small>}
+                                </form>
+                            </div>
+                        )}
+                        <button onClick={e => {
+                            editBackground(e);
+                            if(edits.choices === false) {
+                                setClickedServices(choices);
+                                edits.choices = true;
+                            } else {
+                                setClickedServices([]);
+                                edits.choices = false;
+                            }
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
+                    </li>
+                    <li className="row center bet">
+                        <b>Состав бригады</b>
+                        {!edits.company && <div><p>{company(parseInt(profile.company))}</p></div>}
+                        {edits.company && (
+                            <div>
+                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                    <div className={'rel '+formCSS.sel}>
+                                        <select {...register('company', {required: true})} defaultValue={profile.company}>
+                                            <option value="1">{company(1)}</option>
+                                            <option value="2">{company(2)}</option>
+                                            <option value="3">{company(3)}</option>
+                                            <option value="4">{company(4)}</option>
+                                        </select>
+                                        <span><IoIosArrowDown/></span>
+                                    </div>
+                                    <input type="submit" value="Изменить"/>
+                                    {showErr && <small>{showErr}</small>}
+                                </form>
+                            </div>
+                        )}
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.company = edits.company === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
+                    </li>
                 </ul>
             </main>
+            {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
         </PublicLayout>
     )
 }

@@ -72,19 +72,21 @@ const PublicLayout = ({page, children, ogImage}) => {
                         <li><Link href="/for-clients"><a>Для заказчиков</a></Link></li>
                         <li><Link href="/for-masters"><a>Для мастеров</a></Link></li>
                         <li><Link href="/blog"><a>Блог</a></Link></li>
-                        {!user && <li><Link href="/login"><a>Войти</a></Link></li>}
-                        {user && (
-                            <li className={css.usr}>
-                                <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
-                                {user.level === 2 && (
-                                    <ul>
-                                        <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
-                                        <li><Link href={'/edit-master/'+user.id}><a>Настройки</a></Link></li>
-                                        <li><a href="/login?out">Выход</a></li>
-                                    </ul>
-                                )}
-                            </li>
-                        )}
+                        <li className={user && css.usr}>
+                            {!user && <Link href="/login"><a>Войти</a></Link>}
+                            {user && (
+                                <>
+                                    <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
+                                    {user.level === 2 && (
+                                        <ul>
+                                            <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
+                                            <li><Link href={'/edit-master/'+user.id}><a>Настройки</a></Link></li>
+                                            <li><a href="/login?out">Выход</a></li>
+                                        </ul>
+                                    )}
+                                </>
+                            )}
+                        </li>
                     </ul>
                 </div>
             </nav>

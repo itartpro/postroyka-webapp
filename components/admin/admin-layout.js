@@ -3,7 +3,6 @@ import Link from 'next/link'
 import {useEffect, useState, useContext, useRef} from 'react'
 import {useRouter} from 'next/router'
 import {WsContext} from 'context/WsProvider'
-import ShowMessage from '../show-message'
 import {FaFlag, FaHome, FaIdCard, FaFileImage, FaSitemap, FaSignOutAlt, FaFilter} from 'react-icons/fa'
 import NotFound from '../not-found'
 
@@ -86,7 +85,6 @@ export default function AdminLayout({children}) {
                     </div>
                     <main className={'col start ' + css.main} ref={mainRef}>
                         {children}
-                        { msgText && <ShowMessage {...msgProps} msgType={msgType}/> }
                     </main>
                     <style global jsx>{`
                       body, nav {
