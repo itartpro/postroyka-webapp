@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {toggleDown} from 'libs/sfx';
 import {useState, useEffect} from 'react';
 
-const PublicLayout = ({page, children, ogImage}) => {
+const PublicLayout = ({page, children, ogImage, loginName}) => {
     const router = useRouter();
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -72,15 +72,15 @@ const PublicLayout = ({page, children, ogImage}) => {
                         <li><Link href="/for-clients"><a>Для заказчиков</a></Link></li>
                         <li><Link href="/for-masters"><a>Для мастеров</a></Link></li>
                         <li><Link href="/blog"><a>Блог</a></Link></li>
-                        <li className={user && css.usr}>
-                            {!user && <Link href="/login"><a>Войти</a></Link>}
+                        <li className={(loginName || user) && css.usr}>
+                            {!user && <Link href="/login"><a>{loginName || 'Войти'}</a></Link>}
                             {user && (
                                 <>
-                                    <a role="button" onClick={toggleDown}>{user.first_name + ' ' + user.last_name}</a>
+                                    <a role="button" onClick={toggleDown}>{loginName || (user.first_name + ' ' + user.last_name)}</a>
                                     {user.level === 2 && (
                                         <ul>
                                             <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
-                                            <li><Link href={'/edit-master/'+user.id}><a>Настройки</a></Link></li>
+                                            <li><Link href={'/master/'+user.id+'/edit/info'}><a>Настройки</a></Link></li>
                                             <li><a href="/login?out">Выход</a></li>
                                         </ul>
                                     )}

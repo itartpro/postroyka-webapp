@@ -130,7 +130,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                 //record the service ids the new master has chosen
                 const goData = {
                     address: 'auth:50003',
-                    action: 'update_service_choices',
+                    action: 'update-service-choices',
                     instructions: JSON.stringify({
                         login_id: msg.data.id,
                         service_ids: chosenServices

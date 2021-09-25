@@ -50,14 +50,14 @@ export async function getServerSideProps({params}) {
     }
 }
 
-const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown}) => {
+const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown}) => {
     const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+fromDB.id+'/ava.jpg';
     const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
     const [edits, setEdits] = useState({name:false, contacts:false, about: false, choices: false, company:false})
     const [towns, setTowns] = useState(defaultTowns);
-    const [profile, setProfile] = useState(fromDB);
+    const [user, setUser] = useState(fromDB);
     const [clickedServices, setClickedServices] = useState([]);
     const [chosenServices, setChosenServices] = useState([])
     const simulateClick = useRef([]);
@@ -110,7 +110,7 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                         address: 'auth:50003',
                         action: 'update-cell',
                         instructions: JSON.stringify({
-                            id: profile.id,
+                            id: user.id,
                             column: "avatar",
                             value: "true"
                         })
@@ -133,7 +133,7 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                     setShowMsg("Успешно обновлены данные")
                 }
 
-                if(msg.status && msg.data === 'update_service_choices') {
+                if(msg.status && msg.data === 'update-service-choices') {
                     setShowMsg("Обновлены выбранные специализации")
                 }
             }
@@ -168,14 +168,14 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
         if(d.town_id || d.region_id) {
             location.reload();
         }
-        setProfile(merged)
+        setUser(merged)
     }
 
     const updateChoices = d => {
         const serviceIds = d.services.map(e => parseInt(e));
         const goData = {
             address: 'auth:50003',
-            action: 'update_service_choices',
+            action: 'update-service-choices',
             instructions: JSON.stringify({
                 login_id: parseInt(fromDB.id),
                 service_ids: serviceIds
@@ -229,22 +229,22 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
     }
 
     const legalWatch = watch('legal');
-    const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
+    const fullName = user.last_name + ' ' + user.first_name + (user.paternal_name && ' ' + user.paternal_name);
 
     return (
-        <PublicLayout>
+        <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
             <br/>
             <main className="col start max">
                 <div className={'row start '+css.tabs}>
                     <a className={css.on}>Информация</a>
-                    <Link href={'/edit-services/'+profile.id}><a>Услуги и цены</a></Link>
-                    <Link href={'/edit-portfolio/'+profile.id}><a>Портфолио</a></Link>
+                    <Link href={'/master/'+user.id+'/edit/service-prices'}><a>Услуги и цены</a></Link>
+                    <Link href={'/master/'+user.id+'/edit/portfolio'}><a>Портфолио</a></Link>
                 </div>
                 <ul className={css.list}>
                     <li className={'row center bet '+css.ava}>
                         <b>{image && 'Изменить фото профиля' || 'Фото профиля не загружено'}</b>
                         <div>
-                            {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
+                            {image && <img src={image} alt={user.first_name} width="150" height="150" loading="lazy"/>}
                         </div>
                         <label htmlFor="ava_upload">
                             <BsPencil/> Ред.
@@ -254,14 +254,14 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                                 address={'gpics:50001'}
                                 action={'process'}
                                 instructions={{
-                                    folder: 'masters/' + profile.id,
+                                    folder: 'masters/' + user.id,
                                     width: 150,
                                     height: 150,
                                     fit: 'Fill', //Fit or Fill (with crop)
                                     position: 'Top',
                                     new_name: 'ava',
                                     copy:{
-                                        folder:'masters/' + profile.id + '/mini',
+                                        folder:'masters/' + user.id + '/mini',
                                         height:70,
                                         width:70
                                     }
@@ -272,12 +272,12 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                     </li>
                     <li className="row center bet">
                         <b>ФИО и юр. статус</b>
-                        {!edits.name && <div><p>{fullName}, {legal(profile.legal)}</p></div>}
+                        {!edits.name && <div><p>{fullName}, {legal(user.legal)}</p></div>}
                         {edits.name && (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select {...register('legal', {required: true})} defaultValue={profile.legal}>
+                                        <select {...register('legal', {required: true})} defaultValue={user.legal}>
                                             <option value="1">{legal(1)}</option>
                                             <option value="2">{legal(2)}</option>
                                             <option value="3">{legal(3)}</option>
@@ -287,21 +287,21 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
 
                                     {legalWatch === "3" && (
                                         <>
-                                            <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={profile.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
+                                            <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={user.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
                                             {errMsg(errors.first_name, 70)}
 
-                                            <input type="text" {...register('last_name', {required: true, maxLength: 70})} defaultValue={profile.last_name} placeholder="Точное полное наименование юридического лица"/>
+                                            <input type="text" {...register('last_name', {required: true, maxLength: 70})} defaultValue={user.last_name} placeholder="Точное полное наименование юридического лица"/>
                                             {errMsg(errors.last_name, 70)}
                                         </>
                                     ) || (
                                         <>
-                                            <input type="text" {...register('first_name', {required: true, maxLength: 40})} defaultValue={profile.first_name} placeholder="Ваше имя"/>
+                                            <input type="text" {...register('first_name', {required: true, maxLength: 40})} defaultValue={user.first_name} placeholder="Ваше имя"/>
                                             {errMsg(errors.first_name, 40)}
 
-                                            <input type="text" {...register('last_name', {required: true, maxLength: 40})} defaultValue={profile.last_name} placeholder="Ваша фамилия"/>
+                                            <input type="text" {...register('last_name', {required: true, maxLength: 40})} defaultValue={user.last_name} placeholder="Ваша фамилия"/>
                                             {errMsg(errors.last_name, 40)}
 
-                                            <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} defaultValue={profile.paternal_name} placeholder="Ваше отчество (не обязательно)"/>
+                                            <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} defaultValue={user.paternal_name} placeholder="Ваше отчество (не обязательно)"/>
                                             {errMsg(errors.paternal_name, 40)}
                                         </>
                                     )}
@@ -321,18 +321,18 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                         <b>Контакты</b>
                         {!edits.contacts && (
                             <div>
-                                {profile.phone && <p>{profile.phone},</p>}
-                                {profile.email && <p>{profile.email}</p>}
+                                {user.phone && <p>{user.phone},</p>}
+                                {user.email && <p>{user.email}</p>}
                                 {<p>{homeRegion}, {homeTown}</p>}
                             </div>
                         ) || (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
 
-                                    <input type="text" {...register('phone', {maxLength: 40})} defaultValue={profile.phone} placeholder="Ваш телефон"/>
+                                    <input type="text" {...register('phone', {maxLength: 40})} defaultValue={user.phone} placeholder="Ваш телефон"/>
                                     {errMsg(errors.phone, 40)}
 
-                                    <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={profile.email} placeholder="Ваш email"/>
+                                    <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={user.email} placeholder="Ваш email"/>
                                     {errMsg(errors.email, 40)}
 
                                     <br/>
@@ -340,7 +340,7 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                                     <b>Ваш город/нас. пункт</b>
                                     <p>Выберите Вашу область</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={profile.region_id}>
+                                        <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={user.region_id}>
                                             {regions.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
@@ -351,7 +351,7 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                                     <br/>
                                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})} defaultValue={profile.town_id}>
+                                        <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})} defaultValue={user.town_id}>
                                             {towns && towns.map(e => (
                                                 <option key={e.id} value={e.id}>{e.name}</option>
                                             ))}
@@ -372,11 +372,11 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                     </li>
                     <li className="row center bet">
                         <b>О себе</b>
-                        {!edits.about && <div>{profile.about || "\"О себе\" не заполнено"}</div>}
+                        {!edits.about && <div>{user.about || "\"О себе\" не заполнено"}</div>}
                         {edits.about && (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
-                                    <textarea {...register('about', {maxLength: 2000})} defaultValue={profile.about || ""} placeholder="Напишите о себе"/>
+                                    <textarea {...register('about', {maxLength: 2000})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
                                     {errMsg(errors.about, 2000)}
 
                                     <input type="submit" value="Изменить"/>
@@ -458,12 +458,12 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
                     </li>
                     <li className="row center bet">
                         <b>Состав бригады</b>
-                        {!edits.company && <div><p>{company(parseInt(profile.company))}</p></div>}
+                        {!edits.company && <div><p>{company(parseInt(user.company))}</p></div>}
                         {edits.company && (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
                                     <div className={'rel '+formCSS.sel}>
-                                        <select {...register('company', {required: true})} defaultValue={profile.company}>
+                                        <select {...register('company', {required: true})} defaultValue={user.company}>
                                             <option value="1">{company(1)}</option>
                                             <option value="2">{company(2)}</option>
                                             <option value="3">{company(3)}</option>
@@ -489,4 +489,4 @@ const EditMaster = ({fromDB, defaultTowns, regions, services, choices, homeRegio
     )
 }
 
-export default EditMaster
+export default Info

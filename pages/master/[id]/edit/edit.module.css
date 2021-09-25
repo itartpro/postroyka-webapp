@@ -100,3 +100,42 @@
     background-color: #EEE;
     padding: 15px
 }
+
+li.edit_price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    transition: all .3s
+}
+
+li.edit_price:hover {
+    background-color: #EEE
+}
+
+.edit_price span {
+    flex-grow: 1;
+    border-bottom: dashed 1px #cdcdcd;
+    margin-right: 15px
+}
+
+.edit_price label {
+    font-weight: bold;
+    margin: 0 15px 0 30px
+}
+
+.edit_price input {
+    max-width: 100px;
+    padding: 5px 10px!important;
+    margin: 0 10px!important
+}
+
+.edit_price p {
+    width: 73px
+}
+
+.list h1 {
+    font-size: 2rem;
+    margin: 15px
+}
