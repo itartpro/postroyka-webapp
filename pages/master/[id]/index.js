@@ -38,6 +38,8 @@ const Master = ({profile, comments}) => {
             break;
     }
     switch(profile.company) {
+        case 1:
+            company = 'мастер работает один'
         case 2:
             company = 'бригада 3-4 человека'
             break;

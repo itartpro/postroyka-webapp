@@ -32,7 +32,7 @@ html {
 body, html { width: 100% }
 
 main {
-    min-height: calc(100vh - 122px)
+    min-height: calc(100vh - 282px)
 }
 
 a, button, input[type=submit] { cursor: pointer }

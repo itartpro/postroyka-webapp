@@ -1,4 +1,4 @@
-import css from 'styles/forms.module.css';
+import formCSS from 'styles/forms.module.css';
 import {useForm} from 'react-hook-form';
 import {translit} from 'libs/slugify';
 import {IoIosArrowDown} from 'react-icons/io';
@@ -130,7 +130,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                 //record the service ids the new master has chosen
                 const goData = {
                     address: 'auth:50003',
-                    action: 'update_service_choices',
+                    action: 'update-service-choices',
                     instructions: JSON.stringify({
                         login_id: msg.data.id,
                         service_ids: chosenServices
@@ -214,8 +214,8 @@ const Registration = ({regions, defaultTowns, services}) => {
             <br/>
             <main className={`col start max`}>
                 <h1>Регистрироваться как мастер</h1>
-                <form onSubmit={handleSubmit(onSubmit)} className={`col start ${css.form}`}>
-                    <div className={'rel '+css.sel}>
+                <form onSubmit={handleSubmit(onSubmit)} className={`col start ${formCSS.form}`}>
+                    <div className={'rel '+formCSS.sel}>
                         <select {...register('legal', {required: true})} defaultValue="1">
                             <option value="1">Частное лицо</option>
                             <option value="2">ИП</option>
@@ -248,7 +248,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                     <br/>
                     <b>Ваш адрес</b>
                     <p>Выберите Вашу область</p>
-                    <div className={'rel '+css.sel}>
+                    <div className={'rel '+formCSS.sel}>
                         <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
                             {regions.map(e => (
                                 <option key={e.id} value={e.id}>{e.name}</option>
@@ -258,7 +258,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                     </div>
 
                     <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
-                    <div className={'rel '+css.sel}>
+                    <div className={'rel '+formCSS.sel}>
                         <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
                             {towns && towns.map(e => (
                                 <option key={e.id} value={e.id}>{e.name}</option>
@@ -291,7 +291,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                                 <ul>
                                     {parent.children.map(e => (
                                         <li key={'s'+e.id}>
-                                            <label htmlFor={'srv_'+e.id} className={css.check}>
+                                            <label htmlFor={'srv_'+e.id} className={formCSS.check}>
                                                 {e.name}
                                                 <input id={'srv_'+e.id} type="checkbox" {...register('services')} value={e.id}/>
                                                 <span></span>
@@ -307,47 +307,6 @@ const Registration = ({regions, defaultTowns, services}) => {
                     {showErr && <small>{showErr}</small>}
                     <br/><br/>
                 </form>
-                <style jsx>{`
-                    form > b {
-                        margin-top: 10px;
-                        font-size: 1.2rem
-                    }
-                    form > p {
-                        margin: 10px 0 2px 0;
-                        color: #777
-                    }
-                    
-                    form ul {
-                        list-style: none
-                    }
-                    
-                    form > ul {
-                        margin-top: 10px
-                    }
-                    
-                    form ul li a {
-                        display: block;
-                        width: 100%
-                    }
-                    
-                    form > ul > li > a {
-                        padding: 15px;
-                        background: #f8f8f8;
-                        border-bottom: 1px solid #DDD
-                    }
-                    
-                    form > ul ul {
-                        transition: all .3s;
-                        max-height: 0;
-                        background: white;
-                        overflow: hidden
-                    }
-                    
-                    form > ul ul li {
-                        border-bottom: 1px solid #DDD;
-                        padding: 10px
-                    }
-                `}</style>
             </main>
         </PublicLayout>
     )

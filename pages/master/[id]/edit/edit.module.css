@@ -31,12 +31,16 @@
 }
 
 .list {
-    border: 1px solid #CCC
+    border: 1px solid #CCC;
+}
+
+.list ul {
+    list-style: none
 }
 
 .list > li {
-    margin: 10px 0;
-    padding: 0 15px
+    margin: 15px 0;
+    padding: 0 15px;
 }
 
 .list > li > *:first-child {
@@ -45,13 +49,17 @@
 }
 
 .list > li > div {
-    width: 100%;
-    max-width: 360px;
+    width: calc(100% - 200px - 70px - 30px);
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     height: max-content;
-    transition: all .3s
+    transition: all .3s;
+}
+
+.list > li > div p, .list > li li {
+    line-height: 200%
 }
 
 .list li > button, .ava label {
@@ -91,4 +99,43 @@
 .list .edit {
     background-color: #EEE;
     padding: 15px
+}
+
+li.edit_price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    transition: all .3s
+}
+
+li.edit_price:hover {
+    background-color: #EEE
+}
+
+.edit_price span {
+    flex-grow: 1;
+    border-bottom: dashed 1px #cdcdcd;
+    margin-right: 15px
+}
+
+.edit_price label {
+    font-weight: bold;
+    margin: 0 15px 0 30px
+}
+
+.edit_price input {
+    max-width: 100px;
+    padding: 5px 10px!important;
+    margin: 0 10px!important
+}
+
+.edit_price p {
+    width: 73px
+}
+
+.list h1 {
+    font-size: 2rem;
+    margin: 15px
 }
