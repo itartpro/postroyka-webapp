@@ -9,6 +9,7 @@ import {Info} from "components/public/master/info";
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
     const comments = await getProfileComments(parseInt(params.id));
+
     delete profile['password'];
     delete profile['refresh'];
 

@@ -63,21 +63,35 @@
     margin-bottom: 20px
 }
 
-.sv div > p {
+.sv div {
+    margin: 15px 0
+}
+
+.sv div > a {
     font-size: 1.1rem;
     text-shadow: 0 0 0 black;
-    margin-bottom: 15px
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #CCC
+}
+
+.sv div > a > svg {
+    font-size: .9rem;
 }
 
 .sv ul {
-    list-style: none;
-    margin-bottom: 40px
+    list-style: none
+}
+
+.sv > div > ul {
+    max-height: 0;
+    transition: all .3s;
+    overflow: hidden
 }
 
 .sv li {
     width: 100%;
     max-width: 300px;
-    line-height: 150%
+    line-height: 200%
 }
 
 .sv li a {

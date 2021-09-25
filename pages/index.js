@@ -2,28 +2,34 @@ import PublicLayout from 'components/public/public-layout';
 import Order from 'components/public/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
-import {getCats, getPageBySlug} from 'libs/static-rest';
+import {getCats, getPageBySlug, getRegions} from 'libs/static-rest';
 import css from 'styles/home.module.css';
 import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
 import {Block300} from "components/public/block300";
 import {Button} from "components/public/button";
+import {toggleDown} from "libs/sfx";
+import {IoIosArrowDown} from 'react-icons/io';
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
     const cats = await getCats();
     const services = organizeCats(cats)[1].children;
+    const regions = await getRegions();
 
     return {
         props: {
             page,
-            services
+            services,
+            regions
         },
         revalidate: 120
     }
 }
 
-const Home = ({page, services}) => {
+const Home = ({page, services, regions}) => {
+
+    console.log(regions)
 
     return (
         <PublicLayout page={page}>
@@ -72,7 +78,7 @@ const Home = ({page, services}) => {
                     <p className={css.headline}>Какие виды работ можно заказать?</p>
                     {services && services.map(e => (
                         <div key={'s'+e.id} className="col start">
-                            <p>{e.name}</p>
+                            <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;{e.name}</a>
                             <ul className="row start">
                                 {e.children.map(e => (
                                     <li key={'s'+e.id}>
@@ -85,6 +91,20 @@ const Home = ({page, services}) => {
                         </div>
                     ))}
                 </div>
+                <br/>
+                <div className={'col start max '+css.sv}>
+                    <p className={css.headline}>Найти мастера по региону</p>
+                    <ul className="row start">
+                        {regions && regions.map(e => (
+                            <li key={'r'+e.id}>
+                                <Link href={'/masters/'+e.id}>
+                                    <a>{e.name}</a>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <br/>
             </main>
         </PublicLayout>
     )
