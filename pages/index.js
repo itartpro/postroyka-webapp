@@ -29,8 +29,6 @@ export async function getStaticProps() {
 
 const Home = ({page, services, regions}) => {
 
-    console.log(regions)
-
     return (
         <PublicLayout page={page}>
             <main className={`col start`}>

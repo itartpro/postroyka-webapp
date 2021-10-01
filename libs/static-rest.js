@@ -98,12 +98,20 @@ export const getTowns = (region_id = 1) => {
     })
 }
 
-export const getCats = () => {
-    return goPost(JSON.stringify({
+export const getCats = (columnName = null, valueArray = null) => {
+    let post = {
         address: 'cats:50004',
         action: 'read_all',
-        instructions: "{}"
-    }))
+        instructions: '{}'
+    };
+    if(columnName && valueArray) {
+        post.action = 'read-where-in';
+        post.instructions = {
+            column: columnName,
+            value: valueArray
+        };
+    }
+    return goPost(JSON.stringify(post))
         .then(res => {
             try {
                 const parsed = JSON.parse(res);

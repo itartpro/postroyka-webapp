@@ -6,11 +6,6 @@ const Scratch = () => {
     const { request, wsMsg } = useContext(WsContext);
     const [cats, setCats] = useState([]);
 
-    //check out cats
-    useEffect(() => {
-        cats.length > 0 && console.log(cats)
-    }, [cats])
-
     //check out incoming data
     useEffect(() => {
         if(!wsMsg) return false;

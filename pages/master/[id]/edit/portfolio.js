@@ -2,7 +2,7 @@ import PublicLayout from "components/public/public-layout";
 import css from "./edit.module.css";
 import Link from 'next/link';
 import {useState} from "react";
-import {getProfileById} from "libs/static-rest";
+import {getCats, getMastersChoices, getProfileById} from "libs/static-rest";
 
 export async function getServerSideProps({params}) {
     const fromDB = await getProfileById(parseInt(params.id)).then(e => {
@@ -10,15 +10,19 @@ export async function getServerSideProps({params}) {
         delete e['refresh'];
         return e;
     });
+    const choices = await getMastersChoices(params.id);
+    const choiceIds = choices.map(e => e['service_id']);
+    const services = await getCats('id', choiceIds);
 
     return {
         props: {
-            fromDB
+            fromDB,
+            services
         }
     }
 }
 
-const Portfolio = ({fromDB}) => {
+const Portfolio = ({fromDB, services}) => {
     const [user, setUser] = useState(fromDB);
     return (
         <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
