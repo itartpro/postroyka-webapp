@@ -1,6 +1,7 @@
 export const toggleDown = e => {
     let el = e.target || e;
     let bro = el.nextElementSibling;
+    if(!bro) return false;
     const check = bro.getAttribute('style');
     const svg = el.querySelector('svg');
     if(!check) {

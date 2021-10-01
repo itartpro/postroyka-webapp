@@ -99,17 +99,17 @@ export const getTowns = (region_id = 1) => {
 }
 
 export const getCats = (columnName = null, valueArray = null) => {
-    let post = {
+    const post = {
         address: 'cats:50004',
         action: 'read_all',
         instructions: '{}'
     };
     if(columnName && valueArray) {
         post.action = 'read-where-in';
-        post.instructions = {
+        post.instructions = JSON.stringify({
             column: columnName,
-            value: valueArray
-        };
+            values: valueArray
+        });
     }
     return goPost(JSON.stringify(post))
         .then(res => {

@@ -126,8 +126,8 @@ const ServicePrices = ({fromDB, services, choices}) => {
                         <ul className={'col start'}>
                             {services && services.map(parent => parent && parent.children.map(c => (
                                 <li key={'s'+c.id}>
-                                    <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{c.name}</a>
-                                    <ul className={`row start`}>
+                                    <a role="button" className={formCSS.bar} onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{c.name}</a>
+                                    <ul className={`row start ${formCSS.hid}`}>
                                         {c.children.map(e => (
                                             <li className={css.edit_price} key={'s'+e.id}>
                                                 <label>{e.name}</label>

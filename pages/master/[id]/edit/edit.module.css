@@ -139,3 +139,9 @@ li.edit_price:hover {
     font-size: 2rem;
     margin: 15px
 }
+
+.hid {
+    transition: all .3s;
+    max-height: 0;
+    overflow: hidden;
+}

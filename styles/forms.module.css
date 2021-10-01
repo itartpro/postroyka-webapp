@@ -150,17 +150,22 @@
     width: 100%
 }
 
-.form > ul > li > a {
+.bar {
+    display: flex;
     padding: 15px;
     background: #f8f8f8;
-    border-bottom: 1px solid #DDD
+    border-bottom: 1px solid #DDD;
+    width: 100%
+}
+
+.hid {
+    transition: all .3s;
+    max-height: 0;
+    overflow: hidden
 }
 
 .form > ul ul {
-    transition: all .3s;
-    max-height: 0;
-    background: white;
-    overflow: hidden
+    background: white
 }
 
 .form > ul ul li {
