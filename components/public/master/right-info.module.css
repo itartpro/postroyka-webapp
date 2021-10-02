@@ -3,5 +3,30 @@
 }
 
 .rig b {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
+
+.rig li {
+    list-style: none;
+    padding-left: 35px;
+}
+
+.star p {
+    font-size: 1.2rem;
+}
+
+.rig p:nth-child(7) {
+    color: #9D9D9D;
+    margin-top: 10px;
+}
+
+.star {
+    margin-top: 10px;
+}
+
+.star div {
+    margin-right: 15px;
+}
+
