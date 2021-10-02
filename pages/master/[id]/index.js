@@ -5,6 +5,7 @@ import StarRating from "components/public/star-rating";
 import {timeDiff, timeInRus} from "libs/time-stuff";
 import {useState} from 'react';
 import {Info} from "components/public/master/info";
+import {RightInfo} from "components/public/master/right-info";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
@@ -91,6 +92,7 @@ const Master = ({profile, comments}) => {
                         <b>Портфолио</b>
                     </section>
                 )}
+                <RightInfo/>
             </main>
         </PublicLayout>
     )
