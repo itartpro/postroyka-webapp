@@ -13,20 +13,49 @@
     padding-left: 35px;
 }
 
-.star p {
-    font-size: 1.2rem;
-}
-
 .rig p:nth-child(7) {
     color: #9D9D9D;
     margin-top: 10px;
 }
 
+.rig > div > div > p:nth-child(2) {
+    margin: 5px 0 0 20px
+}
+
 .star {
-    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    width: 105px;
+    height: 1.2em;
+    line-height: 1.2em;
+    display: inline-block;
+    font-size: 23px;
 }
 
-.star div {
-    margin-right: 15px;
+.star:before {
+    content: "\2605\2605\2605\2605\2605";
+    color: #dadada;
+    float: left;
+    top: 0;
+    left: 0;
+    position: absolute;
+    letter-spacing: 2px;
 }
 
+.star span {
+    overflow: hidden;
+    float: left;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding-top: 1.5em
+}
+
+.star span:before {
+    content: "\2605\2605\2605\2605\2605";
+    top: 0;
+    position: absolute;
+    left: 0;
+    color: #47CB43;
+    letter-spacing: 2px;
+}

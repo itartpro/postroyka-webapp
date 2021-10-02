@@ -1,14 +1,14 @@
 import css from './right-info.module.css';
+import {GrLocation} from "react-icons/gr";
 
 export const RightInfo = props => {
     return (
         <aside className={`col start ${css.rig}`}>
             <b>Расположение</b>
 
-            <p><img src="/images/profilemaster/geo.png" width="18" height="21" alt="geo"
-                    loading="lazy"/> Кабардино-Балкарская Республика</p>
+            <p><GrLocation/> Кабардино-Балкарская Республика</p>
             <b>Выезд на объекты</b>
-            <ul><img src="/images/profilemaster/geo.png" width="18" height="21" alt="geo" loading="lazy"/> Ивановская
+            <ul><GrLocation/> Ивановская
                 область
                 <li>Вичуга</li>
                 <li>Иваново</li>
@@ -20,64 +20,40 @@ export const RightInfo = props => {
             </ul>
             <b>Оценки</b>
             <div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '50%'}}/>
+                    </p>
                     <p>Вежливость</p>
                 </div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '50%'}}/>
+                    </p>
                     <p>Доступность для связи</p>
                 </div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '70%'}}/>
+                    </p>
                     <p>Пунктуальность</p>
                 </div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '50%'}}/>
+                    </p>
                     <p>Попадание в смету</p>
                 </div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '90%'}}/>
+                    </p>
                     <p>Соблюдение сроков</p>
                 </div>
-                <div className={`row start ${css.star}`}>
-                    <div>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                    </div>
+                <div className={`row start`}>
+                    <p className={css.star}>
+                        <span style={{width: '30%'}}/>
+                    </p>
                     <p>Баланс цены/качества</p>
                 </div>
             </div>

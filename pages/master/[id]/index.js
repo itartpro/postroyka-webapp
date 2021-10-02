@@ -6,9 +6,6 @@ import {timeDiff, timeInRus} from "libs/time-stuff";
 import {useState} from 'react';
 import {Info} from "components/public/master/info";
 import {RightInfo} from "components/public/master/right-info";
-import {PortfolioPage} from "components/public/master/portfoliopage";
-
-
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
@@ -82,20 +79,22 @@ const Master = ({profile, comments}) => {
                     <button onClick={() => setShowSection(2)} className={showSection === 2 ? css.on : null}>Отзывы</button>
                     <button onClick={() => setShowSection(3)} className={showSection === 3 ? css.on : null}>Портфолио</button>
                 </div>
-                {showSection === 1 && (
-                    <Info/>
-                )}
-                {showSection === 2 && (
-                    <section>
-                        <b>Отзывы</b>
-                    </section>
-                )}
-                {showSection === 3 && (
-                    <section>
-                        <b>Портфолио</b>
-                    </section>
-                )}
-                <RightInfo/>
+                <div className="row">
+                    {showSection === 1 && (
+                        <Info/>
+                    )}
+                    {showSection === 2 && (
+                        <section>
+                            <b>Отзывы</b>
+                        </section>
+                    )}
+                    {showSection === 3 && (
+                        <section>
+                            <b>Портфолио</b>
+                        </section>
+                    )}
+                    <RightInfo/>
+                </div>
             </main>
         </PublicLayout>
     )
