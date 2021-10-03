@@ -1,7 +1,6 @@
 import PublicLayout from 'components/public/public-layout'
 import {getPageBySlug, getLatestArticles} from 'libs/static-rest'
 import css from './slug.module.css'
-import cr from 'components/public/crumbs.module.css'
 import {isoToRusDate} from 'libs/js-time-to-psql'
 import Link from 'next/link'
 import fs from 'fs'
