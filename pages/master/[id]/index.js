@@ -1,29 +1,70 @@
-import {getProfileById, getProfileComments} from "libs/static-rest";
+import {getCats, getMastersChoices, getProfileById, getProfileComments} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
 import StarRating from "components/public/star-rating";
 import {timeDiff, timeInRus} from "libs/time-stuff";
 import {useState} from 'react';
+import {Aside} from "components/public/master/aside";
 import {Info} from "components/public/master/info";
-import {RightInfo} from "components/public/master/right-info";
-import {PortfolioPage} from "components/public/master/portfoliopage";
+import {Portfolio} from "components/public/master/portfolio";
+import {organizeCats} from "../../../libs/arrs";
 
 export async function getServerSideProps({params}) {
-    const profile = await getProfileById(parseInt(params.id));
+    const profile = await getProfileById(parseInt(params.id)).then(e => {
+        delete e['password'];
+        delete e['refresh'];
+        return e;
+    });
     const comments = await getProfileComments(parseInt(params.id));
 
-    delete profile['password'];
-    delete profile['refresh'];
+    const choices = await getMastersChoices(params.id);
+    const choiceIds = choices.map(e => e['service_id'])
+    const services = await getCats().then(cats => organizeCats(cats)[1].children.map(e => ({
+        id: e.id,
+        parent_id: e.parent_id,
+        name: e.name,
+        children: e.children.map(c => ({
+            id: c.id,
+            parent_id: c.parent_id,
+            name: c.name,
+            children: c.children.map(c2 => ({
+                id: c2.id,
+                parent_id: c2.parent_id,
+                name: c2.name,
+                extra: c2.extra
+            }))
+        }))
+    })));
+
+    const filtered = [];
+    if(services && choiceIds) {
+        services.forEach((e,i) => e.children.forEach(e2 => {
+            if(choiceIds.includes(e2.id)) {
+                if(!filtered.hasOwnProperty(i)) {
+                    filtered[i] = e;
+                    filtered[i].children = [];
+                }
+                filtered[i].children.push(e2)
+            }
+        }))
+    }
+
+    const organizedChoices = {};
+    choices.forEach(e => {
+        organizedChoices[e.service_id] = e;
+    })
 
     return {
         props: {
             profile,
-            comments
+            comments,
+            services: filtered,
+            choices: organizedChoices
         }
     }
 }
 
-const Master = ({profile, comments}) => {
+const Master = ({profile, comments, services, choices}) => {
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
     let legal = null;
@@ -58,6 +99,8 @@ const Master = ({profile, comments}) => {
     }
     const [showSection, setShowSection] = useState(1)
 
+    console.log(choices)
+
     return (
         <PublicLayout>
             <br/>
@@ -82,8 +125,7 @@ const Master = ({profile, comments}) => {
                 </div>
                 <div className="row">
                     {showSection === 1 && (
-                        <Info/>
-
+                        <Info user={profile} services={services} choices={choices}/>
                     )}
                     {showSection === 2 && (
                         <section>
@@ -91,10 +133,9 @@ const Master = ({profile, comments}) => {
                         </section>
                     )}
                     {showSection === 3 && (
-                        <PortfolioPage/>
-
+                        <Portfolio/>
                     )}
-                    <RightInfo/>
+                    <Aside/>
                 </div>
             </main>
         </PublicLayout>

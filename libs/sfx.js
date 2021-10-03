@@ -2,24 +2,28 @@ export const toggleDown = e => {
     let el = e.target || e;
     let bro = el.nextElementSibling;
     if(!bro) return false;
-    const check = bro.getAttribute('style');
+    let broHeight = bro.offsetHeight;
     const svg = el.querySelector('svg');
-    if(!check) {
-        if(svg) {
-            svg.style.transition = 'all .3s';
-            svg.style.transform = 'rotate(180deg)'
+    if(svg) {
+        svg.style.transition = 'all .3s';
+        if(svg.style.transform) {
+            svg.removeAttribute('style');
+            svg.style.transition = 'all .3s'
+        } else {
+            svg.style.transform = 'rotate(180deg)';
         }
-        bro.style.borderBottom = 'none';
+    }
+    bro.style.transition = 'all .3s';
+    bro.style.overflow = 'hidden';
+    if(broHeight > 0) {
         bro.style.maxHeight = '600px';
         setTimeout(() => {
-            bro.style.maxHeight = 'initial';
-        }, 300);
+            bro.style.maxHeight = '0'
+        }, 300)
     } else {
-        if(svg) svg.style.transform = 'initial';
         bro.style.maxHeight = '600px';
         setTimeout(() => {
-            bro.removeAttribute('style');
-            if(svg) svg.removeAttribute('style');
+            bro.style.maxHeight = 'initial'
         }, 300)
     }
 }

@@ -1,24 +1,18 @@
 .left {
-    max-width: 65%;
+    max-width: 68%;
     border: 1px solid #B9B9B9;
     border-radius: 8px;
     padding: 30px 35px;
 }
 
-.left b:not(:first-child) {
-    margin-top: 25px;
-}
-
-.left b:nth-child(5) {
-    color: #47CB43;
-}
-
-.left > p {
-    color: #5f5f5f;
-}
-
 .left > div {
     margin-bottom: 10px;
+    width: 100%
+}
+
+.left > div > pre {
+    width: 100%;
+    white-space: pre-wrap;
 }
 
 .left > div ul {
@@ -30,7 +24,7 @@
     float: right;
     background: #fff;
     padding-left: 5px;
-    z-index: 1;
+    z-index: 1
 }
 
 .left > ul > li > p {
@@ -43,7 +37,7 @@
     float: left;
     background: #fff;
     padding-right: 5px;
-    z-index: 1;
+    z-index: 1
 }
 
 .left li::marker {
@@ -51,7 +45,7 @@
 }
 
 .left li li {
-    position: relative;
+    position: relative
 }
 
 .left li li::after {
@@ -61,26 +55,31 @@
     border-bottom: 1px dashed #cdcdcd;
     left: 0;
     z-index: -1;
-    bottom: 5px;
+    bottom: 5px
 }
 
 
 @media all and (max-width: 1000px) {
     .left {
-        max-width: 100%;
+        max-width: 100%
     }
-
-
-    .rig {
-        max-width: 100%;
-    }
-
 }
 
-
 @media all and (max-width: 500px) {
+
+    .left {
+        padding: 0;
+        border: none
+    }
+
+    .left li li::after {
+        display: none
+    }
+
     .left li span {
+        width: 100%;
         color: #47CB43;
+        margin-bottom: 15px
     }
 }
 

@@ -1,9 +1,9 @@
-import css from './right-info.module.css';
+import css from './aside.module.css';
 import {GrLocation} from "react-icons/gr";
 
-export const RightInfo = props => {
+export const Aside = props => {
     return (
-        <aside className={`col start ${css.rig}`}>
+        <aside className={`col start ${css.as}`}>
             <b>Расположение</b>
 
             <p><GrLocation/> Кабардино-Балкарская Республика</p>

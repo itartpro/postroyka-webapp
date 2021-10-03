@@ -1,0 +1,54 @@
+.left {
+    max-width: 68%;
+    list-style: none
+}
+
+.left > li {
+    font-size: 1.2rem;
+    margin: 5px 0
+}
+
+.left > li > a * {
+    pointer-events: none
+}
+
+.d1 {
+    border: 1px solid #B9B9B9;
+    border-radius: 8px;
+    margin-top: 20px;
+    padding: 25px 30px;
+}
+
+.d1 b:not(:first-child) {
+    margin-top: 25px;
+}
+
+.d1 > p {
+    color: #5f5f5f;
+    margin-bottom: 10px
+}
+
+.d1 > p > span {
+    color: #bbb;
+    margin-right: 15px;
+}
+
+.d1 ul {
+    margin: 15px 0;
+}
+
+.d1 ul li {
+    list-style: none;
+    margin-right: 10px;
+}
+
+.d1 ul img {
+    border-radius: 4px;
+}
+
+@media all and (max-width: 1000px) {
+    .left {
+        max-width: 100%;
+        padding: 0
+    }
+}
