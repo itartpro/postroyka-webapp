@@ -1,92 +1,49 @@
 import css from './portfoliopage.module.css';
+import {FiChevronDown} from "react-icons/fi";
 
 export const PortfolioPage = props => {
     return (
 
         <aside className={`col start`}>
-            <div>Ntrcn</div>
-            <section className={css.rig}>
-                <b>Расположение</b>
+            <div className={`row bet center ${css.zgl}`}>
+                <b>Премиальный ремонт дома под ключ</b>
+                <span> <FiChevronDown/> </span>
+            </div>
+            <div className={`row bet center ${css.zgl}`}>
+                <b>Премиальный ремонт дома под ключ</b>
+                <span> <FiChevronDown/> </span>
+            </div>
+            <div className={`row bet center ${css.zgl}`}>
+                <b>Премиальный ремонт дома под ключ</b>
+                <span> <FiChevronDown/> </span>
+            </div>
 
-                <p><img src="/images/profilemaster/geo.png" width="18" height="21" alt="geo"
-                        loading="lazy"/> Кабардино-Балкарская Республика</p>
-                <b>Выезд на объекты</b>
-                <ul><img src="/images/profilemaster/geo.png" width="18" height="21" alt="geo"
-                         loading="lazy"/> Ивановская
-                    область
-                    <li>Вичуга</li>
-                    <li>Иваново</li>
-                    <li>Кинешма</li>
-                    <li>Ивановский район</li>
-                    <li>Кинешемский район</li>
-                    <li>Фурмановский район</li>
-                    <li>Фурманов</li>
+            <section className={`col start ${css.left2}`}>
+                <b>Ремонт ванной и туалета в сталинки</b>
+                <p>Сроки и объем 50 дней Средняя цена 90000руб. Перечень работ Демонтаж перегородок из дранки, замена
+                    всех стояков, устройство стяжки, разводка водопровода, канализации и электрики, устройство
+                    перегородок из гипсокартона устройства тёплого электрического пола, укладка плитки и установка
+                    сантехники Дополнительно Высота до потолка 3,4м.
+                </p>
+                <p>Развернуть</p>
+
+                <ul className={'row start'}>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                    <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
                 </ul>
-                <b>Оценки</b>
-                <div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Вежливость</p>
-                    </div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Доступность для связи</p>
-                    </div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Пунктуальность</p>
-                    </div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Попадание в смету</p>
-                    </div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Соблюдение сроков</p>
-                    </div>
-                    <div className={`row start ${css.star}`}>
-                        <div>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                            <img src="/images/profilemaster/star.png" width="19" height="18" alt="geo" loading="lazy"/>
-                        </div>
-                        <p>Баланс цены/качества</p>
-                    </div>
-                </div>
-                <p>Оценили 5 заказчиков</p>
+
+
+                <p><span>Сроки и объём</span>50 дней</p>
+                <p><span>Средняя цена</span>90 000р</p>
+                <p><span>Дополнительно</span>Высота до потолка 3,4м</p>
+
+
             </section>
+
         </aside>
     )
 }

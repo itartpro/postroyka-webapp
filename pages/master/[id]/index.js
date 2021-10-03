@@ -6,6 +6,7 @@ import {timeDiff, timeInRus} from "libs/time-stuff";
 import {useState} from 'react';
 import {Info} from "components/public/master/info";
 import {RightInfo} from "components/public/master/right-info";
+import {PortfolioPage} from "components/public/master/portfoliopage";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id));
@@ -82,6 +83,7 @@ const Master = ({profile, comments}) => {
                 <div className="row">
                     {showSection === 1 && (
                         <Info/>
+
                     )}
                     {showSection === 2 && (
                         <section>
@@ -89,9 +91,8 @@ const Master = ({profile, comments}) => {
                         </section>
                     )}
                     {showSection === 3 && (
-                        <section>
-                            <b>Портфолио</b>
-                        </section>
+                        <PortfolioPage/>
+
                     )}
                     <RightInfo/>
                 </div>

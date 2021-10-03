@@ -1,4 +1,5 @@
 .rig {
+    margin-left: 20px;
     max-width: 30%;
 }
 
@@ -58,4 +59,27 @@
     left: 0;
     color: #47CB43;
     letter-spacing: 2px;
+}
+
+
+@media all and (max-width: 1000px) {
+    .rig {
+        max-width: 100%;
+    }
+
+}
+
+@media all and (max-width: 400px) {
+    .rig > div > div > p {
+        font-size: 0.8rem;
+    }
+
+    .star {
+        width: 62px;
+        height: 1.2em;
+        line-height: 1.2em;
+        display: inline-block;
+        font-size: 23px;
+    }
+
 }

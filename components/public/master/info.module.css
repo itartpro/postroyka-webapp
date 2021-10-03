@@ -1,5 +1,5 @@
 .left {
-    max-width: 70%;
+    max-width: 65%;
     border: 1px solid #B9B9B9;
     border-radius: 8px;
     padding: 30px 35px;
@@ -63,3 +63,25 @@
     z-index: -1;
     bottom: 5px;
 }
+
+
+@media all and (max-width: 1000px) {
+    .left {
+        max-width: 100%;
+    }
+
+
+    .rig {
+        max-width: 100%;
+    }
+
+}
+
+
+@media all and (max-width: 500px) {
+    .left li span {
+        color: #47CB43;
+    }
+}
+
+
