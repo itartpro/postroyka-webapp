@@ -1,11 +1,12 @@
 import goPost from './go-post';
 import {organizeCats} from './arrs';
 
-export const getPageBySlug = slug => {
+export const getPageBySlug = (slug, id = null) => {
+    const post = id !== null ? {id} : {slug};
     return goPost(JSON.stringify({
         address: 'cats:50004',
         action: 'read',
-        instructions: JSON.stringify({slug})
+        instructions: JSON.stringify(post)
     }))
         .then(res => {
             try {
@@ -45,6 +46,22 @@ export const getMastersChoices = id => {
             return parsed.data
         } catch (e) {
             console.log("getMastersChoices error:" + e + res);
+            return null
+        }
+    })
+}
+
+export const getPortfolio = id => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-portfolio',
+        instructions: JSON.stringify({login_id:parseInt(id)})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getPortfolio error:" + e + res);
             return null
         }
     })

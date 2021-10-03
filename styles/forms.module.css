@@ -48,7 +48,9 @@
     font-size: 1.1rem
 }
 
-.form input[type=submit] {
+.form input[type=submit], .grn {
+    display: block;
+    padding: 15px 20px;
     margin-top: 20px;
     color: white;
     max-width: max-content;
@@ -56,7 +58,7 @@
     transition: all .3s
 }
 
-.form input[type=submit]:hover {
+.form input[type=submit]:hover, .grn:hover {
     background: #067800
 }
 

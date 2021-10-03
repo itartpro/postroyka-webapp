@@ -2,33 +2,54 @@ import PublicLayout from "components/public/public-layout";
 import css from "./edit.module.css";
 import Link from 'next/link';
 import {useState} from "react";
-import {getCats, getMastersChoices, getProfileById} from "libs/static-rest";
+import {getCats, getMastersChoices, getPortfolio, getProfileById} from "libs/static-rest";
 import formCSS from "styles/forms.module.css";
 import {IoIosArrowDown} from 'react-icons/io';
 import {toggleDown} from "libs/sfx";
 import {ShowMessage} from "components/show-message";
 
 export async function getServerSideProps({params}) {
-    const fromDB = await getProfileById(parseInt(params.id)).then(e => {
+    const fromDB = await getProfileById(params.id).then(e => {
         delete e['password'];
         delete e['refresh'];
         return e;
     });
-    const choices = await getMastersChoices(params.id);
-    const choiceIds = choices.map(e => e['service_id'].toString());
-    const services = await getCats('id', choiceIds);
+    const choiceIds = await getMastersChoices(params.id).then(choices => {
+        if(!choices) return null;
+        return choices.map(e => e['service_id'].toString());
+    });
+    const services = choiceIds && await getCats('id', choiceIds);
+    const works = await getPortfolio(params.id)
 
     return {
         props: {
             fromDB,
-            services
+            services,
+            works
         }
     }
 }
 
-const Portfolio = ({fromDB, services}) => {
+//TODO load portfolio
+//TODO add ability to add images right here
+
+//each work in portfolio is:
+//id
+//master_id
+//order_id //0 if none
+//name Название
+//service_id Привзяка к какой категории/услуге это относится
+//description Описание
+//hours Сроки
+//price Приблизительная цена за похожую работу
+
+//Галерея:(из нескольких картинок)
+//portfolio_media table standard layout
+
+const Portfolio = ({fromDB, services, works}) => {
     const [user, setUser] = useState(fromDB);
     const [showMsg, setShowMsg] = useState(null);
+    console.log(works);
 
     return (
         <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
@@ -46,7 +67,9 @@ const Portfolio = ({fromDB, services}) => {
                             {services && services.map(s => (
                                 <li key={'s'+s.id}>
                                     <a role="button" className={formCSS.bar} onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{s.name}</a>
-                                    <div className={formCSS.hid}>Some controls will be here</div>
+                                    <div className={formCSS.hid}>
+                                        <Link href={'/master/'+user.id+'/add-work/'+s.id}><a className={css.b1 + ' ' + formCSS.grn}>Добавить новую работу</a></Link>
+                                    </div>
                                 </li>
                             ))}
                         </ul>

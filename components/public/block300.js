@@ -12,7 +12,7 @@ export const Block300 = () => {
                 <button>Добавить заказ</button>
             </div>
             <div>
-                <img src="images/people.png" alt="people"  width="372" height="272" loading="lazy"/>
+                <img src="/images/home/people.png" alt="people"  width="372" height="272" loading="lazy"/>
             </div>
         </div>
     )

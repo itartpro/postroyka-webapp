@@ -145,3 +145,7 @@ li.edit_price:hover {
     max-height: 0;
     overflow: hidden;
 }
+
+.b1 {
+    margin: 15px auto
+}

@@ -105,6 +105,11 @@ export default function WsProvider(props) {
         return !(verifiedJwt !== undefined && verifiedJwt !== true)
     }
 
+    const verifyById = id => {
+        const parsed = decodeJWT('AccessJWT');
+        return parseInt(id) === parseInt(parsed.sub);
+    }
+
     const refreshAttempt = () => {
         const parsed = decodeJWT('RefreshJWT');
         const exp = parsed.exp * 1000;
@@ -147,6 +152,7 @@ export default function WsProvider(props) {
             wsMsg,
             setWsMsg,
             checkAccess,
+            verifyById,
             logOut,
         }}>
             {props.children}

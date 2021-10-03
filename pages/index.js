@@ -13,8 +13,10 @@ import {IoIosArrowDown} from 'react-icons/io';
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
-    const cats = await getCats();
-    const services = organizeCats(cats)[1].children;
+    const services = await getCats().then(cats => {
+        if(cats === null) return null;
+        return organizeCats(cats)[1].children
+    });
     const regions = await getRegions();
 
     return {

@@ -1,0 +1,22 @@
+.padded {
+    padding: 20px
+}
+
+.time > * {
+    margin-right: 15px
+}
+
+.time > input {
+    width: 100%;
+    max-width: 100px
+}
+
+.time label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.time > input:last-child {
+    margin-right: 0
+}
