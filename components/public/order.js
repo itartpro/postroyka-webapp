@@ -1,6 +1,6 @@
 import css from "./order.module.css";
 
-const Order = () => {
+export const Order = () => {
 
     return (
         <div className={`row bet ${css.box}`}>
@@ -22,5 +22,3 @@ const Order = () => {
         </div>
         )
 }
-
-export default Order

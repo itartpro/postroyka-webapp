@@ -1,5 +1,5 @@
 import PublicLayout from 'components/public/public-layout';
-import Order from 'components/public/order';
+import {Order} from 'components/public/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
 import {getCats, getPageBySlug, getRegions} from 'libs/static-rest';

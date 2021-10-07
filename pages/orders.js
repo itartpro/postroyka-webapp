@@ -1,5 +1,5 @@
 import PublicLayout from "components/public/public-layout";
-import Order from "components/public/order";
+import {Order} from "components/public/order";
 
 const Orders = () => {
     return (
