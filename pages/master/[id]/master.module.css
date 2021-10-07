@@ -1,5 +1,6 @@
 .d1 img {
-    margin-bottom: 15px
+    margin-bottom: 15px;
+    border-radius: 75px
 }
 
 .d1 > p {

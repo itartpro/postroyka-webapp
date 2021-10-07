@@ -1,0 +1,11 @@
+.left {
+    max-width: 68%;
+    border: 1px solid #B9B9B9;
+    border-radius: 8px;
+    padding: 30px 35px;
+}
+
+.left > div {
+    margin-bottom: 10px;
+    width: 100%
+}

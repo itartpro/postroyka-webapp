@@ -1,13 +1,14 @@
 import {getCats, getMastersChoices, getProfileById, getProfileComments} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
-import StarRating from "components/public/star-rating";
 import {timeDiff, timeInRus} from "libs/time-stuff";
+import {organizeCats} from "libs/arrs";
 import {useState} from 'react';
 import {Aside} from "components/public/master/aside";
 import {Info} from "components/public/master/info";
+import {StarRating} from "components/public/star-rating";
 import {Portfolio} from "components/public/master/portfolio";
-import {organizeCats} from "../../../libs/arrs";
+import {Comments} from "components/public/master/comments";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id)).then(e => {
@@ -67,6 +68,8 @@ export async function getServerSideProps({params}) {
 const Master = ({profile, comments, services, choices}) => {
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
+    const image = profile.avatar && masterAva || '/images/silhouette.jpg';
     let legal = null;
     let company = null;
     switch(profile.legal) {
@@ -84,22 +87,22 @@ const Master = ({profile, comments, services, choices}) => {
     }
     switch(profile.company) {
         case 1:
-            company = 'мастер работает один'
+            company = 'мастер работает один';
+            break;
         case 2:
-            company = 'бригада 3-4 человека'
+            company = 'бригада 3-4 человека';
             break;
         case 3:
-            legal = 'бригада 5-20 человека'
+            legal = 'бригада 5-20 человека';
             break;
         case 4:
-            legal = 'бригада более 20 человек'
+            legal = 'бригада более 20 человек';
             break;
         default:
+            company = 'мастер работает один';
             break;
     }
     const [showSection, setShowSection] = useState(1)
-
-    console.log(choices)
 
     return (
         <PublicLayout>
@@ -107,7 +110,7 @@ const Master = ({profile, comments, services, choices}) => {
             <main className="col start max">
                 <div className={'row start'}>
                     <div className={'col start init center '+css.d1}>
-                        <img src="/images/silhouette.jpg" alt="Мастер не добавил фото" width="150" height="150" loading="lazy"/>
+                        {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
                         <StarRating rating={profile.rating}/>
                         <p>{(comments && comments.length) || 0} отзывов</p>
                     </div>
@@ -129,7 +132,7 @@ const Master = ({profile, comments, services, choices}) => {
                     )}
                     {showSection === 2 && (
                         <section>
-                            <b>Отзывы</b>
+                            <Comments/>
                         </section>
                     )}
                     {showSection === 3 && (

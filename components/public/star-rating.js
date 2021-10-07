@@ -1,7 +1,7 @@
 import {BsStarFill, BsStarHalf} from 'react-icons/bs';
 import css from './star-rating.module.css';
 
-const StarRating = ({rating = 0}) => {
+export const StarRating = ({rating = 0}) => {
 
     const outOf = 10;
     const stars = Math.round((rating / outOf * 5) * 2)/2;
@@ -19,5 +19,3 @@ const StarRating = ({rating = 0}) => {
         </div>
     )
 }
-
-export default StarRating
