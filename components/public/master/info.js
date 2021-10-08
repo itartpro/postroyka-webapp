@@ -19,13 +19,13 @@ export const Info = ({user, services, choices}) => {
             </ul>
             <ul>
                 {services && services.map(parent => parent && parent.children.map(c => (
-                <li key={'s'+c.id}>
+                <li key={'is'+c.id}>
                     <p>{c.name}</p>
                     <ul className={`bet`}>
                         {c.children.map(e => {
                             if(choices[e.id]) {
                                 return (
-                                    <li><p>{e.name}</p><span>от {choices[e.id].price} ₽/{e.extra}</span></li>
+                                    <li key={'isc'+e.id}><p>{e.name}</p><span>от {choices[e.id].price} ₽/{e.extra}</span></li>
                                 )
                             }
                         })}

@@ -64,21 +64,23 @@ const Portfolio = ({fromDB, services, works}) => {
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
     const [showErr, setShowErr] = useState(null);
     const submitEdit = d => {
+        console.log(d)
         const work = {
             name: d.name,
             description: d.description,
             hours: parseInt(d.hours || 0) + parseInt(d.days || 0) * 24,
             login_id: parseInt(fromDB.id),
-            service_id: parseInt(service.id),
+            service_id: parseInt(d.service_id),
             price: parseInt(d.price),
             order_id: 0
-        }
+        };
         const goData = {
             address: 'auth:50003',
-            action: 'add-work',
+            action: 'edit-work',
             instructions: JSON.stringify(work)
         };
-        request(JSON.stringify(goData));
+        console.log(work)
+        //request(JSON.stringify(goData));
     }
 
     return (
@@ -94,13 +96,14 @@ const Portfolio = ({fromDB, services, works}) => {
                     <div>
                         <ul className={'col start'}>
                             {services && services.map(s => (
-                                <li key={'s'+s.id}>
+                                <li key={'ps'+s.id}>
                                     <a role="button" className={formCSS.bar} onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{s.name}</a>
                                     <div className={formCSS.hid}>
                                         {works[s.id] && works[s.id].map(e => {
                                             return (
-                                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form +' '+ css2.padded}`}>
-                                                    <input type="text" {...register('name', {required: true, maxLength: 200})} placeholder="Название" defaultValue={e.name}/>
+                                                <form key={'pf'+e.id} onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form +' '+ css2.padded}`}>
+                                                    <input type="hidden" {...register('service_id', {required: true})} value={s.id}/>
+                                                    <input type="text" {...register('name', {required: true, maxLength: 200})} placeholder="Название"/>
                                                     {errMsg(errors.name, 70)}
 
                                                     <textarea {...register('description', {required: true, maxLength: 2000})} placeholder="Напишите о самой работе / о процессе" defaultValue={e.description}/>
@@ -117,9 +120,7 @@ const Portfolio = ({fromDB, services, works}) => {
                                                     <input type="number" {...register('price')} min="0" max="2147483647" placeholder="Приблизительная цена за похожую работу (в рублях)" defaultValue={e.price}/>
                                                     {errMsg(errors.price, 70)}
 
-                                                    <p>Примечание: фотографии можно будет добавлять и редактировать, после добавления, на странице редактирования портфолио.</p>
-
-                                                    <input onClick={e => hideForAWhile(e)} type="submit" value="Изменить"/>
+                                                    <input type="submit" value="Изменить"/>
                                                     {showErr && <small>{showErr}</small>}
                                                 </form>
                                             )

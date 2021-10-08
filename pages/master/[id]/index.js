@@ -5,8 +5,8 @@ import {timeDiff, timeInRus} from "libs/time-stuff";
 import {organizeCats} from "libs/arrs";
 import {useState} from 'react';
 import {Aside} from "components/public/master/aside";
-import {Info} from "components/public/master/info";
 import {StarRating} from "components/public/star-rating";
+import {Info} from "components/public/master/info";
 import {Portfolio} from "components/public/master/portfolio";
 import {Comments} from "components/public/master/comments";
 
@@ -136,7 +136,7 @@ const Master = ({profile, comments, services, choices}) => {
                         </section>
                     )}
                     {showSection === 3 && (
-                        <Portfolio/>
+                        <Portfolio user={profile}/>
                     )}
                     <Aside/>
                 </div>

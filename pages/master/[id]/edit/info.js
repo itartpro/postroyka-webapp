@@ -233,7 +233,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
 
     return (
         <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
-            <br/>
             <main className="col start max">
                 <div className={'row start '+css.tabs}>
                     <a className={css.on}>Информация</a>
@@ -347,7 +346,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     <div className={'rel '+formCSS.sel}>
                                         <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={user.region_id}>
                                             {regions.map(e => (
-                                                <option key={e.id} value={e.id}>{e.name}</option>
+                                                <option key={'ir'+e.id} value={e.id}>{e.name}</option>
                                             ))}
                                         </select>
                                         <span><IoIosArrowDown/></span>
