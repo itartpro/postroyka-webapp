@@ -6,7 +6,7 @@ const Add = () => {
     return (
         <PublicLayout>
             <main className="col start max">
-                <h1 style={css.h1}>Добавить заказ</h1>
+                <h1 className={css.h1}>Добавить заказ</h1>
                 <form className={'col start '+formCSS.form}>
                     <label>Что нужно сделать?</label>
                     <input type="text" name="in1"/>
@@ -15,3 +15,5 @@ const Add = () => {
         </PublicLayout>
     )
 }
+
+export default Add

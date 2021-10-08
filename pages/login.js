@@ -118,7 +118,7 @@ const Login = () => {
                 `}</style>
                 <div className={css.a1}>
                     <p>Впервые на Построй Ке?</p>
-                    <p><a href="#">Добавить заказ</a> – если вы ищете исполнителя работ</p>
+                    <p><Link href={'/orders/add'}><a>Добавить заказ</a></Link> – если вы ищете исполнителя работ</p>
                     <p><Link href={'/for-masters'}><a>Стать исполнителем</a></Link> – если вы ищете заказы</p>
                     <style>{`
                     div:nth-child(2) a {
