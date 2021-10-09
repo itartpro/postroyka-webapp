@@ -2,7 +2,7 @@ import css from './edit-image.module.css'
 import {useState, useEffect, useContext} from 'react'
 import {WsContext} from 'context/WsProvider'
 
-export default function EditImage({table,id,PhotoSwipe,folder,thumb,alt,title,text,link,sort_order,name,width,height,removeImage,updateImage}) {
+export const EditImage = ({table,id,PhotoSwipe,folder,thumb,alt,title,text,link,sort_order,name,width,height,removeImage,updateImage}) => {
 
     const formData = {table,id,alt,title,text,link,sort_order}
     const {request, wsMsg, setWsMsg} = useContext(WsContext);
@@ -72,35 +72,11 @@ export default function EditImage({table,id,PhotoSwipe,folder,thumb,alt,title,te
             </div>
             {table && <form onSubmit={e => e.preventDefault()}>
                 <div>
-                    <label htmlFor={id + 'alt'}>alt:</label>
-                    <input type="text" id={id + 'alt'} value={form.alt}
-                           name="alt"
-                           maxLength={255}
-                           onChange={handleChange}/>
-                </div>
-                <div>
-                    <label htmlFor={id + 'title'}>title:</label>
-                    <input type="text" id={id + 'title'} value={form.title}
-                           name="title"
-                           maxLength={255}
-                           onChange={handleChange}/>
-                </div>
-                <div>
-                    <label htmlFor={id + 'link'}>Ссылка:</label>
-                    <input type="text" id={id + 'link'} value={form.link}
-                           name="link"
-                           maxLength={255}
-                           onChange={handleChange}/>
-                </div>
-                <div>
                     <label htmlFor={id + 'text'}>Текст:</label>
-                    <input type="text" id={id + 'text'} value={form.text}
-                           name="text"
-                           maxLength={255}
-                           onChange={handleChange}/>
+                    <textarea name="text" id={id + 'text'} cols="30" rows="2" maxLength={255} defaultValue={form.text} onChange={handleChange}/>
                 </div>
                 <div>
-                    <label htmlFor={id + 'sort_order'}>Ордер:</label>
+                    <label htmlFor={id + 'sort_order'}>Ордер сортировки:</label>
                     <input type="number" step="1" min="1" id={id + 'sort_order'} value={form.sort_order}
                            name="sort_order"
                            onChange={handleChange}/>

@@ -2,7 +2,7 @@
     max-width: 68%;
     border: 1px solid #B9B9B9;
     border-radius: 8px;
-    padding: 30px 35px;
+    padding: 30px 35px
 }
 
 .left > div {
@@ -15,8 +15,8 @@
     white-space: pre-wrap;
 }
 
-.left > div ul {
-    margin-bottom: 5px;
+.left > ul > li {
+    margin-bottom: 15px;
     list-style: none
 }
 

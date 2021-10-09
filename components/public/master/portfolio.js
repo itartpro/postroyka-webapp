@@ -32,12 +32,11 @@ export const Portfolio = props => {
                         </p>
 
                         <ul className={'row start'}>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="" width="106" height="80" loading="lazy"/></li>
+                            <li><img src="https://placeimg.com/106/80/animals" alt="animals" width="140" height="100" loading="lazy"/></li>
+                            <li><img src="https://placeimg.com/106/80/arch" alt="arch" width="140" height="100" loading="lazy"/></li>
+                            <li><img src="https://placeimg.com/106/80/nature" alt="nature" width="140" height="100" loading="lazy"/></li>
+                            <li><img src="https://placeimg.com/106/80/people" alt="people" width="140" height="100" loading="lazy"/></li>
+                            <li><img src="https://placeimg.com/106/80/tech" alt="tech" width="140" height="100" loading="lazy"/></li>
                         </ul>
 
                         <p><span>Сроки и объём</span>50 дней</p>

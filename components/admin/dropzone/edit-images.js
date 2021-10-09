@@ -11,7 +11,7 @@ export default function EditImages({ins}) {
     const {request, rs, wsMsg, setWsMsg} = useContext(WsContext);
     const [images, setImages] = useState([]);
     const [wait, setWait] = useState(false);
-    const imgApi = '/api/images/'+ins.folder.split('/').join('-');
+    const imgApi = ins.folder && '/api/images/'+ins.folder.split('/').join('-');
 
     const readImages = () => {
         if(wait || rs !== 1) return false;
@@ -27,7 +27,7 @@ export default function EditImages({ins}) {
             };
             return request(JSON.stringify(goData));
         }
-        if(ins && !ins.table && ins.folder) {
+        if(imgApi && ins && !ins.table && ins.folder) {
             return fetch(imgApi)
                 .then(res => res.json())
                 .then(data => setImages(data))

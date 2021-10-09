@@ -1,4 +1,4 @@
-import {getCats, getMastersChoices, getProfileById, getProfileComments} from "libs/static-rest";
+import {getCats, getMastersChoices, getPortfolio, getProfileById, getProfileComments} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
 import {timeDiff, timeInRus} from "libs/time-stuff";
@@ -19,53 +19,44 @@ export async function getServerSideProps({params}) {
     const comments = await getProfileComments(parseInt(params.id));
 
     const choices = await getMastersChoices(params.id);
-    const choiceIds = choices.map(e => e['service_id'])
-    const services = await getCats().then(cats => organizeCats(cats)[1].children.map(e => ({
-        id: e.id,
-        parent_id: e.parent_id,
-        name: e.name,
-        children: e.children.map(c => ({
-            id: c.id,
-            parent_id: c.parent_id,
-            name: c.name,
-            children: c.children.map(c2 => ({
-                id: c2.id,
-                parent_id: c2.parent_id,
-                name: c2.name,
-                extra: c2.extra
-            }))
-        }))
-    })));
-
-    const filtered = [];
-    if(services && choiceIds) {
-        services.forEach((e,i) => e.children.forEach(e2 => {
-            if(choiceIds.includes(e2.id)) {
-                if(!filtered.hasOwnProperty(i)) {
-                    filtered[i] = e;
-                    filtered[i].children = [];
-                }
-                filtered[i].children.push(e2)
-            }
-        }))
-    }
-
+    const choiceIds = await getMastersChoices(params.id);
     const organizedChoices = {};
     choices.forEach(e => {
         organizedChoices[e.service_id] = e;
+    })
+    const directIds = choices.reduce((result, e) => {
+        if(!e.parent) {
+            result.push(e.service_id.toString())
+        }
+        return result
+    }, [])
+    const directServices = await getCats('id', directIds);
+    const parentIds = [...new Set(directServices.map(e => e.parent_id.toString()))]
+    const serviceParents = await getCats('id', parentIds);
+    const services = organizeCats([...serviceParents, ...directServices])
+
+    //const services = choiceIds && await getCats('id', choiceIds);
+    const works = await getPortfolio(params.id)
+    const organizedWorks = {};
+    works.forEach(e => {
+        if(!organizedWorks.hasOwnProperty(e.service_id)) {
+            organizedWorks[e.service_id] = []
+        }
+        organizedWorks[e.service_id].push(e)
     })
 
     return {
         props: {
             profile,
             comments,
-            services: filtered,
+            services,
             choices: organizedChoices
         }
     }
 }
 
 const Master = ({profile, comments, services, choices}) => {
+
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
@@ -102,12 +93,12 @@ const Master = ({profile, comments, services, choices}) => {
             company = 'мастер работает один';
             break;
     }
-    const [showSection, setShowSection] = useState(1)
+    const [showSection, setShowSection] = useState(1);
 
     return (
         <PublicLayout>
-            <br/>
             <main className="col start max">
+                <br/>
                 <div className={'row start'}>
                     <div className={'col start init center '+css.d1}>
                         {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
@@ -140,6 +131,8 @@ const Master = ({profile, comments, services, choices}) => {
                     )}
                     <Aside/>
                 </div>
+                <br/>
+                <br/>
             </main>
         </PublicLayout>
     )

@@ -1,15 +1,13 @@
 import PublicLayout from "components/public/public-layout";
 import css from "./edit.module.css";
 import Link from 'next/link';
-import {useState, useEffect} from "react";
 import {getCats, getMastersChoices, getPortfolio, getProfileById} from "libs/static-rest";
 import formCSS from "styles/forms.module.css";
 import {IoIosArrowDown} from 'react-icons/io';
 import {toggleDown} from "libs/sfx";
+import {EditWork} from "components/public/master/edit/edit-work";
+import {useState} from "react";
 import {ShowMessage} from "components/show-message";
-import css2 from "../add-work/add-work.module.css";
-import {useForm} from "react-hook-form";
-import {errMsg} from "libs/form-stuff";
 
 export async function getServerSideProps({params}) {
     const fromDB = await getProfileById(params.id).then(e => {
@@ -40,55 +38,16 @@ export async function getServerSideProps({params}) {
     }
 }
 
-//TODO load portfolio
-//TODO add ability to add images right here
-
-//each work in portfolio is:
-//id
-//master_id
-//order_id //0 if none
-//name Название
-//service_id Привзяка к какой категории/услуге это относится
-//description Описание
-//hours Сроки
-//price Приблизительная цена за похожую работу
-
-//Галерея:(из нескольких картинок)
-//portfolio_media table standard layout
-
 const Portfolio = ({fromDB, services, works}) => {
-    const [user, setUser] = useState(fromDB);
+
     const [showMsg, setShowMsg] = useState(null);
 
-    //form stuff
-    const {register, handleSubmit, watch, formState: {errors}} = useForm();
-    const [showErr, setShowErr] = useState(null);
-    const submitEdit = d => {
-        console.log(d)
-        const work = {
-            name: d.name,
-            description: d.description,
-            hours: parseInt(d.hours || 0) + parseInt(d.days || 0) * 24,
-            login_id: parseInt(fromDB.id),
-            service_id: parseInt(d.service_id),
-            price: parseInt(d.price),
-            order_id: 0
-        };
-        const goData = {
-            address: 'auth:50003',
-            action: 'edit-work',
-            instructions: JSON.stringify(work)
-        };
-        console.log(work)
-        //request(JSON.stringify(goData));
-    }
-
     return (
-        <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
+        <PublicLayout loginName={fromDB.first_name + ' ' + fromDB.last_name}>
             <main className="col start max">
                 <div className={'row start '+css.tabs}>
-                    <Link href={'/master/'+user.id+'/edit/info'}><a>Информация</a></Link>
-                    <Link href={'/master/'+user.id+'/edit/service-prices'}><a>Услуги и цены</a></Link>
+                    <Link href={'/master/'+fromDB.id+'/edit/info'}><a>Информация</a></Link>
+                    <Link href={'/master/'+fromDB.id+'/edit/service-prices'}><a>Услуги и цены</a></Link>
                     <a className={css.on}>Портфолио</a>
                 </div>
                 <div className={css.list}>
@@ -99,33 +58,14 @@ const Portfolio = ({fromDB, services, works}) => {
                                 <li key={'ps'+s.id}>
                                     <a role="button" className={formCSS.bar} onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{s.name}</a>
                                     <div className={formCSS.hid}>
-                                        {works[s.id] && works[s.id].map(e => {
-                                            return (
-                                                <form key={'pf'+e.id} onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form +' '+ css2.padded}`}>
-                                                    <input type="hidden" {...register('service_id', {required: true})} value={s.id}/>
-                                                    <input type="text" {...register('name', {required: true, maxLength: 200})} placeholder="Название"/>
-                                                    {errMsg(errors.name, 70)}
-
-                                                    <textarea {...register('description', {required: true, maxLength: 2000})} placeholder="Напишите о самой работе / о процессе" defaultValue={e.description}/>
-                                                    {errMsg(errors.description, 2000)}
-
-                                                    <p>Сколько времени ушло на эту работу? (можно приблизительно)</p>
-                                                    <div className={`row center start ${css2.time}`}>
-                                                        <label>Часы:</label>
-                                                        <input type="number" min="0" max="23" placeholder="Часы" {...register('hours')}/>
-                                                        <label>Дни:</label>
-                                                        <input type="number" min="0" max="1460" placeholder="Дни" {...register('days')}/>
-                                                    </div>
-
-                                                    <input type="number" {...register('price')} min="0" max="2147483647" placeholder="Приблизительная цена за похожую работу (в рублях)" defaultValue={e.price}/>
-                                                    {errMsg(errors.price, 70)}
-
-                                                    <input type="submit" value="Изменить"/>
-                                                    {showErr && <small>{showErr}</small>}
-                                                </form>
-                                            )
-                                        })}
-                                        <Link href={'/master/'+user.id+'/add-work/'+s.id}><a className={css.b1 + ' ' + formCSS.grn}>Добавить новую работу</a></Link>
+                                        {works[s.id] && works[s.id].map(e => <EditWork
+                                            key={'pw'+e.id}
+                                            serviceId={s.id}
+                                            userId={fromDB.id}
+                                            work={e}
+                                            setShowMsg={setShowMsg}
+                                        />)}
+                                        <Link href={'/master/'+fromDB.id+'/add-work/'+s.id}><a className={css.b1 + ' ' + formCSS.grn}>Добавить новую работу в раздел {s.name}</a></Link>
                                     </div>
                                 </li>
                             ))}

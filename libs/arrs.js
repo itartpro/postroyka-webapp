@@ -8,10 +8,21 @@ export const organizeCats = cats => {
         catObj[v.id].position = i;
     });
     cats.forEach(el => {
-        if(catObj[el.parent_id]) {
-            let index = catObj[el.parent_id].position;
-            cats[index].children.push(el);
+        if(!catObj[el.parent_id]) {
+            let newLength = cats.push({
+                id: el.parent_id,
+                parent_id: 0,
+                children: []
+            });
+            catObj[el.parent_id] = {
+                id: el.parent_id,
+                parent_id: 0,
+                children: [],
+                position: newLength - 1
+            }
         }
+        let index = catObj[el.parent_id].position;
+        cats[index].children.push(el);
     });
     return cats.filter(el => el.parent_id === 0);
 }

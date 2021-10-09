@@ -112,7 +112,8 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                         instructions: JSON.stringify({
                             id: user.id,
                             column: "avatar",
-                            value: "true"
+                            value: "true",
+                            table: "logins"
                         })
                     };
                     request(JSON.stringify(goData));
@@ -482,8 +483,8 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                         )}
                     </li>
                 </ul>
+                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
             </main>
-            {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
         </PublicLayout>
     )
 }

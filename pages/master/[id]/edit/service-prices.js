@@ -72,11 +72,12 @@ const ServicePrices = ({fromDB, services, choices}) => {
     const updateChoicePrices = d => {
         const choice = [];
         for(let i in d) {
+            let service_id = parseInt(i);
             let price = parseInt(d[i]);
             if(price > 0) {
                 choice.push({
                     login_id: fromDB.id,
-                    service_id: parseInt(i),
+                    service_id,
                     price: price,
                     parent: false
                 })
