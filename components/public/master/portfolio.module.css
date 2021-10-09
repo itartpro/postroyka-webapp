@@ -3,9 +3,9 @@
     list-style: none
 }
 
-.left > li {
-    font-size: 1.2rem;
-    margin: 5px 0
+.left > li > a {
+    margin-bottom: 10px;
+    font-size: 1.2rem
 }
 
 .left > li > a * {
@@ -15,12 +15,17 @@
 .d1 {
     border: 1px solid #B9B9B9;
     border-radius: 8px;
-    margin-top: 20px;
-    padding: 25px 30px;
+    margin-bottom: 30px;
+    padding: 25px 30px
 }
 
 .d1 b:not(:first-child) {
     margin-top: 25px;
+}
+
+.d1 b {
+    font-size: 1.1rem;
+    margin-bottom: 10px
 }
 
 .d1 > p {
@@ -33,17 +38,19 @@
     margin-right: 15px;
 }
 
-.d1 ul {
+.d1 > div {
     margin: 15px 0;
 }
 
-.d1 ul li {
-    list-style: none;
+.d1 img {
     margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer
 }
 
-.d1 ul img {
-    border-radius: 4px;
+/* caption font size for photoswipe gallery */
+.d1 > div > div > div div {
+    font-size: 1.2rem!important
 }
 
 @media all and (max-width: 1000px) {

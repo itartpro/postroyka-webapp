@@ -22,7 +22,7 @@ export async function getServerSideProps({params}) {
     const services = choiceIds && await getCats('id', choiceIds);
     const works = await getPortfolio(params.id)
     const organizedWorks = {};
-    works.forEach(e => {
+    works && works.forEach(e => {
         if(!organizedWorks.hasOwnProperty(e.service_id)) {
             organizedWorks[e.service_id] = []
         }
@@ -58,13 +58,15 @@ const Portfolio = ({fromDB, services, works}) => {
                                 <li key={'ps'+s.id}>
                                     <a role="button" className={formCSS.bar} onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{s.name}</a>
                                     <div className={formCSS.hid}>
-                                        {works[s.id] && works[s.id].map(e => <EditWork
-                                            key={'pw'+e.id}
-                                            serviceId={s.id}
-                                            userId={fromDB.id}
-                                            work={e}
-                                            setShowMsg={setShowMsg}
-                                        />)}
+                                        {works[s.id] && works[s.id].map(e => (
+                                            <EditWork
+                                                key={'pw'+e.id}
+                                                serviceId={s.id}
+                                                userId={fromDB.id}
+                                                work={e}
+                                                setShowMsg={setShowMsg}
+                                            />
+                                        ))}
                                         <Link href={'/master/'+fromDB.id+'/add-work/'+s.id}><a className={css.b1 + ' ' + formCSS.grn}>Добавить новую работу в раздел {s.name}</a></Link>
                                     </div>
                                 </li>

@@ -25,10 +25,10 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
             id: work.id,
             name: d.name,
             description: d.description,
-            hours: parseInt(d.hours || 0) + parseInt(d.days || 0) * 24,
+            volume: d.volume,
             login_id: userId,
             service_id: serviceId,
-            price: parseInt(d.price),
+            price: d.price,
             order_id: work.order_id
         };
         const goData = {
@@ -140,15 +140,10 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                 <textarea {...register('description', {required: true, maxLength: 2000})} placeholder="Напишите о самой работе / о процессе" defaultValue={work.description}/>
                 {errMsg(errors.description, 2000)}
 
-                <p>Сколько времени ушло на эту работу? (можно приблизительно)</p>
-                <div className={`row center start ${css2.time}`}>
-                    <label>Часы:</label>
-                    <input type="number" min="0" max="23" placeholder="Часы" {...register('hours')} defaultValue={calculatedHours}/>
-                    <label>Дни:</label>
-                    <input type="number" min="0" max="1460" placeholder="Дни" {...register('days')} defaultValue={calculatedDays}/>
-                </div>
+                <input type="text" {...register('volume', {maxLength: 40})}  placeholder="Сроки и объем" defaultValue={work.volume}/>
+                {errMsg(errors.price, 40)}
 
-                <input type="number" {...register('price')} min="0" max="2147483647" placeholder="Приблизительная цена за похожую работу (в рублях)" defaultValue={work.price}/>
+                <input type="text" {...register('price', {maxLength: 200})}  placeholder="Средняя цена (в рублях)" defaultValue={work.price}/>
                 {errMsg(errors.price, 70)}
 
                 <input type="submit" value="Изменить инфо"/>

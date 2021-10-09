@@ -1,4 +1,4 @@
-import {getCats, getMastersChoices, getPortfolio, getProfileById, getProfileComments} from "libs/static-rest";
+import {getCats, getMastersChoices, getPortfolio, getPortfolioImages, getProfileById, getProfileComments} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
 import {timeDiff, timeInRus} from "libs/time-stuff";
@@ -35,27 +35,48 @@ export async function getServerSideProps({params}) {
     const serviceParents = await getCats('id', parentIds);
     const services = organizeCats([...serviceParents, ...directServices])
 
-    //const services = choiceIds && await getCats('id', choiceIds);
-    const works = await getPortfolio(params.id)
-    const organizedWorks = {};
-    works.forEach(e => {
-        if(!organizedWorks.hasOwnProperty(e.service_id)) {
-            organizedWorks[e.service_id] = []
+    const worksUn = await getPortfolio(params.id)
+    const works = {};
+    const workServiceIds = [];
+    const workIds = [];
+    worksUn && worksUn.forEach(e => {
+        if(!works.hasOwnProperty(e.service_id)) {
+            works[e.service_id] = []
         }
-        organizedWorks[e.service_id].push(e)
-    })
+        works[e.service_id].push(e)
+        workServiceIds.push(e.service_id.toString());
+        workIds.push(e.id.toString());
+    });
+    //master could've chosen works unrelated to services he put a price on - so need to retrieve these services separately
+    const workServices = await getCats('id', workServiceIds);
+    const photos = await getPortfolioImages(workIds).then(res => {
+        const organized = {};
+        res.forEach(e => {
+            if(!organized.hasOwnProperty(e.album_id)) {
+                organized[e.album_id] = [];
+            }
+            organized[e.album_id].push(e)
+        });
+        for(let i in organized) {
+            organized[i].sort((a,b) => a['sort_order'] - b['sort_order'])
+        }
+        return organized
+    });
 
     return {
         props: {
             profile,
             comments,
             services,
-            choices: organizedChoices
+            choices: organizedChoices,
+            works,
+            workServices,
+            photos
         }
     }
 }
 
-const Master = ({profile, comments, services, choices}) => {
+const Master = ({profile, comments, services, choices, works, workServices, photos}) => {
 
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
@@ -127,7 +148,7 @@ const Master = ({profile, comments, services, choices}) => {
                         </section>
                     )}
                     {showSection === 3 && (
-                        <Portfolio user={profile}/>
+                        <Portfolio user={profile} works={works} workServices={workServices} photos={photos}/>
                     )}
                     <Aside/>
                 </div>

@@ -7,7 +7,7 @@ export const Info = ({user, services, choices}) => {
             <b>Об исполнителе</b>
             <div><pre>{user && user.about}</pre></div>
             {services && services.map(s => s.children.length > 0 && (
-                <ul className={'bet'}>
+                <ul key={'sul'+s.id} className={'bet'}>
                     {s.children.map(c => (
                         <li key={'sc'+c.id}>
                             <p>{c.name}</p>

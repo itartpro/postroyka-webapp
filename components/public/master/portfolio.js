@@ -1,50 +1,60 @@
 import css from './portfolio.module.css';
-import {FiChevronDown} from "react-icons/fi";
+import {FiChevronUp} from "react-icons/fi";
 import {toggleDown} from "libs/sfx";
 
-export const Portfolio = props => {
+import 'photoswipe/dist/photoswipe.css'
+import 'photoswipe/dist/default-skin/default-skin.css'
+import { Gallery, Item } from 'react-photoswipe-gallery';
+
+export const Portfolio = ({works, workServices, photos}) => {
+
     return (
         <ul className={`col start ${css.left}`}>
-            <li>
-                <a className={`row bet center`} role="button" onClick={toggleDown}>
-                    <b>Премиальный ремонт дома под ключ</b>
-                    <FiChevronDown/>
-                </a>
-            </li>
-            <li>
-                <a className={`row bet center`} role="button" onClick={toggleDown}>
-                    <b>Премиальный ремонт дома под ключ</b>
-                    <FiChevronDown/>
-                </a>
-            </li>
-            <li>
-                <a className={`row bet center`} role="button" onClick={toggleDown}>
-                    <b>Премиальный ремонт дома под ключ</b>
-                    <FiChevronDown/>
-                </a>
-                <div>
-                    <div className={`col start ${css.d1}`}>
-                        <b>Ремонт ванной и туалета в сталинки</b>
-                        <p>Сроки и объем 50 дней Средняя цена 90000руб. Перечень работ Демонтаж перегородок из дранки, замена
-                            всех стояков, устройство стяжки, разводка водопровода, канализации и электрики, устройство
-                            перегородок из гипсокартона устройства тёплого электрического пола, укладка плитки и установка
-                            сантехники Дополнительно Высота до потолка 3,4м.
-                        </p>
-
-                        <ul className={'row start'}>
-                            <li><img src="https://placeimg.com/106/80/animals" alt="animals" width="140" height="100" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/arch" alt="arch" width="140" height="100" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/nature" alt="nature" width="140" height="100" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/people" alt="people" width="140" height="100" loading="lazy"/></li>
-                            <li><img src="https://placeimg.com/106/80/tech" alt="tech" width="140" height="100" loading="lazy"/></li>
-                        </ul>
-
-                        <p><span>Сроки и объём</span>50 дней</p>
-                        <p><span>Средняя цена</span>90 000р</p>
-                        <p><span>Дополнительно</span>Высота до потолка 3,4м</p>
+            {workServices && workServices.map(s => (
+                <li key={'ws'+s.id}>
+                    <a className={`row bet center`} role="button" onClick={toggleDown}>
+                        <b>{s.name}</b>
+                        <FiChevronUp/>
+                    </a>
+                    <div>
+                        {works[s.id].map(e => (
+                            <div key={'w'+e.id} className={`col start ${css.d1}`}>
+                                <b>{e.name}</b>
+                                <p>{e.description}</p>
+                                {photos[e.id] && (
+                                    <div className="row start">
+                                        <Gallery>
+                                            {photos[e.id].map((e, i) => (
+                                                <Item key={e.id || i}
+                                                      original={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/'+e.name}
+                                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                                      width={e.width}
+                                                      height={e.height}
+                                                      title={e.text}
+                                                >
+                                                    {({ ref, open }) => (
+                                                        <img
+                                                            ref={ref}
+                                                            onClick={open}
+                                                            src={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                                            alt={i}
+                                                            width={140}
+                                                            height={100}
+                                                            loading="lazy"
+                                                        />
+                                                    )}
+                                                </Item>
+                                            ))}
+                                        </Gallery>
+                                    </div>
+                                )}
+                                <p><span>Сроки и объём</span>{e.volume}</p>
+                                <p><span>Средняя цена</span>{e.price}</p>
+                            </div>
+                        ))}
                     </div>
-                </div>
-            </li>
+                </li>
+            ))}
         </ul>
     )
 }

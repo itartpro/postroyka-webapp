@@ -140,6 +140,26 @@ export const getCats = (columnName = null, valueArray = null) => {
         })
 }
 
+export const getPortfolioImages = workIdStrings => {
+    return goPost(JSON.stringify({
+        address: 'gpics:50001',
+        action: 'read-where-in',
+        instructions: JSON.stringify({
+            column: 'album_id',
+            table: 'portfolio_media',
+            values: workIdStrings
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getPortfolioImages error:" + e + res);
+            return null
+        }
+    })
+}
+
 export const getLatestArticles = (limit = null, url = null) => {
     return getCats(url)
         .then(data => organizeCats(data))
