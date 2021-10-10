@@ -1,3 +1,64 @@
 .h1 {
-    color: red
+    margin-top: 30px;
+}
+
+.tyt {
+    margin-top: 30px;
+}
+
+.tyt span {
+    color: #47CB43;
+    position: absolute;
+    margin: -10px 20px;
+    background: #ffffff;
+    z-index: 1;
+}
+
+.tab {
+    position: relative;
+    border: 1px solid #f3f3f3;
+    border-radius: 8px 8px 0 8px;
+    max-width: 400px;
+    padding: 20px;
+}
+
+
+.tab:hover {
+    background: #fafaff;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+
+.tab > p {
+    color: #929292;
+    margin-top: 5px;
+}
+
+.tab > p > span {
+    color: #d5d5d5;
+}
+
+.in1 {
+    padding-left: 200px;
+    padding-right: 200px;
+    margin-bottom: 25px;
+    filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.02));
+}
+
+
+
+
+@media all and (max-width: 900px) {
+    .in1 {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+
+@media all and (max-width: 390px) {
+    .in1 {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }

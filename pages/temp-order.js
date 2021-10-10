@@ -37,9 +37,9 @@ const TempOrder = () => {
                     <p>Хорошая бригада.</p>
                     <b>Фотографии</b>
                     <div>
-                        <img src="/images/formasters/master1.png" alt="master" width="100" height="126" loading="lazy"/>
-                        <img src="/images/formasters/master1.png" alt="master" width="100" height="126" loading="lazy"/>
-                        <img src="/images/formasters/master1.png" alt="master" width="100" height="126" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
                     </div>
                     <p><a href="https:\\google.com">Алексей </a>октябрь 2021</p>
                 </div>
