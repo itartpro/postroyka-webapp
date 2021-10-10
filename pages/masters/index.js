@@ -1,4 +1,5 @@
 import PublicLayout from "components/public/public-layout";
+import css from "./masters.module.css";
 
 const Masters = () => {
     return (
