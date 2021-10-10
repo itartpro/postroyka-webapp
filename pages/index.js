@@ -6,7 +6,6 @@ import {getCats, getPageBySlug, getRegions} from 'libs/static-rest';
 import css from 'styles/home.module.css';
 import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
-import {Block300} from "components/public/block300";
 import {Button} from "components/public/button";
 import {toggleDown} from "libs/sfx";
 import {IoIosArrowDown} from 'react-icons/io';
@@ -70,7 +69,17 @@ const Home = ({page, services, regions}) => {
                     <Button/>
                 </section>
                 <div className="row max">
-                    <Block300/>
+                    <div className={`row bet ${css.bl1}`}>
+                        <div>
+                            <h1>Более 300 тысяч заказчиков уже нашли мастера на Постройке</h1>
+                            <p>Это совершенно бесплатно и ни к чему не обязывает.
+                                В среднем, на каждый заказ поступает 5-7 предложений</p>
+                            <Link href={'/orders/add'}><a>Добавить заказ</a></Link>
+                        </div>
+                        <div>
+                            <img src="/images/home/people.png" alt="people"  width="372" height="272" loading="lazy"/>
+                        </div>
+                    </div>
                 </div>
                 <br/>
                 <br/>

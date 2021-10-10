@@ -11,7 +11,6 @@ export const Comment = () => {
                 <p>Положительный отзыв</p>
                 <BsStar/>
                 <span>8.2</span>
-                <div></div>
             </div>
             <div className="row center bet">
                 <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76" loading="lazy"/>

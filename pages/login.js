@@ -61,6 +61,7 @@ const Login = () => {
     }, [verifiedJwt])
 
     useEffect(() => {
+        console.log(wsMsg);
         if(!wsMsg || wsMsg.type !== "info") return false;
         const res = JSON.parse(wsMsg.data);
         if(res.data && res.data.hasOwnProperty("avatar")) {
@@ -91,6 +92,7 @@ const Login = () => {
             action: 'login',
             instructions: JSON.stringify(instructions)
         };
+
         request(JSON.stringify(goData), 'jwt-auth')
     };
 

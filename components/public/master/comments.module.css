@@ -1,87 +1,97 @@
-.pad b {
-    padding-right: 10px;
+.left {
+    max-width: 68%
 }
 
 .pad p {
     padding-right: 10px;
+    margin-bottom: 10px;
     color: #6d6d6d;
+    cursor: pointer;
+    font-size: 1.2rem
 }
 
-.cont {
+.pad p.cho {
+    font-weight: bold;
+    color: black
+}
+
+.com {
     border: 1px solid #B9B9B9;
     border-radius: 8px;
     padding: 15px;
-    max-width: 65%;
-    margin: 15px 0 10px 0;
+    margin-bottom: 30px
+}
+.com p {
+    margin-bottom: 20px
 }
 
-.cont > p:nth-child(1) {
-    color: #fff;
-    background: #47CB43;
-    padding: 5px 15px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.ok {
+    color: #00d007;
+    font-weight: bold;
+    align-items: center;
+    border-bottom: 1px solid #DAF5D9;
+    font-size: 1.1rem;
+    padding-bottom: 5px
 }
 
-.cont p {
-    padding: 10px 0;
+.ok > span:nth-child(2) {
+    padding-left: 28px
 }
 
-.cont a {
-    color: #00688c;
+.ok svg {
+    position: absolute;
+    left: 0;
+    top: 2px
 }
 
-.cont a:hover {
+.ok.bad {
+    color: red;
+    border-bottom: 1px solid #ff7d7d
+}
+
+.com a {
+    color: #00688c
+}
+
+.com a:hover {
     color: #009bd0;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    transition: all .3s;
+    transition: all .3s
 }
 
-.cont img {
+.com img {
     margin: 10px 10px 10px 0;
-    border-radius: 4px;
-}
-
-.wow > div:nth-child(2) > p:nth-child(1) {
-    background: #CA1800;
+    border-radius: 4px
 }
 
 .img2 {
-    margin-left: 25px;
-    margin-top: 15px;
+    margin: 15px 0 0 25px
 }
 
 .img2 > div > img {
-    border-radius: 30px;
+    border-radius: 30px
 }
 
 .img2 p {
-    margin-left: 40px;
+    margin-left: 40px
 }
 
-@media all and (max-width: 1200px) {
-    .cont {
-        max-width: 100%;
-        padding: 25px;
+@media all and (max-width: 1000px) {
+    .left {
+        max-width: 100%
     }
 }
 
 
 @media all and (max-width: 1200px) {
-    .cont {
-        padding: 15px;
+    .com {
+        padding: 15px
     }
 
     .pad {
-        flex-direction: column;
-    }
-
-    .pad p, .pad b {
-        margin-top: 15px;
+        flex-direction: column
     }
 
     .img2 {
-        margin: 0;
+        margin: 0
     }
 }

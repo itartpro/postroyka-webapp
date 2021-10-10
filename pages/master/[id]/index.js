@@ -123,8 +123,8 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                 <div className={'row start'}>
                     <div className={'col start init center '+css.d1}>
                         {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
-                        <StarRating rating={profile.rating}/>
-                        <p>{(comments && comments.length) || 0} отзывов</p>
+                        <StarRating rating={profile.rating || 6.3}/>
+                        <p>Отзывов: {(comments && comments.length) || 2}</p>
                     </div>
                     <div className={'col start init '+css.d2}>
                         <h1>{fullName}</h1>
@@ -143,9 +143,7 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                         <Info user={profile} services={services} choices={choices}/>
                     )}
                     {showSection === 2 && (
-                        <section>
-                            <Comments/>
-                        </section>
+                        <Comments/>
                     )}
                     {showSection === 3 && (
                         <Portfolio user={profile} works={works} workServices={workServices} photos={photos}/>
