@@ -211,7 +211,6 @@ const Registration = ({regions, defaultTowns, services}) => {
 
     return (
         <PublicLayout>
-            <br/>
             <main className={`col start max`}>
                 <h1>Регистрироваться как мастер</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className={`col start ${formCSS.form}`}>
@@ -287,8 +286,8 @@ const Registration = ({regions, defaultTowns, services}) => {
                     <ul className={'col start'}>
                         {services && services.map(parent => (
                             <li key={'s'+parent.id}>
-                                <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
-                                <ul>
+                                <a className={formCSS.bar} role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
+                                <ul className={formCSS.hid}>
                                     {parent.children.map(e => (
                                         <li key={'s'+e.id}>
                                             <label htmlFor={'srv_'+e.id} className={formCSS.check}>

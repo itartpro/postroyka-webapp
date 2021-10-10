@@ -15,10 +15,15 @@ export async function getServerSideProps({params}) {
         delete e['refresh'];
         return e;
     });
-    const choiceIds = await getMastersChoices(params.id).then(choices => {
-        if(!choices) return null;
-        return choices.map(e => e['service_id'].toString());
-    });
+
+    const choiceIds = await getMastersChoices(params.id).then(resp => {
+        return resp.reduce((result, e) => {
+            if(e.parent) {
+                result.push(e.service_id.toString())
+            }
+            return result
+        }, []);
+    })
     const services = choiceIds && await getCats('id', choiceIds);
     const works = await getPortfolio(params.id)
     const organizedWorks = {};
@@ -41,6 +46,7 @@ export async function getServerSideProps({params}) {
 const Portfolio = ({fromDB, services, works}) => {
 
     const [showMsg, setShowMsg] = useState(null);
+    console.log(services);
 
     return (
         <PublicLayout loginName={fromDB.first_name + ' ' + fromDB.last_name}>

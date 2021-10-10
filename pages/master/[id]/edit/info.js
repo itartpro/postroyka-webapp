@@ -417,8 +417,8 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     <ul className={'col start'}>
                                         {services && services.map(parent => (
                                             <li key={'s'+parent.id}>
-                                                <a role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
-                                                <ul className={`row start`}>
+                                                <a className={formCSS.bar} role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
+                                                <ul className={`row start ${formCSS.hid}`}>
                                                     {parent.children.map(e => (
                                                         <li ref={el => simulateClick.current[e.id] = el} key={'s'+e.id}>
                                                             <label htmlFor={'srv_'+e.id} className={formCSS.check}>
