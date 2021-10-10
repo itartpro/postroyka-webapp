@@ -47,7 +47,18 @@
     background: #CA1800;
 }
 
+.img2 {
+    margin-left: 25px;
+    margin-top: 15px;
+}
 
+.img2 > div > img {
+    border-radius: 30px;
+}
+
+.img2 p {
+    margin-left: 40px;
+}
 
 @media all and (max-width: 1200px) {
     .cont {
@@ -70,5 +81,7 @@
         margin-top: 15px;
     }
 
-
+    .img2 {
+        margin: 0;
+    }
 }
