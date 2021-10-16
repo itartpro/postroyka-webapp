@@ -104,9 +104,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     const {query} = useRouter();
     useEffect(() => query && query.title && setValue('title', query.title), [query])
     const titleWatch = watch('title');
-    useEffect(() => {
-        if(!titleWatch) return false;
-        const title = titleWatch.toLowerCase();
+    const searchWord = str => {
+        const title = str.toLowerCase();
         const idx1 = directServices.findIndex(e => {
             const str = e.name.toLowerCase();
             return str.includes(title)
@@ -115,8 +114,21 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             const str = e.name.toLowerCase();
             return str.includes(title)
         });
-        if(directServices[idx1]) setValue('service_id', directServices[idx1].id);
-        if(!directServices[idx1] && smartSearch[idx2]) setValue('service_id', smartSearch[idx2].parent_id);
+        if(directServices[idx1]) {
+            setValue('service_id', directServices[idx1].id);
+            return true;
+        }
+        if(!directServices[idx1] && smartSearch[idx2]) {
+            setValue('service_id', smartSearch[idx2].parent_id);
+            return true;
+        }
+    }
+    useEffect(() => {
+        if(!titleWatch) return false;
+        if(!searchWord(titleWatch)) {
+            const firstWordRemoved = titleWatch.substr(titleWatch.indexOf(" ") + 1);
+            searchWord(firstWordRemoved);
+        }
     }, [titleWatch])
 
     //region and towns
@@ -135,14 +147,14 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             <main className="col start max">
                 <header><h1 className={css.h1}>Добавить заказ</h1></header>
                 <form onSubmit={handleSubmit(onSubmit)} className={'col start ' + formCSS.form}>
-                    <label htmlFor="i1">Что нужно сделать?</label>
-                    <input id="i1" type="text" {...register('title', {required: true, maxLength: 90})} placeholder="Заголовок"/>
+                    <p>Что нужно сделать?</p>
+                    <input type="text" {...register('title', {required: true, maxLength: 90})} placeholder='Заголовок (например "Сделать натяжные потолки" или "Ремонт стиральной машинки")'/>
                     {errMsg(errors.title, 70)}
                     <br/>
 
-                    <label htmlFor="i3">Чтобы Ваш заказ быстрее попал к соответствующему мастеру выберите к какой категории работ отонсится Ваш заказ</label>
+                    <p>Чтобы Ваш заказ быстрее попал к соответствующему мастеру выберите к какой категории работ отонсится Ваш заказ</p>
                     <div className={'rel '+formCSS.sel}>
-                        <select id="i3" {...register('service_id', {required: true})} data-label="Категория услуг">
+                        <select {...register('service_id', {required: true})} data-label="Категория услуг">
                             <option value="">Выберите категорию</option>
                             {directServices && directServices.map(e => (
                                 <option key={'ds'+e.id} value={e.id}>{e.name}</option>
@@ -153,8 +165,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     {errMsg(errors.service_id)}
                     <br/>
 
-                    <label htmlFor="i2">Укажите объем и виды работ</label>
-                    <textarea id="i2" {...register("text", {required: true, maxLength: 2000})} />
+                    <p>Укажите объем и виды работ</p>
+                    <textarea
+                        {...register("text", {required: true, maxLength: 2000})}
+                        placeholder="Напишите список работ, укажите объём (например, если это помещение, то в квадратных метрах). Опишите Ваши пожелания и требования если они есть. Чем детальнее Вы напишите тех. задание - тем охотнее согласятся работать компетентные мастера."/>
                     {errMsg(errors.text, 2000)}
                     <div className={'row start '+css.imgs}>
                         {!(images && images.length > 4) && (
