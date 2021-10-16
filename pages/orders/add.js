@@ -139,6 +139,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         exp[2] && searchWord(exp[2])
     }, [titleWatch])
 
+    const passwordWatch = watch('password');
+
     //region and towns
     const regionWatch = watch('region');
     useEffect(() => {
@@ -152,7 +154,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
 
     const marks = [1000, 1500, 2000, 2500, 3000, 5000, 7000, 10000, 15000, 30000, 50000, 100000, 150000, 300000, 500000, 1000000, 1500000, 3000000, 10000000];
     const [rangeValue, setRangeValue] = useState(0);
-    const getRangeValue = e => setRangeValue(e);
+    const getRangeValue = e => {
+        setValue('budget', e);
+        setRangeValue(e);
+    }
 
     return (
         <PublicLayout>
@@ -242,7 +247,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     <MarkedRangeSlider returnValue={getRangeValue} marks={marks}/>
                     <div className={'row '+css.budget}>
                         <span>До</span>
-                        <input type="number" placeholder="budget" defaultValue={rangeValue} {...register("budget", {required: true, max: marks[marks.length - 1], min: marks[0]})} />
+                        <input type="number" placeholder="budget" defaultValue={0} {...register("budget", {required: true, max: marks[marks.length - 1], min: marks[0]})} />
                         <span>рублей</span>
                     </div>
                     <br/>
