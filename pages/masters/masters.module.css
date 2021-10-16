@@ -1,12 +1,10 @@
-
 .left {
     max-width: 30%;
-
 }
 
 .block {
     padding: 40px 52px 52px 52px;
-    border: 1px solid #EAEAEA;
+    border: 1px solid #eaeaea;
     border-radius: 8px;
     margin-top: 30px;
 }
@@ -96,6 +94,24 @@
     border-radius: 8px;
 }
 
+.right > div:nth-child(1) {
+    margin-bottom: 15px;
+    padding: 0;
+    border: none;
+}
+
+.right > div:nth-child(1) b {
+    font-size: 1.3rem;
+    margin: 0;
+}
+.right > div:nth-child(1) p {
+    margin: 15px 0;
+}
+
+.right > div:nth-child(1) p:nth-child(1) {
+    margin-top: 44px;
+}
+
 .right img {
     border-radius: 60px
 }
@@ -158,4 +174,39 @@
 
 .vo a {
     color: #2F80ED
+}
+
+
+@media all and (max-width: 1200px) {
+    .left {
+        max-width: 48%;
+    }
+    .right {
+        max-width: 48%;
+    }
+}
+
+
+@media all and (max-width: 850px) {
+    .left {
+        max-width: 100%;
+    }
+    .right {
+        max-width: 100%;
+    }
+    .block {
+        padding: 20px 25px;
+
+    }
+    .filt {
+        padding: 20px 25px;
+    }
+
+    .formi {
+        padding: 20px 25px;
+    }
+
+    .right > div {
+        padding: 20px;
+    }
 }
