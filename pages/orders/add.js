@@ -180,6 +180,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     <p>Укажите объем и виды работ</p>
                     <textarea
                         {...register("text", {required: true, maxLength: 2000})}
+                        data-label="Описание работы"
                         placeholder="Напишите список работ, укажите объём (например, если это помещение, то в квадратных метрах). Опишите Ваши пожелания и требования если они есть. Чем детальнее Вы напишите тех. задание - тем охотнее согласятся работать компетентные мастера."/>
                     {errMsg(errors.text, 2000)}
                     <div className={'row start '+css.imgs}>

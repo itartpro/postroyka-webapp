@@ -6,7 +6,7 @@ export const errMsg = (e, maxLength = 0, ) => {
     );
 
     if (e.type === "required") return (
-        <small>Поле "{e.ref.placeholder || e.ref.dataset.label || e.ref.name}" необходимо заполнить</small>
+        <small>Поле "{e.ref.dataset.label || e.ref.placeholder || e.ref.name}" необходимо заполнить</small>
     );
 
     if (e.type === "maxLength") return (
