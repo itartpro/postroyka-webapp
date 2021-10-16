@@ -266,6 +266,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                         <span><IoIosArrowDown/></span>
                     </div>
 
+                    <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
                     <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg(errors.email, 50)}
 

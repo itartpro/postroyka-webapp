@@ -257,6 +257,14 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     {errMsg(errors.paternal_name, 40)}
                     <br/>
 
+                    {/* Оптимальный вариант это дать им выбор логина по Google ИЛИ
+                    Email / Пароль
+                    Телефон / Пароль
+                    Если заполнено оба поля Телефон и Email то Email выступает в качестве логина
+                    ---- А ЕЩЁ идеальнее это сделать возможность логина ПО гугл и ПО почте/телефону паролю
+                    ---- Если у них уже сделана система Логина/пароля то им нужно авторизоватся и после этого авторизоватся в Google
+                    */}
+                    <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
                     <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg(errors.email, 50)}
 
