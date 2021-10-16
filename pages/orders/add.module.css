@@ -51,3 +51,15 @@
     opacity: 0;
     border: none
 }
+
+.budget {
+    max-width: 200px;
+    align-items: center;
+    margin-top: 5px
+}
+
+.budget input {
+    max-width: 110px;
+    padding: 5px;
+    margin: 0
+}

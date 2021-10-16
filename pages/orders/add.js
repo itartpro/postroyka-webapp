@@ -15,6 +15,8 @@ import {InputUpload} from "components/input-upload";
 import {MdAddAPhoto} from "react-icons/md";
 import {IoIosArrowDown} from 'react-icons/io';
 import {useRouter} from "next/router";
+import {MarkedRangeSlider} from "components/public/orders/marked-range-slider";
+import {translit} from "../../libs/slugify";
 
 export async function getStaticProps() {
     const regions = await getRegions();
@@ -109,6 +111,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     useEffect(() => query && query.title && setValue('title', query.title), [query])
     const titleWatch = watch('title');
     const searchWord = str => {
+        if(!str) return false;
         const title = str.toLowerCase();
         const idx1 = directServices.findIndex(e => {
             const str = e.name.toLowerCase();
@@ -130,11 +133,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     }
     useEffect(() => {
         if(!titleWatch) return false;
-        if(!searchWord(titleWatch)) {
-            const firstWordRemoved = titleWatch.substr(titleWatch.indexOf(" ") + 1);
-            searchWord(firstWordRemoved);
-        }
-        return true
+        const exp = titleWatch.split(" ");
+        exp[0] && searchWord(exp[0]);
+        exp[1] && searchWord(exp[1]);
+        exp[2] && searchWord(exp[2])
     }, [titleWatch])
 
     //region and towns
@@ -147,6 +149,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         };
         request(JSON.stringify(goData))
     }, [regionWatch])
+
+    const marks = [1000, 1500, 2000, 2500, 3000, 5000, 7000, 10000, 15000, 30000, 50000, 100000, 150000, 300000, 500000, 1000000, 1500000, 3000000, 10000000];
+    const [rangeValue, setRangeValue] = useState(0);
+    const getRangeValue = e => setRangeValue(e);
 
     return (
         <PublicLayout>
@@ -229,9 +235,46 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                         </select>
                         <span><IoIosArrowDown/></span>
                     </div>
+                    <br/>
+
+                    <p>Выберите бюджет</p>
+                    <MarkedRangeSlider returnValue={getRangeValue} marks={marks}/>
+                    <div className={'row '+css.budget}>
+                        <span>До</span>
+                        <input type="number" placeholder="budget" defaultValue={rangeValue} {...register("budget", {required: true, max: marks[marks.length - 1], min: marks[0]})} />
+                        <span>рублей</span>
+                    </div>
+                    <br/>
+
+                    <b>Как Вас зовут? (публикуется, фамилия и отчество не обязательно)</b>
+                    <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя"/>
+                    {errMsg(errors.first_name, 40)}
+
+                    <input type="text" {...register('last_name', {required: true, maxLength: 40})} placeholder="Ваша фамилия"/>
+                    {errMsg(errors.last_name, 40)}
+
+                    <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество"/>
+                    {errMsg(errors.paternal_name, 40)}
+                    <br/>
+
+                    <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
+                    {errMsg(errors.email, 50)}
+
+                    <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
+                    {errMsg(errors.password, 32)}
+
+                    <input type="password" {...register('password_confirm', {
+                        required: true,
+                        maxLength: 32,
+                        validate: {
+                            sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
+                        }
+                    })} placeholder="Повторите пароль"/>
+                    {errMsg(errors.password_confirm, 32)}
 
                     <input type="submit" value="Найти мастера"/>
                 </form>
+                <br/><br/><br/>
             </main>
         </PublicLayout>
     )
