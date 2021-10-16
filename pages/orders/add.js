@@ -94,7 +94,11 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         setRegData({})
     }, [rs, wsMsg]);
 
-    const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm();
+    const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm({
+        defaultValues: {
+            service_id:""
+        }
+    });
 
     const onSubmit = d => {
         console.log(d)
@@ -122,6 +126,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             setValue('service_id', smartSearch[idx2].parent_id);
             return true;
         }
+        return false
     }
     useEffect(() => {
         if(!titleWatch) return false;
@@ -129,6 +134,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             const firstWordRemoved = titleWatch.substr(titleWatch.indexOf(" ") + 1);
             searchWord(firstWordRemoved);
         }
+        return true
     }, [titleWatch])
 
     //region and towns
