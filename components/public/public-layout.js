@@ -50,11 +50,7 @@ const PublicLayout = ({page, children, ogImage, loginName}) => {
             </Head>
             <nav className={`row center ${css.top} ${topColor}`}>
                 <div className={`row center bet max`}>
-                    <Link href="/">
-                        <a>
-                            <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
-                        </a>
-                    </Link>
+                    <Link href="/"><a><img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/></a></Link>
                     <div className={'row start '+css.hbg} onClick={e => {
                         e.target.classList.toggle(css.change);
                         toggleDown(e)
@@ -64,7 +60,7 @@ const PublicLayout = ({page, children, ogImage, loginName}) => {
                             <div className={css.b2}/>
                             <div className={css.b3}/>
                         </div>
-                        <img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/>
+                        <Link href="/"><a><img src="/images/logo.png" width="172" height="48" alt="Постройка" loading="lazy"/></a></Link>
                     </div>
                     <ul className={`row center init`}>
                         <li><Link href="/orders"><a>Заказы</a></Link></li>

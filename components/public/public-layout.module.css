@@ -101,14 +101,18 @@
         position: relative
     }
 
-    .hbg > * {
+    .hbg > div {
         pointer-events: none
     }
 
-    .hbg > img {
+    .hbg > a {
         position: absolute;
         left: 90px;
         top: 6px
+    }
+
+    .hbg > a img {
+        display: block
     }
 
     .hbg > div {

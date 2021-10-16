@@ -1,12 +1,15 @@
 import css from './hero.module.css';
 import { useKeenSlider } from 'keen-slider/react'
 import {useState, useRef, useEffect} from 'react';
+import {useRouter} from "next/router";
 
 export const Hero = () => {
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const slides = useRef([]);
     const timer = useRef();
+    const router = useRouter();
+    const [query, setQuery] = useState("")
 
     const [sliderRef, slider] = useKeenSlider({
         slides: 3,
@@ -27,6 +30,19 @@ export const Hero = () => {
         slides.current[currentSlide].classList.add(css.show);
     }, [currentSlide])
 
+    const handleParam = setValue => e => setValue(e.target.value);
+    const handleSubmit = e => {
+        e.preventDefault();
+        if(query.length > 3) {
+            router.replace({
+                pathname: 'orders/add',
+                query: {title: query.trim()},
+            })
+        } else {
+            router.push('orders/add')
+        }
+    }
+
     return (
         <div className="col start max rel">
             <div className={css.d2}>
@@ -36,8 +52,8 @@ export const Hero = () => {
                     <p>Заказов в неделю: <span>1 714</span></p>
                     <p>Предложений в сутки: <span>615</span></p>
                 </div>
-                <form>
-                    <input type="text" placeholder="Что требуется сделать?"/>
+                <form onSubmit={handleSubmit}>
+                    <input type="text" name="title" value={query} onChange={handleParam(setQuery)} placeholder="Что требуется сделать?"/>
                     <input type="submit" value="Найти мастера"/>
                 </form>
             </div>

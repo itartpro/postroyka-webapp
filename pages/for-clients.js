@@ -1,11 +1,26 @@
 import PublicLayout from "components/public/public-layout";
 import css from 'styles/for-clients.module.css';
-import {Hero} from "../components/public/home/hero";
-import Order from "../components/public/order";
-import {Button} from "../components/public/button";
-import Comments from "../components/public/home/comments";
+import {Hero} from "components/public/home/hero";
+import {useState} from "react";
+import {useRouter} from "next/router";
 
 const ForClients = () => {
+
+    const router = useRouter();
+    const [query, setQuery] = useState("")
+    const handleParam = setValue => e => setValue(e.target.value);
+    const handleSubmit = e => {
+        e.preventDefault();
+        if(query.length > 3) {
+            router.replace({
+                pathname: 'orders/add',
+                query: {title: query.trim()},
+            })
+        } else {
+            router.push('orders/add')
+        }
+    }
+
     return (
         <PublicLayout>
             <main className={'col start'}>
@@ -185,27 +200,19 @@ const ForClients = () => {
                     <div className={`row max bet`}>
                         <div className={css.d2}>
                             <h1>Найдите мастера под Ваши работы</h1>
-
-
                             <div className={`row bet`}>
                                 <p>Мастеров онлайн: <span>312</span></p>
                                 <p>Заказов в неделю: <span>1 714</span></p>
                                 <p>Предложений в сутки: <span>615</span></p>
                             </div>
-
-
-                            <form>
-                                <input type="text" placeholder="Что требуется сделать?"/>
+                            <form onSubmit={handleSubmit}>
+                                <input type="text" name="title" value={query} onChange={handleParam(setQuery)} placeholder="Что требуется сделать?"/>
                                 <input type="submit" value="Найти мастера"/>
                             </form>
-                            <p>Опишите, какие работы требуются. — Свободные мастера, которых заинтересует ваш заказ, пришлют свои предложения по ценам и срокам. — Вы сможете обсудить свой заказ и договориться о выезде на объект и работах напрямую с любым из ответивших исполнителей.
-
-                            </p>
+                            <p>Опишите, какие работы требуются. — Свободные мастера, которых заинтересует ваш заказ, пришлют свои предложения по ценам и срокам. — Вы сможете обсудить свой заказ и договориться о выезде на объект и работах напрямую с любым из ответивших исполнителей.</p>
                         </div>
                         <img src="images/clients/imgblock.jpg" alt="people" width="550" height="293" loading="lazy"/>
                     </div>
-
-
                 </section>
             </main>
         </PublicLayout>

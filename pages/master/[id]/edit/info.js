@@ -65,7 +65,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
-    const [showErr, setShowErr] = useState(null);
 
     useEffect(() => {
         simulateClick.current.forEach((e, i) => {
@@ -312,7 +311,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     )}
 
                                     <input type="submit" value="Изменить"/>
-                                    {showErr && <small>{showErr}</small>}
                                 </form>
                             </div>
                         )}
@@ -365,7 +363,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     </div>
 
                                     <input type="submit" value="Изменить"/>
-                                    {showErr && <small>{showErr}</small>}
                                 </form>
                             </div>
                         )}
@@ -385,7 +382,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     {errMsg(errors.about, 2000)}
 
                                     <input type="submit" value="Изменить"/>
-                                    {showErr && <small>{showErr}</small>}
                                 </form>
                             </div>
                         )}
@@ -451,7 +447,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         ))}
                                     </ul>
                                     <input type="submit" value="Изменить"/>
-                                    {showErr && <small>{showErr}</small>}
                                 </form>
                             </div>
                         )}
@@ -477,7 +472,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         <span><IoIosArrowDown/></span>
                                     </div>
                                     <input type="submit" value="Изменить"/>
-                                    {showErr && <small>{showErr}</small>}
                                 </form>
                             </div>
                         )}
