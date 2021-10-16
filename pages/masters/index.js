@@ -105,14 +105,15 @@ const Masters = () => {
 
 
                         <div className={css.imge}>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
+                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
                                  loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
+                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
                                  loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
+                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
                                  loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
+                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
                                  loading="lazy"/>
+
                         </div>
 
                         <div>
