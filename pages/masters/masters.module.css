@@ -1,0 +1,143 @@
+.left {
+    max-width: 30%;
+}
+
+.block {
+    padding: 40px 52px 52px 52px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+.block > b {
+    font-size: 1.3rem;
+}
+
+.block > input {
+    padding: 23px 33px;
+    border: 1px solid #737373;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.filt {
+    padding: 40px 52px;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.filt > b:nth-child(1) {
+    font-size: 1.3rem;
+}
+
+.filt > ul {
+    list-style: none;
+}
+
+.filt > ul > li:hover {
+    color: #47CB43;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+
+.filt > ul > li > ul > li {
+    color: #545454;
+    list-style: none;
+    margin-top: 5px;
+}
+
+.filt > ul > li > ul > li:hover {
+    color: #47CB43;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+
+.filt > ul > li {
+    margin-top: 15px;
+}
+
+.formi {
+    padding: 40px 52px;
+    border: 1px solid #EAEAEA;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.formi > button {
+    color: #fff;
+    background: #47CB43;
+    border-radius: 4px;
+    padding: 17px;
+    width: 100%;
+    border: none;
+}
+
+.formi p {
+    font-size: 0.8rem;
+    color: #6f7580;
+    margin-top: 15px;
+}
+
+.right {
+    max-width: 68%;
+    margin-top: 30px;
+}
+
+.others {
+    margin-bottom: 25px;
+    padding: 0 20px;
+    border: none;
+}
+
+.others b {
+    display: block;
+    font-size: 1.3rem;
+    margin-bottom: 15px
+}
+
+.others a {
+    display: grid;
+    grid-template-columns: 3fr minmax(100px, 1fr);
+    grid-gap: 15px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+
+
+@media all and (max-width: 1200px) {
+    .left {
+        max-width: 48%;
+    }
+    .right {
+        max-width: 48%;
+    }
+}
+
+
+@media all and (max-width: 850px) {
+    .left {
+        max-width: 100%;
+    }
+    .right {
+        max-width: 100%;
+    }
+    .block {
+        padding: 20px 25px;
+
+    }
+    .filt {
+        padding: 20px 25px;
+    }
+
+    .formi {
+        padding: 20px 25px;
+    }
+
+    .right > div {
+        padding: 20px;
+    }
+}
