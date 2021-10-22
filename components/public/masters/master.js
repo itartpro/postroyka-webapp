@@ -1,5 +1,4 @@
-import css from "pages/masters/masters.module.css";
-import css2 from "./master.module.css";
+import css from "./master.module.css";
 
 export const Master = () => {
     return (
