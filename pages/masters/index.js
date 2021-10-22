@@ -1,12 +1,12 @@
 import PublicLayout from "components/public/public-layout";
 import css from "./masters.module.css";
-import {BsStar} from 'react-icons/bs';
+import {Master} from "components/public/masters/master";
 
 const Masters = () => {
     return (
         <PublicLayout>
             <main className={`row start bet max`}>
-                <section className={css.left}>
+                <aside className={css.left}>
                     <div className={`col ${css.block}`}>
                         <b>Регион</b>
                         <input type="text" placeholder="Введите ваш регион"/>
@@ -38,165 +38,54 @@ const Masters = () => {
                         <p>Заинтересованные подрядчики пришлют вам свои предложения с ценами и прочими условиями, на
                             которых они готовы взяться за работу.</p>
                     </div>
-                </section>
+                </aside>
 
                 <section className={css.right}>
-                    <div className={`row`}>
-                        <div>
-                            <b>Другие услуги этого раздела</b>
-                            <p>Премиальный ремонт квартир под ключ</p>
-                            <p>Косметический ремонт дома</p>
-                            <p>Косметический ремонт дома</p>
-                            <p>Косметический ремонт дома</p>
-                            <p>Косметический ремонт дома</p>
-                            <p>Капитальный ремонт дома</p>
-                            <p>Премиальный ремонт дома под ключ</p>
-                            <p>Премиальный ремонт дома под ключ</p>
-                            <p>Ремонт квартир в новостройке</p>
-                            <p>Черновая отделка</p>
-                        </div>
-                        <div>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                            <p>от 5 000 до 13 000р / м²</p>
-                        </div>
+                    <div className={css.others}>
+                        <b>Другие услуги этого раздела</b>
+                        <a>
+                            <span>Премиальный ремонт квартир под ключ</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Косметический ремонт дома</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Капитальный ремонт дома</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Ремонт квартир в новостройке</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Черновая отделка</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Премиальный ремонт квартир под ключ</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Косметический ремонт дома</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Капитальный ремонт дома</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Ремонт квартир в новостройке</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
+                        <a>
+                            <span>Черновая отделка</span>
+                            <span>от 5 000 до 13 000р / м²</span>
+                        </a>
                     </div>
-
-
-                    <div>
-                        <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76"
-                             loading="lazy"/>
-                        <b>Арсёнов Михаил Александрович</b>
-                        <span className="rel"><BsStar/> 8.2</span>
-
-                        <div className={`row center bet ${css.very}`}>
-                            <a href="#">
-                                Премиальный ремонт дома под ключ
-                            </a>
-                            <b>
-                                от 6 000р / м²
-                            </b>
-                            <button>
-                                Предложить заказ
-                            </button>
-                        </div>
-                        <div className={`row start ${css.grayp}`}>
-                            <p>На сайте 6 лет 2 месяца</p>
-                            <p>Был 1 год 8 месяцев назад</p>
-                        </div>
-
-                        <div className={css.ss}>
-                            <p>
-                                Комплексные ремонтные работы под ключ или отдельные виды работ. Ремонтно-отделочные
-                                работы
-                                любой сложности. Индивидуальный подход к каждому клиенту.
-                                Работы под ключ или отдельные виды работ. Ремонтно-отделочные работы любой сложности.
-                                Индивидуальный подход к каждому клиенту.
-                            </p>
-                            <a href="#">Развернуть</a>
-                        </div>
-
-
-                        <div className={css.imge}>
-                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/140/100" alt="master" width="140" height="100"
-                                 loading="lazy"/>
-
-                        </div>
-
-                        <div>
-                            <b>Последний отзыв</b>
-                            <p>
-                                Комплексные ремонтные работы под ключ или отдельные виды работ. Ремонтно-отделочные
-                                работы
-                                любой сложности. Индивидуальный подход к каждому клиенту.
-                                Работы под ключ или отдельные виды работ. Ремонтно-отделочные работы любой сложности.
-                                Индивидуальный подход к каждому клиенту.
-                            </p>
-                        </div>
-                        <div className={css.vo}>
-                            <p><a href="#">Аделина, </a>Апрель 2021, по заказу <a href="#"> Сделать потолки в 3х
-                                комнатах</a></p>
-                        </div>
-
-
-                    </div>
-                    <div className="row center start">
-                        <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76"
-                             loading="lazy"/>
-                        <b>Арсёнов Михаил Александрович</b>
-                        <span className="rel"><BsStar/> 8.2</span>
-
-                        <div className={`row center bet ${css.very}`}>
-                            <a href="#">
-                                Премиальный ремонт дома под ключ
-                            </a>
-                            <b>
-                                от 6 000р / м²
-                            </b>
-                            <button>
-                                Предложить заказ
-                            </button>
-                        </div>
-                        <div className={`row start ${css.grayp}`}>
-                            <p>На сайте 6 лет 2 месяца</p>
-                            <p>Был 1 год 8 месяцев назад</p>
-                        </div>
-
-                        <div className={css.ss}>
-                            <p>
-                                Комплексные ремонтные работы под ключ или отдельные виды работ. Ремонтно-отделочные
-                                работы
-                                любой сложности. Индивидуальный подход к каждому клиенту.
-                                Работы под ключ или отдельные виды работ. Ремонтно-отделочные работы любой сложности.
-                                Индивидуальный подход к каждому клиенту.
-                            </p>
-                            <a href="#">Развернуть</a>
-                        </div>
-
-
-                        <div className={css.imge}>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
-                                 loading="lazy"/>
-                            <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80"
-                                 loading="lazy"/>
-                        </div>
-
-                        <div>
-                            <b>Последний отзыв</b>
-                            <p>
-                                Комплексные ремонтные работы под ключ или отдельные виды работ. Ремонтно-отделочные
-                                работы
-                                любой сложности. Индивидуальный подход к каждому клиенту.
-                                Работы под ключ или отдельные виды работ. Ремонтно-отделочные работы любой сложности.
-                                Индивидуальный подход к каждому клиенту.
-                            </p>
-                        </div>
-                        <div className={css.vo}>
-                            <p><a href="#">Аделина, </a>Апрель 2021, по заказу <a href="#"> Сделать потолки в 3х
-                                комнатах</a></p>
-                        </div>
-
-
-                    </div>
-
-
+                    <Master/>
+                    <Master/>
                 </section>
             </main>
         </PublicLayout>
