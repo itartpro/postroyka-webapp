@@ -89,7 +89,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             return false;
         }
 
-        if(msg.name === 'auth') {
+        if(msg.data && msg.name === 'auth') {
             //looks like the visitor registered and got into the database
             if(msg.data.hasOwnProperty('refresh')) {
                 if(msg.data.refresh === null) {
@@ -145,7 +145,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             }
         }
 
-        if(msg.name === 'gpics') {
+        if(msg.data && msg.name === 'gpics') {
             const folder = 'temp/'+tempDir+'/'
             const imgApi = folder && '/api/images/'+folder.split('/').join('-');
             fetch(imgApi)

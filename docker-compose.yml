@@ -4,20 +4,24 @@ networks:
 
 services:
   nextjs:
-    container_name: postroyka
     logging:
       options:
         max-size: 5m
-    build: ./
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
     restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
-      - ./:/webapp
-      - ../appservices/uploads:/uploads
+      - ./:/home/appuser/webapp
+      - ../appservices/uploads:/home/appuser/appservices/uploads
       - ../appservices/uploads/logs/npm:/root/.npm/_logs
-      - /webapp/.next
-      - /webapp/node_modules
+      - /home/appuser/webapp/.next
+      - /home/appuser/webapp/node_modules
     tty: true
     networks:
       - docknet
