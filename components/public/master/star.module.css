@@ -1,0 +1,52 @@
+
+.star {
+    overflow: hidden;
+    position: relative;
+    width: 105px;
+    height: 1.2em;
+    line-height: 1.2em;
+    display: inline-block;
+    font-size: 23px;
+}
+
+.star:before {
+    content: "\2605\2605\2605\2605\2605";
+    color: #dadada;
+    float: left;
+    top: 0;
+    left: 0;
+    position: absolute;
+    letter-spacing: 2px;
+}
+
+.star span {
+    overflow: hidden;
+    float: left;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding-top: 1.5em
+}
+
+.star span:before {
+    content: "\2605\2605\2605\2605\2605";
+    top: 0;
+    position: absolute;
+    left: 0;
+    color: #47CB43;
+    letter-spacing: 2px;
+}
+
+
+
+@media all and (max-width: 400px) {
+
+    .star {
+        width: 62px;
+        height: 1.2em;
+        line-height: 1.2em;
+        display: inline-block;
+        font-size: 23px;
+    }
+
+}
