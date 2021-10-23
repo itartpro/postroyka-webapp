@@ -5,18 +5,20 @@ import {useForm} from "react-hook-form";
 import {useContext, useEffect, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
 import {nowToISO} from 'libs/js-time-to-psql';
-import {validateEmailPhoneInput} from 'libs/email-phone-input';
 import {getRegions, getTowns, getCats} from 'libs/static-rest';
 import {organizeCats} from 'libs/arrs';
 import {errMsg} from "libs/form-stuff";
-import {ShowMessage} from "components/show-message";
 import {UploadProvider} from "context/UploadProvider";
 import {InputUpload} from "components/input-upload";
 import {MdAddAPhoto} from "react-icons/md";
 import {IoIosArrowDown} from 'react-icons/io';
 import {useRouter} from "next/router";
 import {MarkedRangeSlider} from "components/public/orders/marked-range-slider";
-import {translit} from "../../libs/slugify";
+import {translit} from "libs/slugify";
+
+import 'photoswipe/dist/photoswipe.css'
+import 'photoswipe/dist/default-skin/default-skin.css'
+import { Gallery, Item } from 'react-photoswipe-gallery';
 
 export async function getStaticProps() {
     const regions = await getRegions();
@@ -56,21 +58,22 @@ export async function getStaticProps() {
 const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     const {wsMsg, rs, request} = useContext(WsContext);
     const [showErr, setShowErr] = useState(null);
-    const [regData, setRegData] = useState({});
     const [towns, setTowns] = useState(defaultTowns);
     const [showMsg, setShowMsg] = useState(null);
+    const [order, setOrder] = useState({});
     const [images,setImages] = useState([]);
+    const [tempDir, setTempDir] = useState(Math.round(new Date()/1000) + '/');
 
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
+
         if (wsMsg.type === "error") {
             if(wsMsg.data.includes("is taken") && showErr === null) {
                 setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном")
             } else {
                 setShowErr(wsMsg.data)
             }
-            setRegData({});
             return false
         }
         if (wsMsg.type !== "info") {
@@ -86,14 +89,71 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             return false;
         }
 
-        //parse towns
-        if(msg && msg.data && msg.data.hasOwnProperty(0)) {
-            if(msg.data[0].hasOwnProperty('region_id')) {
-                setTowns(msg.data);
-                return true
+        if(msg.name === 'auth') {
+            //looks like the visitor registered and got into the database
+            if(msg.data.hasOwnProperty('refresh')) {
+                if(msg.data.refresh === null) {
+                    //insert new order into database, with the visitors id
+                    let addOrder = order;
+                    addOrder.login_id = msg.data.id;
+                    setOrder(addOrder);
+                    const goData = {
+                        address: 'auth:50003',
+                        action: 'add-order',
+                        instructions: JSON.stringify(addOrder)
+                    };
+                    request(JSON.stringify(goData))
+                }
+            }
+
+            //looks like the order has been added to db, check for images and add them to alum and move them to folder
+            if(msg.data.hasOwnProperty('budget')) {
+                if(msg.data.id && images.length > 0) {
+                    let album_id = parseInt(msg.data.id);
+                    images.forEach(e => {
+                        const goData = {
+                            address: 'gpics:50001',
+                            action: 'process',
+                            instructions: JSON.stringify({
+                                name: tempDir+e.name,
+                                folder: 'orders/' + album_id,
+                                width: 1400,
+                                height: 1400,
+                                fit: 'Fit', //Fit or Fill (with crop)
+                                position: 'Center',
+                                table: 'orders_media',
+                                album_id,
+                                copy:{
+                                    folder:'orders/' + album_id + '/mini',
+                                    height:100,
+                                    width:140
+                                }
+                            })
+                        };
+                        request(JSON.stringify(goData))
+                    })
+                }
+
+            }
+
+            //parse towns
+            if(msg.data.hasOwnProperty(0)) {
+                if(msg.data[0].hasOwnProperty('region_id')) {
+                    setTowns(msg.data);
+                    return true
+                }
             }
         }
-        setRegData({})
+
+        if(msg.name === 'gpics') {
+            const folder = 'temp/'+tempDir+'/'
+            const imgApi = folder && '/api/images/'+folder.split('/').join('-');
+            fetch(imgApi)
+                .then(res => res.json())
+                .then(data => setImages([...data]))
+                .catch(err => console.log(err))
+        }
+
     }, [rs, wsMsg]);
 
     const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm({
@@ -102,16 +162,12 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         }
     });
 
-    const onSubmit = d => {
-        console.log(d)
-    }
-
     //all of this deals with the title
     const {query} = useRouter();
     useEffect(() => query && query.title && setValue('title', query.title), [query])
     const titleWatch = watch('title');
     const searchWord = str => {
-        if(!str) return false;
+        if(!str || str.length < 3) return false;
         const title = str.toLowerCase();
         const idx1 = directServices.findIndex(e => {
             const str = e.name.toLowerCase();
@@ -159,6 +215,58 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         setRangeValue(e);
     }
 
+    const deleteImage = name => {
+        console.log(name)
+        const goData = {
+            address: 'gpics:50001',
+            action: 'delete',
+            instructions: JSON.stringify({"folder":'temp/'+tempDir,"name":name})
+        }
+        request(JSON.stringify(goData));
+    }
+
+    const onSubmit = d => {
+        //check if errors object is not empty
+        for(let i in errors) return false;
+
+        const created = nowToISO();
+        const register = {
+            first_name: d.first_name,
+            last_name: d.last_name,
+            paternal_name: d.paternal_name,
+            email: d.email,
+            level: 1,
+            phone: '',
+            password: d.password,
+            region_id: parseInt(d.region),
+            town_id: parseInt(d.town),
+            created: created,
+            last_online: created
+        };
+
+        if (!register.email && !register.phone) return false;
+
+        let name = d.first_name;
+        if(d.paternal_name.length > 0) name += ' '+d.paternal_name;
+        if(d.last_name.length > 0) name += ' '+d.last_name;
+
+        //first register guy
+        const addOrder = {
+            name,
+            title: d.title,
+            service_id: parseInt(d.service_id),
+            created: created,
+            description: d.description,
+            region_id: parseInt(d.region),
+            town_id: parseInt(d.town),
+            login_id: 0,
+            budget: parseInt(d.budget)
+        };
+        setOrder(addOrder);
+        //then add order and append guy id to the order
+        //when order is added append images to the order
+    }
+
     return (
         <PublicLayout>
             <main className="col start max">
@@ -184,15 +292,47 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
 
                     <p>Укажите объем и виды работ</p>
                     <textarea
-                        {...register("text", {required: true, maxLength: 2000})}
+                        {...register("description", {required: true, maxLength: 2000})}
                         data-label="Описание работы"
                         placeholder="Напишите список работ, укажите объём (например, если это помещение, то в квадратных метрах). Опишите Ваши пожелания и требования если они есть. Чем детальнее Вы напишите тех. задание - тем охотнее согласятся работать компетентные мастера."/>
-                    {errMsg(errors.text, 2000)}
+                    {errMsg(errors.description, 2000)}
                     <div className={'row start '+css.imgs}>
-                        {!(images && images.length > 4) && (
-                            //ограничение на 5 картинок для каждой работы
+                        {(images && images.length > 0) && (
+                            <Gallery>
+                                {images.map((e, i) =>
+                                    <Item key={i}
+                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
+                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
+                                          width={e.width}
+                                          height={e.height}
+                                    >
+                                        {({ ref, open }) => (
+                                            <div className="col">
+                                                <figure>
+                                                    <img
+                                                        ref={ref}
+                                                        onClick={open}
+                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
+                                                        alt={i}
+                                                        width={Math.round(e.width * 100 / e.height)}
+                                                        height={100}
+                                                        loading="lazy"
+                                                    />
+                                                </figure>
+                                                <button onClick={ev => {
+                                                    ev.preventDefault();
+                                                    deleteImage(e.name)
+                                                }}>Удалить</button>
+                                            </div>
+                                        )}
+                                    </Item>
+                                )}
+                            </Gallery>
+                        )}
+                        {!(images && images.length > 3) && (
+                            //ограничение на 4 картинок для каждой работы
                             <div className={css.add_img}>
-                                <span>Приложить изображения <MdAddAPhoto/></span>
+                                <span>Приложить изображения<br/>(до 4) <MdAddAPhoto/></span>
                                 <div>
                                     <label htmlFor="add_order_images">
                                         <UploadProvider
@@ -201,16 +341,11 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                             address={'gpics:50001'}
                                             action={'process'}
                                             instructions={{
-                                                folder: 'temp',
-                                                width: 1000,
-                                                height: 1000,
+                                                folder: 'temp/'+tempDir,
+                                                width: 1400,
+                                                height: 1400,
                                                 fit: 'Fit', //Fit or Fill (with crop)
-                                                position: 'Center',
-                                                copy:{
-                                                    folder:'temp/mini',
-                                                    height:100,
-                                                    width:140
-                                                }
+                                                position: 'Center'
                                             }}>
                                             <InputUpload name="add_order_images" id="add_order_images" multiple={false}/>
                                         </UploadProvider>
@@ -256,7 +391,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя"/>
                     {errMsg(errors.first_name, 40)}
 
-                    <input type="text" {...register('last_name', {required: true, maxLength: 40})} placeholder="Ваша фамилия"/>
+                    <input type="text" {...register('last_name', {required: false, maxLength: 40})} placeholder="Ваша фамилия"/>
                     {errMsg(errors.last_name, 40)}
 
                     <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество"/>
@@ -271,7 +406,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     ---- Если у них уже сделана система Логина/пароля то им нужно авторизоватся и после этого авторизоватся в Google
                     */}
                     <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
-                    <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
+                    <input type="email" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg(errors.email, 50)}
 
                     <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
@@ -287,6 +422,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     {errMsg(errors.password_confirm, 32)}
 
                     <input type="submit" value="Найти мастера"/>
+                    {showErr && <small>{showErr}</small>}
                 </form>
                 <br/><br/><br/>
             </main>

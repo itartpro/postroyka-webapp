@@ -267,7 +267,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                     </div>
 
                     <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
-                    <input type="text" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
+                    <input type="email" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg(errors.email, 50)}
 
                     <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
@@ -304,7 +304,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                     </ul>
 
                     <input type="submit" value="Зарегистрироваться"/>
-                    {showErr && <small>{showErr}</small>}
+                    {showErr && <showMsg>{showErr}</showMsg>}
                     <br/><br/>
                 </form>
             </main>

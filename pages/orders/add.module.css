@@ -7,6 +7,38 @@
     margin-top: 10px
 }
 
+.imgs figure {
+    height: 100px;
+    width: 140px;
+    overflow: hidden;
+    object-fit: contain;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px
+}
+
+.imgs > div {
+    margin-right: 10px;
+    width: 140px
+}
+
+.imgs > div > button {
+    background: none;
+    border: none;
+    font-size: .85rem;
+    margin-top: 5px;
+    height: 16px
+}
+
+.imgs > div > button:hover {
+    color: #0088ff
+}
+
+.imgs figure > img {
+    cursor: pointer;
+    max-width: initial
+}
+
 .add_img {
     width: 140px;
     height: 100px;
