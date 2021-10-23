@@ -9,6 +9,7 @@ const FinanceSlider = () => {
     return (
         <PublicLayout>
             <main className="col start max">
+                <br/><br/><br/>
                 <div>
                     <input
                         className={css.i1}
@@ -31,3 +32,5 @@ const FinanceSlider = () => {
         </PublicLayout>
     )
 }
+
+export default FinanceSlider
