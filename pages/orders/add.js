@@ -150,7 +150,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             const imgApi = folder && '/api/images/'+folder.split('/').join('-');
             fetch(imgApi)
                 .then(res => res.json())
-                .then(data => setImages([...data]))
+                .then(data => {
+                    console.log(data)
+                    setImages([...data])
+                })
                 .catch(err => console.log(err))
         }
 

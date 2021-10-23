@@ -3,9 +3,9 @@ import path from 'path'
 
 export default (req, res) => {
     const {location} = req.query;
-    const dir = '/uploads/' + location.split('-').join('/');
+    const dir = process.env.NEXT_PUBLIC_UPLOADS_DIR + location.split('-').join('/');
     if (!fs.existsSync(dir)) {
-        return res.status(200).json({"statusCode": 200, "result": []});
+        return res.status(200).json({"statusCode": 404, "result": []});
     }
     const filenames = fs.readdirSync(dir);
 
