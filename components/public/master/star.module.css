@@ -34,9 +34,9 @@
     position: absolute;
     left: 0;
     color: #47CB43;
+    text-shadow: 0 0 1px #47CB43;
     letter-spacing: 2px;
 }
-
 
 
 @media all and (max-width: 400px) {

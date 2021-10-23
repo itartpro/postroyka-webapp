@@ -1,6 +1,5 @@
 import css from './aside.module.css';
 import {GrLocation} from "react-icons/gr";
-import {Master} from "../masters/master";
 import {Star} from "components/public/master/star";
 
 export const Aside = props => {
@@ -23,27 +22,27 @@ export const Aside = props => {
             <b>Оценки</b>
             <div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={40}/>
                     <p>Вежливость</p>
                 </div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={90}/>
                     <p>Доступность для связи</p>
                 </div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={50}/>
                     <p>Пунктуальность</p>
                 </div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={50}/>
                     <p>Попадание в смету</p>
                 </div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={50}/>
                     <p>Соблюдение сроков</p>
                 </div>
                 <div className={`row start`}>
-                    <Star/>
+                    <Star rating={50}/>
                     <p>Баланс цены/качества</p>
                 </div>
             </div>
