@@ -63,6 +63,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     const [order, setOrder] = useState({});
     const [images,setImages] = useState([]);
     const [tempDir, setTempDir] = useState(Math.round(new Date()/1000) + '/');
+    const router = useRouter();
 
     //handle info from server
     useEffect(() => {
@@ -131,9 +132,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             })
                         };
                         request(JSON.stringify(goData))
-                    })
+                    });
+                    setImages([]);
                 }
-
+                return router.push('/profile/'+msg.data.id+'/edit')
             }
 
             //parse towns
@@ -166,8 +168,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     });
 
     //all of this deals with the title
-    const {query} = useRouter();
-    useEffect(() => query && query.title && setValue('title', query.title), [query])
+    useEffect(() => router.query && router.query.title && setValue('title', router.query.title), [router.query])
     const titleWatch = watch('title');
     const searchWord = str => {
         if(!str || str.length < 3) return false;
@@ -266,8 +267,13 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             budget: parseInt(d.budget)
         };
         setOrder(addOrder);
-        //then add order and append guy id to the order
-        //when order is added append images to the order
+
+        const goData = {
+            address: 'auth:50003',
+            action: 'register',
+            instructions: JSON.stringify(register)
+        };
+        request(JSON.stringify(goData))
     }
 
     return (
