@@ -1,23 +1,21 @@
 import css from "./order.module.css";
 
-export const Order = () => {
-
+export const Order = props => {
     return (
         <div className={`row bet ${css.box}`}>
             <div className={`row bet`}>
-                <p>Покрыть ванну акрилом. Три года назад уже покрывали. Также нужно поменять смеситель.</p>
-                <span>5 000р</span>
+                <p>{props.title}</p>
+                <span>{props.budget}р</span>
             </div>
             <div className={`row start center`}>
-                <span>1 фото</span>
+                <span>{props.images.length} фото</span>
                 <button>Бесплатный заказ</button>
                 <button>Можно позвонить</button>
             </div>
-            <p>Требуется выполнить работу: расчистка участка, покраска, копка, работа с растениями, покос травы, кладка
-                блоков, погрузка и разгрузка строительных материалов, подъем на этаж и прочие работы.</p>
+            <p>{props.description}</p>
             <div className={`row bet`}>
-                <p>Краснодарский край, городской округ Сочи, село Верхнениколаевское, Николаевская улица, 12А </p>
-                <span>1 час 8 минут назад</span>
+                <p>{props.region_id+', '+props.town_id}</p>
+                <span>{props.created}</span>
             </div>
         </div>
         )

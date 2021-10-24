@@ -184,3 +184,49 @@ export const getLatestArticles = (limit = null, url = null) => {
             }
         })
 }
+
+export const getOrders = ({
+                              order_by = "",
+                              limit = 0,
+                              offset = 0,
+                              service_id = [],
+                              town_id = [],
+                              region_id = [],
+                              budgetGreater = 0,
+                              budgetLess = 0
+                          }) =>
+{
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-orders',
+        instructions: JSON.stringify({order_by, limit, offset, service_id, town_id, region_id, budgetGreater, budgetLess})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getOrders error:" + e + res);
+            return null
+        }
+    })
+}
+
+export const getOrdersImages = orderIdStrings => {
+    return goPost(JSON.stringify({
+        address: 'gpics:50001',
+        action: 'read-where-in',
+        instructions: JSON.stringify({
+            column: 'album_id',
+            table: 'orders_media',
+            values: orderIdStrings
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getOrdersImages error:" + e + res);
+            return null
+        }
+    })
+}
