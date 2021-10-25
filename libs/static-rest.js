@@ -185,17 +185,7 @@ export const getLatestArticles = (limit = null, url = null) => {
         })
 }
 
-export const getOrders = ({
-                              order_by = "",
-                              limit = 0,
-                              offset = 0,
-                              service_id = [],
-                              town_id = [],
-                              region_id = [],
-                              budgetGreater = 0,
-                              budgetLess = 0
-                          }) =>
-{
+export const getOrders = ({order_by = "", limit = 0, offset = 0, service_id = [], town_id = [], region_id = [], budgetGreater = 0, budgetLess = 0}) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-orders',
@@ -229,4 +219,37 @@ export const getOrdersImages = orderIdStrings => {
             return null
         }
     })
+}
+
+export const getOrdersWithImages = instructions => {
+    return getOrders(instructions).then(orders => {
+        const orderIds = orders.map(e => e.id.toString());
+        if(orderIds.length > 0) {
+            return getOrdersImages(orderIds).then(res => {
+                const organized = {};
+                if(res.length > 0) {
+                    res.forEach(e => {
+                        if (!organized.hasOwnProperty(e.album_id)) {
+                            organized[e.album_id] = [];
+                        }
+                        organized[e.album_id].push(e)
+                    });
+                    for (let i in organized) {
+                        organized[i].sort((a, b) => a['sort_order'] - b['sort_order'])
+                    }
+                    orders.forEach(e => {
+                        if (organized[e.id]) {
+                            if (!e.hasOwnProperty('images')) {
+                                e['images'] = [];
+                            }
+                            organized[e.id].forEach(img => e.images.push(img))
+                        }
+                    });
+                    return orders;
+                }
+            });
+        }
+        //if no images then jump to here and return without images
+        return orders;
+    });
 }

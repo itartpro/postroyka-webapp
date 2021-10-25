@@ -1,5 +1,5 @@
 import css from "./order.module.css";
-
+//TODO improve and move into orders folder
 export const Order = props => {
     return (
         <div className={`row bet ${css.box}`}>
@@ -8,7 +8,7 @@ export const Order = props => {
                 <span>{props.budget}р</span>
             </div>
             <div className={`row start center`}>
-                <span>{props.images.length} фото</span>
+                <span>{props.images && props.images.length} фото</span>
                 <button>Бесплатный заказ</button>
                 <button>Можно позвонить</button>
             </div>
@@ -18,5 +18,5 @@ export const Order = props => {
                 <span>{props.created}</span>
             </div>
         </div>
-        )
+    )
 }

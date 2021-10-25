@@ -1,8 +1,8 @@
 import PublicLayout from 'components/public/public-layout';
-import {Order} from 'components/public/order';
+import {Order} from 'components/public/orders/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
-import {getCats, getPageBySlug, getRegions} from 'libs/static-rest';
+import {getCats, getOrders, getOrdersImages, getOrdersWithImages, getPageBySlug, getRegions} from 'libs/static-rest';
 import css from 'styles/home.module.css';
 import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
@@ -17,18 +17,20 @@ export async function getStaticProps() {
         return organizeCats(cats)[1].children
     });
     const regions = await getRegions();
+    const orders = await getOrdersWithImages({});
 
     return {
         props: {
             page,
             services,
-            regions
+            regions,
+            orders
         },
         revalidate: 120
     }
 }
 
-const Home = ({page, services, regions}) => {
+const Home = ({page, services, regions, orders}) => {
 
     return (
         <PublicLayout page={page}>
@@ -63,9 +65,7 @@ const Home = ({page, services, regions}) => {
                     </header>
                     <br/>
                     <br/>
-                    <Order/>
-                    <Order/>
-                    <Order/>
+                    {orders && orders.map(e => <Order key={'o'+e.id} {...e}/>)}
                     <Button/>
                 </section>
                 <div className="row max">

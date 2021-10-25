@@ -13,15 +13,17 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        MYUSERNAME: ${MYUSERNAME}
+        MYUSERGROUP: ${MYUSERGROUP}
     restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
-      - ./:/home/appuser/webapp
-      - ../appservices/uploads:/home/appuser/appservices/uploads
+      - ./:/home/${MYUSERNAME}/webapp
+      - ../appservices/uploads:/home/${MYUSERNAME}/appservices/uploads
       - ../appservices/uploads/logs/npm:/root/.npm/_logs
-      - /home/appuser/webapp/.next
-      - /home/appuser/webapp/node_modules
+      - /home/${MYUSERNAME}/webapp/.next
+      - /home/${MYUSERNAME}/webapp/node_modules
     tty: true
     networks:
       - docknet
