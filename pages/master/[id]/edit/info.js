@@ -52,7 +52,7 @@ export async function getServerSideProps({params}) {
 
 const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown}) => {
     const {wsMsg, request} = useContext(WsContext);
-    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+fromDB.id+'/ava.jpg';
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+fromDB.id+'/ava.jpg';
     const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
     const [edits, setEdits] = useState({name:false, contacts:false, about: false, choices: false, company:false})

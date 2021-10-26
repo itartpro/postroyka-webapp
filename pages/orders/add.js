@@ -310,8 +310,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             <Gallery>
                                 {images.map((e, i) =>
                                     <Item key={i}
-                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
-                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
+                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
+                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
                                           width={e.width}
                                           height={e.height}
                                     >
@@ -321,7 +321,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                                     <img
                                                         ref={ref}
                                                         onClick={open}
-                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'temp/'+tempDir+e.name}
+                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
                                                         alt={i}
                                                         width={Math.round(e.width * 100 / e.height)}
                                                         height={100}

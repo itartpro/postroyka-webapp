@@ -221,7 +221,7 @@ export default function Update() {
                         </div>
                     </div>
                     <div className={'row center ' + css.folder}>
-                        {dbData.image && <img alt={dbData.name || ""} src={process.env.NEXT_PUBLIC_STATIC_URL + 'cats/' + urlId + '/' + dbData.image + '?' + imageCache} />}
+                        {dbData.image && <img alt={dbData.name || ""} src={process.env.NEXT_PUBLIC_STATIC_URL + '/uploads/cats/' + urlId + '/' + dbData.image + '?' + imageCache} />}
                         {<UploadProvider
                             chunkSize={1048576}
                             allowed={['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon']}

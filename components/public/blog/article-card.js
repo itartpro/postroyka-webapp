@@ -9,7 +9,7 @@ export default function ArticleCard(props) {
                 <a>
                     {props.image.length > 0 && (
                         <img
-                            src={`${process.env.NEXT_PUBLIC_STATIC_URL}cats/${props.id}/${props.image}`}
+                            src={`${process.env.NEXT_PUBLIC_STATIC_URL}/uploads/cats/${props.id}/${props.image}`}
                             alt={props.name}
                             width={320}
                             height={200}

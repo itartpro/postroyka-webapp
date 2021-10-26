@@ -87,8 +87,8 @@ export default function EditImages({ins}) {
                     <Gallery>
                         {images.map((el, i) =>
                                 <Item key={el.id || i}
-                                      original={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/"+el.name}
-                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/"+el.name}
+                                      original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/'+ins.folder+"/"+el.name}
+                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/'+ins.folder+"/"+el.name}
                                       width={el.width || ins.width}
                                       height={el.height || ins.height}
                                 >

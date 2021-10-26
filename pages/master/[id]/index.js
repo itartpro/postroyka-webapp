@@ -80,8 +80,8 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
 
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
-    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'masters/'+profile.id+'/ava.jpg';
-    const image = profile.avatar && masterAva || '/images/silhouette.jpg';
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+profile.id+'/ava.jpg';
+    const image = profile.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
     let legal = null;
     let company = null;
     switch(profile.legal) {

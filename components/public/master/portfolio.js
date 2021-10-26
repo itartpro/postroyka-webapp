@@ -26,8 +26,8 @@ export const Portfolio = ({works, workServices, photos}) => {
                                         <Gallery>
                                             {photos[e.id].map((e, i) => (
                                                 <Item key={e.id || i}
-                                                      original={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/'+e.name}
-                                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                                      original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/'+e.name}
+                                                      thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/mini/'+e.name}
                                                       width={e.width}
                                                       height={e.height}
                                                       title={e.text}
@@ -36,7 +36,7 @@ export const Portfolio = ({works, workServices, photos}) => {
                                                         <img
                                                             ref={ref}
                                                             onClick={open}
-                                                            src={process.env.NEXT_PUBLIC_STATIC_URL+'masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                                            src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/mini/'+e.name}
                                                             alt={i}
                                                             width={140}
                                                             height={100}

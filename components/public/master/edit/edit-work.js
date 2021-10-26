@@ -153,8 +153,8 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                     <Gallery>
                         {images.map((el, i) =>
                             <Item key={el.id || i}
-                                  original={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/"+el.name}
-                                  thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/mini/"+el.name}
+                                  original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/'+ins.folder+"/"+el.name}
+                                  thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/'+ins.folder+"/mini/"+el.name}
                                   width={el.width || ins.width}
                                   height={el.height || ins.height}
                             >
@@ -168,7 +168,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                                             width={el.width || ins.width}
                                             height={el.height || ins.height}
                                             folder={ins.folder}
-                                            thumb={process.env.NEXT_PUBLIC_STATIC_URL+ins.folder+"/mini/"+el.name}
+                                            thumb={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/'+ins.folder+"/mini/"+el.name}
                                             table={ins.table}/>
                                     </div>
                                 )}

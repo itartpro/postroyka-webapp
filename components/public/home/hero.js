@@ -64,21 +64,21 @@ export const Hero = () => {
                             <b>С нами легко</b>
                             <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
                         </div>
-                        <img src="/images/home/people1.png" alt="построить дом" width="365" height="300" loading="lazy"/>
+                        <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/images/home/people1.png`} alt="построить дом" width="365" height="300" loading="lazy"/>
                     </div>
                     <div key={1} className={'row bet'} ref={el => slides.current[1] = el}>
                         <div className="col start">
                             <b>Большой спектр услуг</b>
                             <p>Услуги строительных компаний помогут вам построить дом с нуля или преобразить свое жилище в точно оговоренные сроки</p>
                         </div>
-                        <img src="/images/home/people2.png" alt="найти работу" width="366" height="299" loading="lazy"/>
+                        <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/images/home/people2.png`} alt="найти работу" width="366" height="299" loading="lazy"/>
                     </div>
                     <div key={2} className={'row bet'} ref={el => slides.current[2] = el}>
                         <div className="col start">
                             <b>Абсолютно безопасно</b>
                             <p>Выберите мастера по выгодной цене или отзывам. Мы не скрываем негативные отзывы и проверяем каждый из них.</p>
                         </div>
-                        <img src="/images/home/people3.png" alt="Выбрать мастера" width="366" height="299" loading="lazy"/>
+                        <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/images/home/people3.png`} alt="Выбрать мастера" width="366" height="299" loading="lazy"/>
                     </div>
                 </div>
                 {slider  && (

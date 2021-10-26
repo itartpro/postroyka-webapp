@@ -77,7 +77,7 @@ const Home = ({page, services, regions, orders}) => {
                             <Link href={'/orders/add'}><a>Добавить заказ</a></Link>
                         </div>
                         <div>
-                            <img src="/images/home/people.png" alt="people"  width="372" height="272" loading="lazy"/>
+                            <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/public/images/home/people.png`} alt="people"  width="372" height="272" loading="lazy"/>
                         </div>
                     </div>
                 </div>
