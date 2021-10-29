@@ -8,7 +8,7 @@ export async function getStaticProps() {
     const orders = await getOrdersWithImages({});
     const regionIds = orders.map(e => e.region_id.toString());
     const townIds = orders.map(e => e.town_id.toString());
-    const regions = await goPost(JSON.stringify({
+    const orderRegions = await goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'regions-where-in',
         instructions: JSON.stringify({
@@ -28,7 +28,7 @@ export async function getStaticProps() {
             return res
         }
     });
-    const towns = await goPost(JSON.stringify({
+    const orderTowns = await goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'towns-where-in',
         instructions: JSON.stringify({
@@ -53,14 +53,14 @@ export async function getStaticProps() {
         props: {
             page,
             orders,
-            regions,
-            towns
+            orderRegions,
+            orderTowns
         },
         revalidate: 120
     }
 }
 
-const Orders = ({page, orders, regions, towns}) => {
+const Orders = ({page, orders, orderRegions, orderTowns}) => {
 
     return (
         <PublicLayout page={page}>
@@ -70,7 +70,7 @@ const Orders = ({page, orders, regions, towns}) => {
                     <h1>Все заказы</h1>
                 </header>
                 <br/>
-                {orders && orders.map(e => <Order key={'o'+e.id} {...e} region={regions[e.region_id]} town={towns[e.town_id]}/>)}
+                {orders && orders.map(e => <Order key={'o'+e.id} {...e} region={orderRegions[e.region_id]} town={orderTowns[e.town_id]}/>)}
             </main>
         </PublicLayout>
     )
