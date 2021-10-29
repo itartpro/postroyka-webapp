@@ -36,9 +36,9 @@ export const Comments = () => {
                 <p>Хорошая бригада.</p>
                 <b>Фотографии</b>
                 <div>
-                    <img src="http://placekitten.com/g/106/80" alt="master" width="140" height="100" loading="lazy"/>
-                    <img src="http://placekitten.com/g/106/80" alt="master" width="140" height="100" loading="lazy"/>
-                    <img src="http://placekitten.com/g/106/80" alt="master" width="140" height="100" loading="lazy"/>
+                    <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                    <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                    <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
                 </div>
                 <p><a href="https:\\google.com">Алексей </a>октябрь 2021</p>
             </div>
@@ -68,12 +68,12 @@ export const Comments = () => {
                     <p>Хорошая бригада.</p>
                     <b>Фотографии</b>
                     <div>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
-                        <img src="http://placekitten.com/g/106/80" alt="master" width="106" height="80" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
+                        <img src="http://placekitten.com/g/106/80" alt="master" width="120" height="90" loading="lazy"/>
                     </div>
                     <p><a href="https:\\google.com">Алексей </a> октябрь 2021</p>
                     <div className={css.img2}>

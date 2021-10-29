@@ -127,7 +127,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                 copy:{
                                     folder:'orders/' + album_id + '/mini',
                                     height:100,
-                                    width:140
+                                    width:120
                                 }
                             })
                         };

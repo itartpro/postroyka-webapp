@@ -124,7 +124,7 @@ export const UploadProvider = props => {
             setUpload(file);
         } else {
             //remove bad file from remains array
-            setWsMsg({type: 'error', data:"Такой тип файла не разрешён в этой части"});
+            setWsMsg({type: 'error', data:"Такой тип файла () не разрешён в этой части"});
             let newArr = remains.filter(e => e.name !== file.name);
             setRemains(newArr);
         }

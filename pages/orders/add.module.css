@@ -9,7 +9,7 @@
 
 .imgs figure {
     height: 100px;
-    width: 140px;
+    width: 120px;
     overflow: hidden;
     object-fit: contain;
     display: flex;
@@ -19,7 +19,7 @@
 
 .imgs > div {
     margin-right: 10px;
-    width: 140px
+    width: 120px
 }
 
 .imgs > div > button {
@@ -40,8 +40,8 @@
 }
 
 .add_img {
-    width: 140px;
-    height: 100px;
+    width: 120px;
+    height: 90px;
     background: #AAA;
     position: relative;
     border-radius: 5px;

@@ -44,7 +44,12 @@
 
 .gal img {
     border-radius: 4px;
+    margin: 0 6px 6px 0;
     cursor: pointer;
+}
+
+.gal img:last-of-type {
+    margin: 0
 }
 
 /* caption font size for photoswipe gallery */

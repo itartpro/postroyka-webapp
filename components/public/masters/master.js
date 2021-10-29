@@ -32,17 +32,17 @@ export const Master = () => {
 
 
             <div className={css.img}>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
-                <img src="http://placekitten.com/g/140/100" alt="master" width="114" height="84"
+                <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
 
             </div>

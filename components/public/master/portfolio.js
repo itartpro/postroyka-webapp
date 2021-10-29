@@ -22,7 +22,7 @@ export const Portfolio = ({works, workServices, photos}) => {
                                 <b>{e.name}</b>
                                 <p>{e.description}</p>
                                 {photos[e.id] && (
-                                    <div className={css.gal}>
+                                    <div className={'row start '+css.gal}>
                                         <Gallery>
                                             {photos[e.id].map((e, i) => (
                                                 <Item key={e.id || i}
