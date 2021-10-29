@@ -46,7 +46,6 @@ export async function getServerSideProps({params}) {
 const Portfolio = ({fromDB, services, works}) => {
 
     const [showMsg, setShowMsg] = useState(null);
-    console.log(services);
 
     return (
         <PublicLayout loginName={fromDB.first_name + ' ' + fromDB.last_name}>

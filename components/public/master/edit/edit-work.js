@@ -117,7 +117,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                         setImages(sortList(msg.data, 'sort_order'));
                     }
                 } else {
-                    console.log(msg.data);
+                    setShowMsg(msg.data);
                 }
             }
 
@@ -127,7 +127,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                 }
             }
         } else {
-            console.log(wsMsg.data)
+            setShowMsg(wsMsg.data)
         }
     }, [wsMsg])
 
@@ -176,8 +176,8 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                         )}
                     </Gallery>
                 )}
-                {!(images && images.length > 4) && (
-                    //ограничение на 5 картинок для каждой работы
+                {!(images && images.length > 5) && (
+                    //ограничение на 6 картинок для каждой работы
                     <div className={css.add_img}>
                         <span>Добавить фото <MdAddAPhoto/></span>
                         <div>
@@ -197,8 +197,8 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                                         album_id: work.id,
                                         copy:{
                                             folder:'masters/' + userId + '/work/' + work.id + '/mini',
-                                            height:100,
-                                            width:140
+                                            width:120,
+                                            height:90
                                         }
                                     }}>
                                     <InputUpload name="work_img" id="work_img_upload" multiple={false}/>

@@ -22,7 +22,7 @@ export const Portfolio = ({works, workServices, photos}) => {
                                 <b>{e.name}</b>
                                 <p>{e.description}</p>
                                 {photos[e.id] && (
-                                    <div className="row start">
+                                    <div className={css.gal}>
                                         <Gallery>
                                             {photos[e.id].map((e, i) => (
                                                 <Item key={e.id || i}
@@ -38,8 +38,8 @@ export const Portfolio = ({works, workServices, photos}) => {
                                                             onClick={open}
                                                             src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/mini/'+e.name}
                                                             alt={i}
-                                                            width={140}
-                                                            height={100}
+                                                            width={120}
+                                                            height={90}
                                                             loading="lazy"
                                                         />
                                                     )}

@@ -42,10 +42,9 @@
     margin: 15px 0;
 }
 
-.d1 img {
-    margin-right: 10px;
+.gal img {
     border-radius: 4px;
-    cursor: pointer
+    cursor: pointer;
 }
 
 /* caption font size for photoswipe gallery */
