@@ -25,7 +25,7 @@ const PublicLayout = ({page, children, ogImage, loginName}) => {
         }
     }, []);
 
-    const topColor = router.pathname === '/' ? css.fff : css.f8;
+    const topColor = (router.pathname === '/' || router.pathname === '/for-clients') ? css.fff : css.f8;
 
     return (
         <>

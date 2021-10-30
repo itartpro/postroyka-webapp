@@ -106,7 +106,7 @@ const Home = ({page, services, regions, orders, orderRegions, orderTowns}) => {
                     <br/><br/>
                     <header className={'row start '+css.blu}>
                         <p className={css.headline}>Актуальные заказы</p>
-                        <a>Смотреть все ›</a>
+                        <Link href={'/orders'}><a>Смотреть все ›</a></Link>
                     </header>
                     <br/>
                     <br/>

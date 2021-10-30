@@ -2,61 +2,54 @@
     max-width: 30%;
 }
 
-.block {
+.place {
     padding: 40px 52px 52px 52px;
     border: 1px solid #eaeaea;
     border-radius: 8px;
     margin-top: 30px;
 }
 
-.block > b {
+.place > b {
     font-size: 1.3rem;
 }
 
-.block > input {
+.place > input {
     padding: 23px 33px;
     border: 1px solid #737373;
     border-radius: 4px;
     margin-top: 10px;
 }
 
-.filt {
+.cats {
     padding: 40px 52px;
     border: 1px solid #EAEAEA;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 10px
 }
 
-.filt > b:nth-child(1) {
+.cats > b {
     font-size: 1.3rem;
+    margin-bottom: 10px
 }
 
-.filt > ul {
-    list-style: none;
+.cats ul {
+    list-style: none
 }
 
-.filt > ul > li:hover {
-    color: #47CB43;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    transition: all .3s;
+.cats ul ul {
+    max-height: 0;
+    overflow: hidden
 }
 
-.filt > ul > li > ul > li {
-    color: #545454;
-    list-style: none;
-    margin-top: 5px;
+.cats li li {
+    margin: 5px 0;
+    width: 100%
 }
 
-.filt > ul > li > ul > li:hover {
-    color: #47CB43;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    transition: all .3s;
-}
-
-.filt > ul > li {
-    margin-top: 15px;
+.cats li > b {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 5px
 }
 
 .formi {
@@ -125,11 +118,7 @@
     .right {
         max-width: 100%;
     }
-    .block {
-        padding: 20px 25px;
-
-    }
-    .filt {
+    .place {
         padding: 20px 25px;
     }
 

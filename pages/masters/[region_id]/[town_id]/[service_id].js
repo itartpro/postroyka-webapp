@@ -40,7 +40,7 @@ const Masters = ({services}) => {
                                     <ul className="row start">
                                         {e.children.map(e => (
                                             <li key={'s'+e.id}>
-                                                <Link href={'/masters/1/2/'+e.id}>
+                                                <Link href={'/masters/1/2/3/'+e.slug}>
                                                     <a>{e.name}</a>
                                                 </Link>
                                             </li>

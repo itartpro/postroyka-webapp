@@ -1,6 +1,7 @@
 export const toggleDown = e => {
     let el = e.target || e;
     let bro = el.nextElementSibling;
+    console.log(el, bro)
     if(!bro) return false;
     let broHeight = bro.offsetHeight;
     const svg = el.querySelector('svg');
