@@ -18,7 +18,7 @@ export async function getStaticProps() {
         return organizeCats(cats)[1].children
     });
     const regions = await getRegions();
-    const orders = await getOrdersWithImages({});
+    const orders = await getOrdersWithImages({limit: 8});
     const regionIds = orders.map(e => e.region_id.toString());
     const townIds = orders.map(e => e.town_id.toString());
     const orderRegions = await goPost(JSON.stringify({

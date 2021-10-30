@@ -2,13 +2,14 @@
     display: grid;
     grid-template-columns: 340px 1fr;
     grid-gap: 30px;
-    margin-top: 30px
+    margin-top: 25px
 }
 
 .place {
     padding: 30px 40px;
     border: 1px solid #eaeaea;
-    border-radius: 8px
+    border-radius: 8px;
+    margin-top: 8px
 }
 
 .place > b {
@@ -30,11 +31,12 @@
 }
 
 .cats > b {
+    display: block;
     font-size: 1.3rem;
-    margin-bottom: 10px
+    margin-bottom: 15px
 }
 
-.cats ul {
+.cats ul, .others ul {
     list-style: none
 }
 
@@ -54,14 +56,14 @@
     margin-bottom: 5px
 }
 
-.formi {
+.add {
     padding: 30px 40px;
     border: 1px solid #EAEAEA;
     border-radius: 8px;
     margin-top: 10px;
 }
 
-.formi > button {
+.add > button {
     color: #fff;
     background: #47CB43;
     border-radius: 4px;
@@ -70,32 +72,32 @@
     border: none;
 }
 
-.formi p {
+.add p {
     font-size: 0.8rem;
     color: #6f7580;
     margin-top: 15px;
 }
 
-.others {
-    margin-bottom: 25px;
-    padding: 0 20px;
-    border: none;
+.right h1, .others {
+    margin-bottom: 20px
 }
 
-.others b {
-    display: block;
-    font-size: 1.3rem;
+.others h2 {
+    font-size: 1.2rem;
     margin-bottom: 15px
 }
 
 .others a {
     display: grid;
-    grid-template-columns: 3fr minmax(100px, 1fr);
+    grid-template-columns: 1fr 190px;
     grid-gap: 15px;
     width: 100%;
     margin: 10px 0;
 }
 
+.others a span:nth-child(2) {
+    text-align: right
+}
 
 @media all and (max-width: 850px) {
     .place {

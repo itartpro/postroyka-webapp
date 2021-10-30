@@ -63,20 +63,6 @@
     color: #9D9D9D
 }
 
-.gal {
-    margin-top: 20px
-}
-
-.gal img {
-    border-radius: 4px;
-    margin: 0 6px 6px 0;
-    cursor: pointer;
-}
-
-.gal img:last-of-type {
-    margin: 0
-}
-
 @media screen and (max-width: 1230px) {
     .box {
         border-radius: 0;
