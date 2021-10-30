@@ -31,7 +31,7 @@ export const Master = () => {
             </div>
 
 
-            <div className={css.img}>
+            <div className={'row start '+css.gal}>
                 <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"
                      loading="lazy"/>
                 <img src="http://placekitten.com/g/120/90" alt="master" width="120" height="90"

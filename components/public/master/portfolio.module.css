@@ -1,5 +1,4 @@
 .left {
-    max-width: 68%;
     list-style: none
 }
 
@@ -44,7 +43,7 @@
 
 .gal img {
     border-radius: 4px;
-    margin: 0 6px 6px 0;
+    margin: 0 9px 9px 0;
     cursor: pointer;
 }
 
@@ -55,11 +54,4 @@
 /* caption font size for photoswipe gallery */
 .d1 > div > div > div div {
     font-size: 1.2rem!important
-}
-
-@media all and (max-width: 1000px) {
-    .left {
-        max-width: 100%;
-        padding: 0
-    }
 }

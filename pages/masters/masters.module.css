@@ -1,12 +1,14 @@
-.left {
-    max-width: 30%;
+.main {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    grid-gap: 30px;
+    margin-top: 30px
 }
 
 .place {
-    padding: 40px 52px 52px 52px;
+    padding: 30px 40px;
     border: 1px solid #eaeaea;
-    border-radius: 8px;
-    margin-top: 30px;
+    border-radius: 8px
 }
 
 .place > b {
@@ -21,7 +23,7 @@
 }
 
 .cats {
-    padding: 40px 52px;
+    padding: 30px 40px;
     border: 1px solid #EAEAEA;
     border-radius: 8px;
     margin-top: 10px
@@ -53,7 +55,7 @@
 }
 
 .formi {
-    padding: 40px 52px;
+    padding: 30px 40px;
     border: 1px solid #EAEAEA;
     border-radius: 8px;
     margin-top: 10px;
@@ -72,11 +74,6 @@
     font-size: 0.8rem;
     color: #6f7580;
     margin-top: 15px;
-}
-
-.right {
-    max-width: 68%;
-    margin-top: 30px;
 }
 
 .others {
@@ -100,24 +97,7 @@
 }
 
 
-
-@media all and (max-width: 1200px) {
-    .left {
-        max-width: 48%;
-    }
-    .right {
-        max-width: 48%;
-    }
-}
-
-
 @media all and (max-width: 850px) {
-    .left {
-        max-width: 100%;
-    }
-    .right {
-        max-width: 100%;
-    }
     .place {
         padding: 20px 25px;
     }

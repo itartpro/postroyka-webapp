@@ -3,7 +3,7 @@ import { useKeenSlider } from 'keen-slider/react'
 import {useState, useRef, useEffect} from 'react';
 import {useRouter} from "next/router";
 
-export const Hero = () => {
+export const Hero = ({h1}) => {
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const slides = useRef([]);
@@ -46,7 +46,7 @@ export const Hero = () => {
     return (
         <div className="col start max rel">
             <div className={css.d2}>
-                <h1>Найдите мастера под Ваши работы</h1>
+                <h1>{h1}</h1>
                 <div className={`row bet`}>
                     <p>Мастеров онлайн: <span>312</span></p>
                     <p>Заказов в неделю: <span>1 714</span></p>

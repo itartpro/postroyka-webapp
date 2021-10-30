@@ -138,7 +138,7 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                     <button onClick={() => setShowSection(2)} className={showSection === 2 ? css.on : null}>Отзывы</button>
                     <button onClick={() => setShowSection(3)} className={showSection === 3 ? css.on : null}>Портфолио</button>
                 </div>
-                <div className="row">
+                <div className={css.d3}>
                     {showSection === 1 && (
                         <Info user={profile} services={services} choices={choices}/>
                     )}

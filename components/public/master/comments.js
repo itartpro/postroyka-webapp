@@ -3,7 +3,7 @@ import {BsStar} from 'react-icons/bs';
 
 export const Comments = () => {
     return (
-        <section className={`col start ${css.left}`}>
+        <section className={`col start`}>
             <header className="row start">
                 <div className={`row start ${css.pad}`}>
                     <p className={css.cho}>Все</p>

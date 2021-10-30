@@ -21,11 +21,10 @@ export async function getServerSideProps({params}) {
 }
 
 const Masters = ({services}) => {
-
     return (
         <PublicLayout>
-            <main className={`row start bet max`}>
-                <aside className={css.left}>
+            <main className={'max '+css.main}>
+                <aside>
                     <div className={`col ${css.place}`}>
                         <b>Регион</b>
                         <input type="text" placeholder="Введите ваш регион"/>
@@ -40,7 +39,7 @@ const Masters = ({services}) => {
                                     <ul className="row start">
                                         {e.children.map(e => (
                                             <li key={'s'+e.id}>
-                                                <Link href={'/masters/1/2/'+e.id}>
+                                                <Link href={'/masters/russia/all/'+e.slug}>
                                                     <a>{e.name}</a>
                                                 </Link>
                                             </li>
@@ -56,7 +55,6 @@ const Masters = ({services}) => {
                             которых они готовы взяться за работу.</p>
                     </div>
                 </aside>
-
                 <section className={css.right}>
                     <div className={css.others}>
                         <b>Другие услуги этого раздела</b>
