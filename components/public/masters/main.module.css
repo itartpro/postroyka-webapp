@@ -5,6 +5,11 @@
     margin-top: 25px
 }
 
+.main > aside > div:nth-child(2) {
+    position: sticky;
+    top: 7px
+}
+
 .place {
     padding: 30px 40px;
     border: 1px solid #eaeaea;
@@ -16,8 +21,8 @@
     font-size: 1.3rem;
 }
 
-.place > input {
-    padding: 23px 33px;
+.place > select {
+    padding: 15px 20px;
     border: 1px solid #737373;
     border-radius: 4px;
     margin-top: 10px;
@@ -60,7 +65,7 @@
     padding: 30px 40px;
     border: 1px solid #EAEAEA;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 10px
 }
 
 .add > button {
@@ -69,13 +74,13 @@
     border-radius: 4px;
     padding: 17px;
     width: 100%;
-    border: none;
+    border: none
 }
 
 .add p {
     font-size: 0.8rem;
     color: #6f7580;
-    margin-top: 15px;
+    margin-top: 15px
 }
 
 .right h1, .others {
@@ -92,23 +97,27 @@
     grid-template-columns: 1fr 190px;
     grid-gap: 15px;
     width: 100%;
-    margin: 10px 0;
+    margin: 10px 0
 }
 
 .others a span:nth-child(2) {
     text-align: right
 }
 
+.txt {
+    margin: 50px auto
+}
+
 @media all and (max-width: 850px) {
     .place {
-        padding: 20px 25px;
+        padding: 20px 25px
     }
 
-    .formi {
-        padding: 20px 25px;
+    .add {
+        padding: 20px 25px
     }
 
     .right > div {
-        padding: 20px;
+        padding: 20px
     }
 }

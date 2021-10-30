@@ -19,48 +19,52 @@ export async function getStaticProps() {
     });
     const regions = await getRegions();
     const orders = await getOrdersWithImages({limit: 8});
-    const regionIds = orders.map(e => e.region_id.toString());
-    const townIds = orders.map(e => e.town_id.toString());
-    const orderRegions = await goPost(JSON.stringify({
-        address: 'auth:50003',
-        action: 'regions-where-in',
-        instructions: JSON.stringify({
-            column: 'id',
-            values: regionIds
-        })
-    })).then(res => {
-        try {
-            const parsed = JSON.parse(res);
-            const organized = {};
-            parsed.data.forEach(e => {
-                organized[e.id] = e.name;
-            });
-            return organized
-        } catch (e) {
-            console.log("regions-where-in error:" + e + res);
-            return res
-        }
-    });
-    const orderTowns = await goPost(JSON.stringify({
-        address: 'auth:50003',
-        action: 'towns-where-in',
-        instructions: JSON.stringify({
-            column: 'id',
-            values: townIds
-        })
-    })).then(res => {
-        try {
-            const parsed = JSON.parse(res);
-            const organized = {};
-            parsed.data.forEach(e => {
-                organized[e.id] = e.name;
-            });
-            return organized
-        } catch (e) {
-            console.log("towns-where-in error:" + e + res);
-            return res
-        }
-    });
+    let orderRegions = null;
+    let orderTowns = null;
+    if(orders) {
+        const regionIds = orders.map(e => e.region_id.toString());
+        const townIds = orders.map(e => e.town_id.toString());
+        orderRegions = await goPost(JSON.stringify({
+            address: 'auth:50003',
+            action: 'regions-where-in',
+            instructions: JSON.stringify({
+                column: 'id',
+                values: regionIds
+            })
+        })).then(res => {
+            try {
+                const parsed = JSON.parse(res);
+                const organized = {};
+                parsed.data.forEach(e => {
+                    organized[e.id] = e.name;
+                });
+                return organized
+            } catch (e) {
+                console.log("regions-where-in error:" + e + res);
+                return res
+            }
+        });
+        orderTowns = await goPost(JSON.stringify({
+            address: 'auth:50003',
+            action: 'towns-where-in',
+            instructions: JSON.stringify({
+                column: 'id',
+                values: townIds
+            })
+        })).then(res => {
+            try {
+                const parsed = JSON.parse(res);
+                const organized = {};
+                parsed.data.forEach(e => {
+                    organized[e.id] = e.name;
+                });
+                return organized
+            } catch (e) {
+                console.log("towns-where-in error:" + e + res);
+                return res
+            }
+        });
+    }
 
     return {
         props: {

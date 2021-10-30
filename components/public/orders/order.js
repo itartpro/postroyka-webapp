@@ -3,7 +3,6 @@ import {timeDiff, timeInRus} from "libs/time-stuff";
 
 export const Order = props => {
     const created = timeInRus(timeDiff(Date.parse(props.created), Date.now()));
-    console.log(props.images)
     return (
         <div className={`row bet ${css.box}`}>
             <div className={`row bet`}>

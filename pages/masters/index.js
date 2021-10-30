@@ -1,6 +1,6 @@
 import PublicLayout from "components/public/public-layout";
 import {Main} from "components/public/masters/main";
-import {getCats, getPageBySlug} from "libs/static-rest";
+import {getCats, getPageBySlug, getRegions, getTowns} from "libs/static-rest";
 import {organizeCats} from "libs/arrs";
 
 export async function getServerSideProps({params}) {
@@ -9,19 +9,23 @@ export async function getServerSideProps({params}) {
         if(cats === null) return null;
         return organizeCats(cats)[1].children
     });
+    const regions = await getRegions();
+    const towns = await getTowns();
 
     return {
         props: {
             page,
-            services
+            services,
+            regions,
+            towns
         }
     }
 }
 
-const Masters = ({page, services}) => {
+const Masters = props => {
     return (
-        <PublicLayout page={page}>
-            <Main services={services} page={page}/>
+        <PublicLayout page={props.page}>
+            <Main {...props}/>
         </PublicLayout>
     )
 }

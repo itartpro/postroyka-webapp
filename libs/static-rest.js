@@ -223,6 +223,7 @@ export const getOrdersImages = orderIdStrings => {
 
 export const getOrdersWithImages = instructions => {
     return getOrders(instructions).then(orders => {
+        if(!orders) return null;
         const orderIds = orders.map(e => e.id.toString());
         if(orderIds.length > 0) {
             return getOrdersImages(orderIds).then(res => {
