@@ -2,14 +2,20 @@ import PublicLayout from 'components/public/public-layout';
 import {Order} from 'components/public/orders/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
-import {getCats, getOrdersWithImages, getPageBySlug, getRegions} from 'libs/static-rest';
+import {
+    getCats,
+    getOrdersWithImages,
+    getPageBySlug,
+    getRegions,
+    organizedRegions,
+    organizedTowns
+} from 'libs/static-rest';
 import css from 'styles/home.module.css';
 import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
 import {Button} from "components/public/button";
 import {toggleDown} from "libs/sfx";
 import {IoIosArrowDown} from 'react-icons/io';
-import goPost from "libs/go-post";
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
@@ -24,46 +30,8 @@ export async function getStaticProps() {
     if(orders) {
         const regionIds = orders.map(e => e.region_id.toString());
         const townIds = orders.map(e => e.town_id.toString());
-        orderRegions = await goPost(JSON.stringify({
-            address: 'auth:50003',
-            action: 'regions-where-in',
-            instructions: JSON.stringify({
-                column: 'id',
-                values: regionIds
-            })
-        })).then(res => {
-            try {
-                const parsed = JSON.parse(res);
-                const organized = {};
-                parsed.data.forEach(e => {
-                    organized[e.id] = e.name;
-                });
-                return organized
-            } catch (e) {
-                console.log("regions-where-in error:" + e + res);
-                return res
-            }
-        });
-        orderTowns = await goPost(JSON.stringify({
-            address: 'auth:50003',
-            action: 'towns-where-in',
-            instructions: JSON.stringify({
-                column: 'id',
-                values: townIds
-            })
-        })).then(res => {
-            try {
-                const parsed = JSON.parse(res);
-                const organized = {};
-                parsed.data.forEach(e => {
-                    organized[e.id] = e.name;
-                });
-                return organized
-            } catch (e) {
-                console.log("towns-where-in error:" + e + res);
-                return res
-            }
-        });
+        orderRegions = await organizedRegions(regionIds)
+        orderTowns = await organizedTowns(townIds)
     }
 
     return {

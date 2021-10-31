@@ -10,19 +10,17 @@ export async function getServerSideProps({params}) {
         return organizeCats(cats)[1].children
     });
     const regions = await getRegions();
-    const towns = await getTowns();
 
     return {
         props: {
             page,
             services,
-            regions,
-            towns
+            regions
         }
     }
 }
 
-const Masters = props => {
+const AllMasters = props => {
     return (
         <PublicLayout page={props.page}>
             <Main {...props}/>
@@ -30,4 +28,4 @@ const Masters = props => {
     )
 }
 
-export default Masters
+export default AllMasters

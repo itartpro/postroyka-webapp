@@ -254,3 +254,65 @@ export const getOrdersWithImages = instructions => {
         return orders;
     });
 }
+
+export const organizedRegions = strRegionIds => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'regions-where-in',
+        instructions: JSON.stringify({
+            column: 'id',
+            values: strRegionIds
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            const organized = {};
+            parsed.data.forEach(e => {
+                organized[e.id] = e.name;
+            });
+            return organized
+        } catch (e) {
+            console.log("regions-where-in error:" + e + res);
+            return res
+        }
+    });
+}
+
+export const organizedTowns = strTownIds => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'towns-where-in',
+        instructions: JSON.stringify({
+            column: 'id',
+            values: strTownIds
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            const organized = {};
+            parsed.data.forEach(e => {
+                organized[e.id] = e.name;
+            });
+            return organized
+        } catch (e) {
+            console.log("towns-where-in error:" + e + res);
+            return res
+        }
+    });
+}
+
+export const getRow = (column, value, table) => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-row',
+        instructions: JSON.stringify({column, value, table})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log("getCell error:" + e + res);
+            return null
+        }
+    })
+}

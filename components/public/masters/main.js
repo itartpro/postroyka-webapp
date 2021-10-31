@@ -5,50 +5,40 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useRef} from 'react'
 
+export const Main = ({services, page, others, region, town, regions, othersLine, towns}) => {
 
-export const Main = ({services, page, others, regions, othersLine, towns}) => {
-
-    const regionRef = useRef(null);
-    const router = useRouter();
+    const {push, query} = useRouter();
+    const regionRef = useRef(null)
     const selectRegion = e => {
         const value = e.target.value;
-        let empty = true;
-        for(let i in router.query) {
-            if(router.query.hasOwnProperty(i)) {
-                empty = false;
-                return true
-            }
-        }
-        if(empty) return router.push(`/masters/${value}/all/all`);
+        if (!query.service) return push(`/masters/${value}`);
     }
     const selectTown = e => {
-        console.log(regionRef.current.value)
+        //const region = regionRef.current.value;
         const value = e.target.value;
-        let empty = true;
-        for(let i in router.query) {
-            if(router.query.hasOwnProperty(i)) {
-                empty = false;
-                return true
-            }
-        }
+        if (!query.service) return push(`/masters/${regionRef.current.value}/${value}`);
     }
 
     return (
         <main className={'max ' + css.main}>
             <aside>
                 <div className={`col ${css.place}`}>
-                        <b>Местоположение</b>
-                        <select ref={regionRef} placeholder="Выберите Вашу область" onChange={selectRegion} defaultValue={'moskovskaya-obl'}>
-                            {regions.map(e => (
-                                <option key={e.id} value={e.slug}>{e.name}</option>
-                            ))}
-                        </select>
-                        <select placeholder="Ваш город или ближайший" onChange={selectTown} defaultValue={'moskva'}>
-                            {towns.map(e => (
-                                <option key={e.id} value={e.slug}>{e.name}</option>
-                            ))}
-                        </select>
-                    </div>
+                    <b>Местоположение</b>
+                    <select ref={regionRef} onChange={selectRegion}
+                            defaultValue={region && region.slug || ''}>
+                        <option value="">Выберите Вашу область</option>
+                        {regions.map(e => (
+                            <option key={e.id} value={e.slug}>{e.name}</option>
+                        ))}
+                    </select>
+                    <select onChange={selectTown}
+                            defaultValue={town && town.slug || ''}>
+                        <option value="">Ваш город или ближайший</option>
+                        {towns && towns.map(e => (
+                            <option key={e.id} value={e.slug}>{e.name}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className="col start">
                     <div className={css.cats}>
                         <b>Виды работ</b>
@@ -59,7 +49,7 @@ export const Main = ({services, page, others, regions, othersLine, towns}) => {
                                     <ul className="row start">
                                         {e.children.map(e => (
                                             <li key={'s' + e.id}>
-                                                <Link href={'/masters/russia/all/' + e.slug}>
+                                                <Link href={`/masters/${query.region || 'russia'}/${query.town || 'all'}/${e.slug}`}>
                                                     <a>{e.name}</a>
                                                 </Link>
                                             </li>
@@ -83,7 +73,7 @@ export const Main = ({services, page, others, regions, othersLine, towns}) => {
                         <h2>{othersLine}</h2>
                         <ul>
                             {others.map(e => (
-                                <li>
+                                <li key={e.id}>
                                     <Link href={'/masters/russia/all/' + e.slug}>
                                         <a>
                                             <span>{e.name}</span>
@@ -97,7 +87,7 @@ export const Main = ({services, page, others, regions, othersLine, towns}) => {
                 )}
                 <Master/>
                 <Master/>
-                {page.text.length && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}} />}
+                {page.text.length && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}}/>}
             </section>
         </main>
     )
