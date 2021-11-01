@@ -49,19 +49,7 @@ export async function getServerSideProps({params}) {
     });
     //master could've chosen works unrelated to services he put a price on - so need to retrieve these services separately
     const workServices = await getCats('id', workServiceIds);
-    const photos = await getPortfolioImages(workIds).then(res => {
-        const organized = {};
-        res.forEach(e => {
-            if(!organized.hasOwnProperty(e.album_id)) {
-                organized[e.album_id] = [];
-            }
-            organized[e.album_id].push(e)
-        });
-        for(let i in organized) {
-            organized[i].sort((a,b) => a['sort_order'] - b['sort_order'])
-        }
-        return organized
-    });
+    const photos = await getPortfolioImages(workIds);
 
     return {
         props: {

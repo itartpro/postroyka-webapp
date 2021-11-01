@@ -67,6 +67,56 @@ export const getPortfolio = id => {
     })
 }
 
+export const MastersPortfolios = (masterIds, serviceIds = []) => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'masters-portfolios',
+        instructions: JSON.stringify({
+            login_id: masterIds,
+            service_id: serviceIds
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log(`organizedRegions JSON.parse error:${e}\nresponse:${res}\n`);
+            return res
+        }
+    });
+}
+
+export const getPortfolioImages = workIdStrings => {
+    return goPost(JSON.stringify({
+        address: 'gpics:50001',
+        action: 'read-where-in',
+        instructions: JSON.stringify({
+            column: 'album_id',
+            table: 'portfolio_media',
+            values: workIdStrings
+        })
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            const images = parsed.data;
+            const organized = {};
+            images && images.length > 0 && images.forEach(e => {
+                if(!organized.hasOwnProperty(e.album_id)) {
+                    organized[e.album_id] = [];
+                }
+                organized[e.album_id].push(e)
+            });
+            for(let i in organized) {
+                organized[i].sort((a,b) => a['sort_order'] - b['sort_order'])
+            }
+            return organized
+        } catch (e) {
+            console.log(`getPortfolioImages JSON.parse error:${e}\nresponse:${res}\n`);
+            return null
+        }
+    })
+}
+
 export const getProfileComments = id => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
@@ -138,26 +188,6 @@ export const getCats = (columnName = null, strValueArray = null) => {
                 return null
             }
         })
-}
-
-export const getPortfolioImages = workIdStrings => {
-    return goPost(JSON.stringify({
-        address: 'gpics:50001',
-        action: 'read-where-in',
-        instructions: JSON.stringify({
-            column: 'album_id',
-            table: 'portfolio_media',
-            values: workIdStrings
-        })
-    })).then(res => {
-        try {
-            const parsed = JSON.parse(res);
-            return parsed.data
-        } catch (e) {
-            console.log(`getPortfolioImages JSON.parse error:${e}\nresponse:${res}\n`);
-            return null
-        }
-    })
 }
 
 export const getLatestArticles = (limit = null, url = null) => {

@@ -67,7 +67,7 @@ const Home = ({page, services, regions, orders, orderRegions, orderTowns}) => {
                         <p>Изучите отзывы об исполнителях, сравните их условия и цены на вашу работу</p>
                     </div>
                 </div>
-                <section className={`row ${css.bg}`}>
+                <section className={`col ${css.bg}`}>
                     <header className={'row start max '+css.blu}>
                         <p className={css.headline}>Последние отзывы о выполненных работах</p>
                         <a>Рекомендации по выбору исполнителя</a>

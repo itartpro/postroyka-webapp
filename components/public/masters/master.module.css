@@ -6,37 +6,44 @@
     padding: 25px 30px
 }
 
-.master > div:nth-child(1) img {
+.nfo, .master > ul li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px
+}
+
+.nfo img {
     border-radius: 60px;
     margin-right: 20px
 }
 
-.master > b {
-    margin-left: 15px;
-    margin-bottom: 20px;
+.nfo > div {
+    width: initial
 }
 
-.very {
-    margin-bottom: 20px;
-}
-
-.very a {
-    color: #2F80ED;
-}
-
-.very button {
+.nfo button {
     padding: 17px 29px;
     border: 1px solid #47CB43;
     border-radius: 4px;
     background: #fff;
 }
 
-.very button:hover {
+.nfo button:hover {
     color: #fff;
     background: #47CB43;
     -webkit-transition: all .3s;
     -moz-transition: all .3s;
     transition: all .3s;
+}
+
+.master > ul {
+    list-style: none
+}
+
+.master > ul li p {
+    color: #2F80ED;
 }
 
 .gray p {
@@ -45,9 +52,20 @@
     margin-bottom: 15px;
 }
 
-.ss a {
+.text button {
     color: #CACACA;
+    border: none;
     border-bottom: 1px dashed #CACACA;
+    font-size: 1rem;
+    background: none;
+}
+
+.text pre {
+    width: 100%;
+    white-space: pre-wrap;
+    max-height: 5.5em;
+    line-height: 1.4em;
+    overflow: hidden
 }
 
 .gal {

@@ -378,8 +378,8 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                         {edits.about && (
                             <div>
                                 <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
-                                    <textarea {...register('about', {maxLength: 2000})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
-                                    {errMsg(errors.about, 2000)}
+                                    <textarea {...register('about', {maxLength: 1600})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
+                                    {errMsg(errors.about, 1600)}
 
                                     <input type="submit" value="Изменить"/>
                                 </form>

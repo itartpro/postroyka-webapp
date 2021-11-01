@@ -1,17 +1,20 @@
 import PublicLayout from "components/public/public-layout";
 import {Main} from "components/public/masters/main";
-import {getCats, getPageBySlug, getRegions, getMasters} from "libs/static-rest";
+import {getCats, getPageBySlug, getRegions} from "libs/static-rest";
 import {organizeCats} from "libs/arrs";
+import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
     const page = await getPageBySlug('masters');
+    //TODO get only essential services
     const services = await getCats().then(cats => {
         if(cats === null) return null;
         return organizeCats(cats)[1].children
     });
-    //TODO get only essential services
     const regions = await getRegions();
-    const masters = await getMasters();
+
+    //get all masters in main masters page
+    const masters = await getOrganizedMasters();
 
     return {
         props: {
@@ -24,7 +27,6 @@ export async function getServerSideProps({params}) {
 }
 
 const AllMasters = props => {
-
     return (
         <PublicLayout page={props.page}>
             <Main {...props}/>
