@@ -13,7 +13,7 @@ export const getPageBySlug = (slug, id = null) => {
                 const parsed = JSON.parse(res);
                 return parsed.data
             } catch (e) {
-                console.log("getPageBySlug error:" + e + res);
+                console.log(`getPageBySlug JSON.parse error:${e}\nresponse:${res}\n`);
                 return null
             }
         })
@@ -29,7 +29,7 @@ export const getProfileById = id => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getProfileById error:" + e + res);
+            console.log(`getProfileById JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -45,7 +45,7 @@ export const getMastersChoices = id => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getMastersChoices error:" + e + res);
+            console.log(`getMastersChoices JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -61,7 +61,7 @@ export const getPortfolio = id => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getPortfolio error:" + e + res);
+            console.log(`getPortfolio JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -77,7 +77,7 @@ export const getProfileComments = id => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getCommentsById error:" + e + res);
+            console.log(`getCommentsById JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -93,7 +93,7 @@ export const getRegions = (country_id = 1) => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getRegions error:" + e + res);
+            console.log(`getRegions JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -109,23 +109,23 @@ export const getTowns = (region_id = 1) => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getTowns error:" + e + res);
+            console.log(`getTowns JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
 }
 
-export const getCats = (columnName = null, valueArray = null) => {
+export const getCats = (columnName = null, strValueArray = null) => {
     const post = {
         address: 'cats:50004',
         action: 'read_all',
         instructions: '{}'
     };
-    if(columnName && valueArray) {
+    if(columnName && strValueArray) {
         post.action = 'read-where-in';
         post.instructions = JSON.stringify({
             column: columnName,
-            values: valueArray
+            values: strValueArray
         });
     }
     return goPost(JSON.stringify(post))
@@ -134,7 +134,7 @@ export const getCats = (columnName = null, valueArray = null) => {
                 const parsed = JSON.parse(res);
                 return parsed.data
             } catch (e) {
-                console.log("getCats error:" + e + res);
+                console.log(`getCats JSON.parse error:${e}\nresponse:${res}\n`);
                 return null
             }
         })
@@ -154,7 +154,7 @@ export const getPortfolioImages = workIdStrings => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getPortfolioImages error:" + e + res);
+            console.log(`getPortfolioImages JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -185,7 +185,8 @@ export const getLatestArticles = (limit = null, url = null) => {
         })
 }
 
-export const getOrders = ({order_by = "", limit = 0, offset = 0, service_id = [], town_id = [], region_id = [], budgetGreater = 0, budgetLess = 0}) => {
+export const getOrders = ({order_by = "", limit = 0, offset = 0, service_id = [], town_id = [],
+                              region_id = [], budgetGreater = 0, budgetLess = 0}) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-orders',
@@ -195,7 +196,7 @@ export const getOrders = ({order_by = "", limit = 0, offset = 0, service_id = []
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getOrders error:" + e + res);
+            console.log(`getOrders JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -215,7 +216,7 @@ export const getOrdersImages = orderIdStrings => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getOrdersImages error:" + e + res);
+            console.log(`getOrdersImages JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })
@@ -272,7 +273,7 @@ export const organizedRegions = strRegionIds => {
             });
             return organized
         } catch (e) {
-            console.log("regions-where-in error:" + e + res);
+            console.log(`organizedRegions JSON.parse error:${e}\nresponse:${res}\n`);
             return res
         }
     });
@@ -295,7 +296,7 @@ export const organizedTowns = strTownIds => {
             });
             return organized
         } catch (e) {
-            console.log("towns-where-in error:" + e + res);
+            console.log(`organizedTowns JSON.parse error:${e}\nresponse:${res}\n`);
             return res
         }
     });
@@ -311,7 +312,23 @@ export const getRow = (column, value, table) => {
             const parsed = JSON.parse(res);
             return parsed.data
         } catch (e) {
-            console.log("getCell error:" + e + res);
+            console.log(`getCell JSON.parse error:${e}\nresponse:${res}\n`);
+            return null
+        }
+    })
+}
+
+export const getMasters = () => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-masters',
+        instructions: JSON.stringify({})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log(`getMasters JSON.parse error:${e}\nresponse:${res}\n`);
             return null
         }
     })

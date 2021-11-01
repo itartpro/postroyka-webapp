@@ -1,11 +1,18 @@
 import css from "./master.module.css";
+import {timeDiff, timeInRus} from "libs/time-stuff";
 
-export const Master = () => {
+export const Master = props => {
+
+    const fullName = props.last_name + ' ' + props.first_name + (props.paternal_name && ' ' + props.paternal_name);
+    const timeOnSite = timeInRus(timeDiff(Date.parse(props.created), Date.now()));
+    const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+props.id+'/mini/ava.jpg';
+    const image = props.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
+
     return (
         <div className={css.master}>
             <div className="row start center">
-                <img src="https://thispersondoesnotexist.com/image" alt="" width="76" height="76" loading="lazy"/>
-                <b>Арсёнов Михаил Александрович</b>
+                <img src={image} alt={props.first_name} width="76" height="76" loading="lazy"/>
+                <b>{fullName}</b>
             </div>
 
             <div className={`row center bet ${css.very}`}>
@@ -15,7 +22,7 @@ export const Master = () => {
             </div>
 
             <div className={`row start ${css.gray}`}>
-                <p>На сайте 6 лет 2 месяца</p>
+                <p>На сайте {timeOnSite}</p>
                 <p>Был 1 год 8 месяцев назад</p>
             </div>
 

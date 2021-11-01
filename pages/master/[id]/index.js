@@ -122,7 +122,7 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                 <br/>
                 <div className={'row start'}>
                     <div className={'col start init center '+css.d1}>
-                        {image && <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>}
+                        <img src={image} alt={profile.first_name} width="150" height="150" loading="lazy"/>
                         <StarRating rating={profile.rating || 6.3}/>
                         <p>Отзывов: {(comments && comments.length) || 2}</p>
                     </div>

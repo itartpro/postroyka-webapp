@@ -1,12 +1,10 @@
 import {useEffect, useContext, useState} from 'react';
 import {WsContext} from 'context/WsProvider';
-import {organizeCats} from "libs/arrs";
-import {slugify, translit} from "libs/slugify";
 
 const Scratch = () => {
-    //TODO find duplicate slugs and make them unique
     const { request, wsMsg } = useContext(WsContext);
     const [cats, setCats] = useState([]);
+    const [regions, setRegions] = useState([]);
 
     //check out incoming data
     useEffect(() => {
@@ -18,17 +16,44 @@ const Scratch = () => {
         const msg = JSON.parse(wsMsg.data);
         if(Array.isArray(msg.data)) {
             if(msg.data[1].hasOwnProperty('created_at')) {
-                setCats(organizeCats(msg.data)[1].children)
+                setCats(msg.data)
+            }
+            if(msg.data[1].hasOwnProperty('country_id')) {
+                setRegions(msg.data)
             }
         }
     }, [wsMsg]);
 
+    useEffect(() => {
+        if(cats.length < 10) return false;
+        console.log('And the regions are set...working on dupes...');
+        const organized = {};
+        for (let v of cats) {
+            if(!organized.hasOwnProperty(v.slug)) {
+                organized[v.slug] = v
+            } else {
+                console.log('original:', organized[v.slug]);
+                console.log('possible dupe:', v);
+                const goData = {
+                    address: 'cats:50004',
+                    action: 'update-cell',
+                    instructions: JSON.stringify({
+                        id: v.id,
+                        column: "slug",
+                        value: v.slug + "-" + v.id
+                    })
+                };
+                //request(JSON.stringify(goData))
+            }
+        }
+    }, [cats])
+
     const checkStuff = () => {
         console.log('button pushed...')
         const goData = {
-            address: 'auth:50003',
-            action: 'read-towns',
-            instructions: JSON.stringify({country_id:1})
+            address: 'cats:50004',
+            action: 'read_all',
+            instructions: "{}"
         };
         //request(JSON.stringify(goData));
     }

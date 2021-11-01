@@ -62,12 +62,12 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     const [showMsg, setShowMsg] = useState(null);
     const [order, setOrder] = useState({});
     const [images,setImages] = useState([]);
-    const [tempDir, setTempDir] = useState(Math.round(new Date()/1000) + '/');
     const router = useRouter();
 
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
+        console.log(wsMsg)
 
         if (wsMsg.type === "error") {
             if(wsMsg.data.includes("is taken") && showErr === null) {
@@ -116,7 +116,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             address: 'gpics:50001',
                             action: 'process',
                             instructions: JSON.stringify({
-                                name: tempDir+e.name,
+                                name: e.name,
                                 folder: 'orders/' + album_id,
                                 width: 1400,
                                 height: 1400,
@@ -148,12 +148,11 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         }
 
         if(msg.data && msg.name === 'gpics') {
-            const folder = 'temp/'+tempDir+'/'
+            const folder = 'temp'
             const imgApi = folder && '/api/images/'+folder.split('/').join('-');
             fetch(imgApi)
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     setImages([...data])
                 })
                 .catch(err => console.log(err))
@@ -220,11 +219,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
     }
 
     const deleteImage = name => {
-        console.log(name)
         const goData = {
             address: 'gpics:50001',
             action: 'delete',
-            instructions: JSON.stringify({"folder":'temp/'+tempDir,"name":name})
+            instructions: JSON.stringify({"folder":"temp","name":name})
         }
         request(JSON.stringify(goData));
     }
@@ -310,8 +308,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             <Gallery>
                                 {images.map((e, i) =>
                                     <Item key={i}
-                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
-                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
+                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
+                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
                                           width={e.width}
                                           height={e.height}
                                     >
@@ -321,7 +319,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                                     <img
                                                         ref={ref}
                                                         onClick={open}
-                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+tempDir+e.name}
+                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
                                                         alt={i}
                                                         width={Math.round(e.width * 100 / e.height)}
                                                         height={100}
@@ -350,11 +348,12 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                             address={'gpics:50001'}
                                             action={'process'}
                                             instructions={{
-                                                folder: 'temp/'+tempDir,
+                                                folder: 'temp',
                                                 width: 1400,
                                                 height: 1400,
                                                 fit: 'Fit', //Fit or Fill (with crop)
-                                                position: 'Center'
+                                                position: 'Center',
+                                                temp_time: 3600
                                             }}>
                                             <InputUpload name="add_order_images" id="add_order_images" multiple={false}/>
                                         </UploadProvider>

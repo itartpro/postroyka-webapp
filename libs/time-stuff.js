@@ -1,41 +1,41 @@
 const minString = mins => {
     const str = mins.toString();
     const last = parseInt(str.slice(-1));
+    if(last > 4 || (mins > 4 && mins < 21)) return 'минут'
     if(last === 1) return 'минута'
     if(last > 1 && last < 5) return 'минуты'
-    if(last > 4) return 'минут'
 }
 
 const hourString = hours => {
     const str = hours.toString();
     const last = parseInt(str.slice(-1));
+    if(last > 4 || (hours > 4 && hours < 21)) return 'часов'
     if(last === 1) return 'час'
     if(last > 1 && last < 5) return 'часа'
-    if(last > 4) return 'часов'
 }
 
 const dayString = days => {
     const str = days.toString();
     const last = parseInt(str.slice(-1));
+    if(last > 4 || (days > 4 && days < 21)) return 'дней'
     if(last === 1) return 'день'
     if(last > 1 && last < 5) return 'дня'
-    if(last > 4) return 'дней'
 }
 
 const monthString = months => {
     const str = months.toString();
     const last = parseInt(str.slice(-1));
+    if(last > 4 || (months > 4 && months < 21)) return 'месяцев'
     if(last === 1) return 'месяц'
     if(last > 1 && last < 5) return 'месяца'
-    if(last > 4) return 'месяцев'
 }
 
 const yearString = years => {
     const str = years.toString();
     const last = parseInt(str.slice(-1));
+    if(last > 4 || (years > 4 && years < 21)) return 'лет'
     if(last === 1) return 'год'
     if(last > 1 && last < 5) return 'года'
-    if(last > 4) return 'лет'
 }
 
 export const timeInRus = milliseconds => {

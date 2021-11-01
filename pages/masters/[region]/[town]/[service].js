@@ -7,11 +7,14 @@ export async function getServerSideProps({params}) {
     const service = await getPageBySlug(params.service);
     let town = null;
     let region = null;
-    if(params.town && params.town !== 'all') {
+    if(params.town && params.town !== "all") {
         town = await getRow("slug", params.town, "towns")
     }
     if(params.region && params.region !== 'russia') {
-        region = await getRow("id", town.region_id.toString(), "regions");
+        region = await getRow("slug", params.region, "regions")
+    }
+    if(town && region && town.region_id.toString() !== region.id.toString()) {
+        region = await getRow("id", town.region_id.toString(), "regions")
     }
 
     let page;
@@ -44,13 +47,13 @@ export async function getServerSideProps({params}) {
     let othersLine = "";
     const others = services.reduce((result, parent) => {
         parent.children.forEach(e => {
-            if(page.id === e.id) {
+            if(service.id === e.id) {
                 othersLine = `Услуги раздела ${e.name}`;
                 if(e.children && e.children.length > 0) {
                     e.children.forEach(e2 => result.push(e2))
                 }
             }
-            if(page.parent_id === e.id) {
+            if(service.parent_id === e.id) {
                 othersLine = `Другие услуги раздела ${e.name}`;
                 if(e.children && e.children.length > 0) {
                     e.children.forEach(e2 => result.push(e2))

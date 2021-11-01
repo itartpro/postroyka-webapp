@@ -5,18 +5,25 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useRef} from 'react'
 
-export const Main = ({services, page, others, region, town, regions, othersLine, towns}) => {
+export const Main = ({services, page, others, region, town, regions, othersLine, towns, masters}) => {
 
     const {push, query} = useRouter();
     const regionRef = useRef(null)
     const selectRegion = e => {
         const value = e.target.value;
-        if (!query.service) return push(`/masters/${value}`);
+        if (!query.service) {
+            return push(`/masters/${value}`);
+        } else {
+            return push(`/masters/${value}/all/${query.service}`);
+        }
     }
     const selectTown = e => {
-        //const region = regionRef.current.value;
         const value = e.target.value;
-        if (!query.service) return push(`/masters/${regionRef.current.value}/${value}`);
+        if (!query.service) {
+            return push(`/masters/${regionRef.current.value}/${value}`);
+        } else {
+            return push(`/masters/${regionRef.current.value}/${value}/${query.service}`);
+        }
     }
 
     return (
@@ -27,7 +34,7 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                     <select ref={regionRef} onChange={selectRegion}
                             defaultValue={region && region.slug || ''}>
                         <option value="">Выберите Вашу область</option>
-                        {regions.map(e => (
+                        {regions && regions.map(e => (
                             <option key={e.id} value={e.slug}>{e.name}</option>
                         ))}
                     </select>
@@ -68,13 +75,13 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
             </aside>
             <section className={css.right}>
                 <header><h1>{page.h1 || page.name}</h1></header>
-                {others && others.length > 0 && (
+                {others && (
                     <div className={css.others}>
                         <h2>{othersLine}</h2>
                         <ul>
                             {others.map(e => (
                                 <li key={e.id}>
-                                    <Link href={'/masters/russia/all/' + e.slug}>
+                                    <Link href={`/masters/${query.region || 'russia'}/${query.town || 'all'}/${e.slug}`}>
                                         <a>
                                             <span>{e.name}</span>
                                             <span>от 5 000 до 13 000р / м²</span>
@@ -85,9 +92,11 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                         </ul>
                     </div>
                 )}
+                {masters && masters.map(e => (
+                    <Master key={e.id} {...e}/>
+                ))}
                 <Master/>
-                <Master/>
-                {page.text.length && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}}/>}
+                {page.text.length > 0 && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}}/>}
             </section>
         </main>
     )
