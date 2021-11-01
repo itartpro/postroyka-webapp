@@ -1,5 +1,6 @@
 import css from "./master.module.css";
 import {timeDiff, timeInRus} from "libs/time-stuff";
+import Link from 'next/link';
 
 import 'photoswipe/dist/photoswipe.css'
 import 'photoswipe/dist/default-skin/default-skin.css'
@@ -37,15 +38,15 @@ export const Master = props => {
         }
     }
 
-   console.log(photos);
-
     return (
         <div className={css.master}>
             <div className={css.nfo}>
-                <div className="row center">
-                    <img src={image} alt={props.first_name} width="76" height="76" loading="lazy"/>
-                    <b>{fullName}</b>
-                </div>
+                <Link href={`/master/${props.id}`}>
+                    <a className="row center">
+                        <img src={image} alt={props.first_name} width="76" height="76" loading="lazy"/>
+                        <b>{fullName}</b>
+                    </a>
+                </Link>
                 <button>Предложить заказ</button>
             </div>
 
