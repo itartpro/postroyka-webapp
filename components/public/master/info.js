@@ -13,8 +13,8 @@ export const Info = ({user, services, choices}) => {
                             <p>{c.name}</p>
                             {c.children.length > 0 && (
                                 <ul className={'bet'}>
-                                    {c.children.map(e => (
-                                        <li key={'sce'+e.id}>
+                                    {c.children.map(e => choices.hasOwnProperty(e.id) && (
+                                        <li key={'sce' + e.id}>
                                             <p>{e.name}</p>
                                             <span>от {choices[e.id].price} ₽/{e.extra}</span>
                                         </li>

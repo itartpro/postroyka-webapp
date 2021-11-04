@@ -92,10 +92,12 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                         </ul>
                     </div>
                 )}
-                {masters && masters.map(e => (
-                    <Master key={e.id} {...e}/>
-                ))}
-                <Master/>
+                {masters && masters.map(e => {
+                    return (
+                        <Master key={e.id} {...e}/>
+                    )
+                })}
+                {!masters && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}`}><a className={css.link}>{region.name}</a></Link></p>}
                 {page.text.length > 0 && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}}/>}
             </section>
         </main>

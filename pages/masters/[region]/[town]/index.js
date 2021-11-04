@@ -1,7 +1,7 @@
 import PublicLayout from "components/public/public-layout";
-import {getCats, getRegions, getTowns, getRow} from "libs/static-rest";
-import {organizeCats} from "libs/arrs";
+import {getRegions, getTowns, getRow} from "libs/static-rest";
 import {Main} from "components/public/masters/main";
+import {essentialCats, getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
     const town = await getRow("slug", params.town, "towns");
@@ -14,12 +14,10 @@ export async function getServerSideProps({params}) {
         text:''
     };
 
-    const services = await getCats().then(cats => {
-        if(cats === null) return null;
-        return organizeCats(cats)[1].children
-    });
+    const services = await essentialCats();
     const regions = await getRegions();
     const towns = await getTowns(town.region_id || 1);
+    const masters = await getOrganizedMasters([], [town.region_id], [town.id])
 
     return {
         props: {
@@ -28,7 +26,8 @@ export async function getServerSideProps({params}) {
             regions,
             towns,
             region,
-            town
+            town,
+            masters
         }
     }
 }

@@ -1,7 +1,8 @@
 import PublicLayout from "components/public/public-layout";
-import {getCats, getRegions, getTowns, getRow} from "libs/static-rest";
-import {organizeCats} from "libs/arrs";
+import {getRegions, getTowns, getRow} from "libs/static-rest";
 import {Main} from "components/public/masters/main";
+import {essentialCats} from "libs/masters-stuff";
+import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
     const region = await getRow("slug", params.region, "regions")
@@ -12,13 +13,10 @@ export async function getServerSideProps({params}) {
         description: 'Найти мастера в области ' + region.name,
         text:''
     };
-
-    const services = await getCats().then(cats => {
-        if(cats === null) return null;
-        return organizeCats(cats)[1].children
-    });
+    const services = await essentialCats();
     const regions = await getRegions();
-    const towns = await getTowns(region.id || 1);
+    const towns = await getTowns(region.id);
+    const masters = await getOrganizedMasters([], [region.id])
 
     return {
         props: {
@@ -26,7 +24,8 @@ export async function getServerSideProps({params}) {
             page,
             regions,
             towns,
-            region
+            region,
+            masters
         }
     }
 }

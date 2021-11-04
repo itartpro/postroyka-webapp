@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import {UploadProvider} from "context/UploadProvider";
 import {useContext, useEffect, useState, useRef} from "react";
-import {getProfileById, getRegions, getTowns, getCats, getMastersChoices} from 'libs/static-rest';
+import {getProfileById, getRegions, getTowns, getCats, getMastersChoices, getTerritories} from 'libs/static-rest';
 import {WsContext} from "context/WsProvider";
 import {BsPencil} from "react-icons/bs"
 import {useForm} from "react-hook-form";
@@ -23,7 +23,16 @@ export async function getServerSideProps({params}) {
     });
     const choices = await getMastersChoices(params.id).then(e => e.map(e => e['service_id']));
     const regions = await getRegions();
-    const defaultTowns = await getTowns(fromDB.region_id);
+    const places = await getTowns(0).then(data => {
+        const organizedRegions = {};
+        regions.forEach(e => {
+            organizedRegions[e.id] = e;
+            organizedRegions[e.id].towns = [];
+        });
+        data.forEach(e => organizedRegions[e.region_id].towns.push(e));
+        return organizedRegions
+    });
+    const defaultTowns = places[fromDB.region_id].towns;
     const homeRegion = regions.find(e => e.id === fromDB.region_id).name;
     const homeTown = defaultTowns.find(e => e.id === fromDB.town_id).name;
     const services = await getCats().then(cats => organizeCats(cats)[1].children.map(e => ({
@@ -36,6 +45,21 @@ export async function getServerSideProps({params}) {
             name: c.name
         }))
     })));
+    let defClickedTerritories = [];
+    let organizedTerritories = null;
+    const territories = await getTerritories([], [], [fromDB.id])
+    if(territories) {
+        defClickedTerritories = territories.map(e => e.region_id + '-' + e.town_id);
+        organizedTerritories = {};
+        territories.forEach(e => {
+            if(!organizedTerritories.hasOwnProperty(e.region_id)) {
+                organizedTerritories[e.region_id] = {};
+            }
+            if(e.town_id !== 0) {
+                organizedTerritories[e.region_id][e.town_id] = e;
+            }
+        })
+    }
 
     return {
         props: {
@@ -45,26 +69,32 @@ export async function getServerSideProps({params}) {
             services,
             homeRegion,
             homeTown,
-            choices
+            choices,
+            places,
+            territories:organizedTerritories,
+            defClickedTerritories
         }
     }
 }
 
-const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown}) => {
+const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown, places, territories, defClickedTerritories}) => {
     const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+fromDB.id+'/ava.jpg';
     const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
-    const [edits, setEdits] = useState({name:false, contacts:false, about: false, choices: false, company:false})
+    const [edits, setEdits] = useState({name:false, contacts:false, about: false, choices: false, company:false, territories: false})
     const [towns, setTowns] = useState(defaultTowns);
     const [user, setUser] = useState(fromDB);
     const [clickedServices, setClickedServices] = useState([]);
+    const [clickedTerritories, setClickedTerritories] = useState(defClickedTerritories);
     const [chosenServices, setChosenServices] = useState([])
     const simulateClick = useRef([]);
     const [showMsg, setShowMsg] = useState(null);
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const regionLimit = 3;
+    const placesLimit = 12;
 
     useEffect(() => {
         simulateClick.current.forEach((e, i) => {
@@ -123,12 +153,6 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
             }
 
             if(msg.name === "auth") {
-                //parse towns
-                if(msg.data && msg.data.hasOwnProperty(0) && msg.data[0].hasOwnProperty('region_id')) {
-                    setTowns(msg.data);
-                    return true
-                }
-
                 if(msg.status && msg.data === 'updated successfully') {
                     setShowMsg("Успешно обновлены данные")
                 }
@@ -136,20 +160,19 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                 if(msg.status && msg.data === 'update-service-choices') {
                     setShowMsg("Обновлены выбранные специализации")
                 }
+
+                if(msg.status && msg.data === 'update-territory-choices') {
+                    setShowMsg("Обновлены выбранные территории")
+                }
             }
         } else {
             console.log(wsMsg.data)
         }
     }, [wsMsg])
 
-    const regionWatch = watch('region');
+    const regionWatch = watch('region_id');
     useEffect(() => {
-        const goData = {
-            address: 'auth:50003',
-            action: 'read-towns',
-            instructions: JSON.stringify({region_id: parseInt(regionWatch)})
-        };
-        request(JSON.stringify(goData))
+        regionWatch && setTowns(places[regionWatch].towns)
     }, [regionWatch])
 
     const submitEdit = d => {
@@ -182,6 +205,44 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
             })
         }
         request(JSON.stringify(goData));
+    }
+
+    const updateTerritories = d => {
+        if(d.territories.length > 0) {
+            const newTerritoryRows = [];
+            d.territories.forEach(e => {
+                const arr = e.split('-');
+                newTerritoryRows.push({
+                    login_id: fromDB.id,
+                    region_id: parseInt(arr[0]),
+                    town_id: parseInt(arr[1])
+                })
+            })
+            //limit up to 3 regions and 12 overall location points
+            const checkedRegionLimit = [];
+            const checked = [];
+            let limit = placesLimit;
+            if(newTerritoryRows.length < placesLimit) {
+                limit = newTerritoryRows.length;
+            }
+            for(let i = 0; i < limit; i++) {
+                if(!checkedRegionLimit.includes(newTerritoryRows[i].region_id)) {
+                    checkedRegionLimit.push(newTerritoryRows[i].region_id);
+                }
+                if(checkedRegionLimit.length <= regionLimit) {
+                    checked.push(newTerritoryRows[i])
+                }
+            }
+
+            if(checked.length <= placesLimit) {
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'update-territory-choices',
+                    instructions: JSON.stringify(checked)
+                }
+                request(JSON.stringify(goData))
+            }
+        }
     }
 
     const editBackground = ({target}) => {
@@ -230,6 +291,34 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
 
     const legalWatch = watch('legal');
     const fullName = user.last_name + ' ' + user.first_name + (user.paternal_name && ' ' + user.paternal_name);
+
+    useEffect(() => {
+        if(clickedTerritories.length > placesLimit) {
+            clickedTerritories.length = 12;
+            setClickedTerritories([...clickedTerritories])
+        }
+
+        Object.keys(places).forEach(region => {
+            const box = document.getElementById(`t_${places[region].id}-0`);
+            if(box) {
+                if(!clickedTerritories.includes(box.value)) {
+                    box.checked = false
+                } else {
+                    box.parentElement.parentElement.parentElement.style.maxHeight = 'initial';
+                }
+            }
+            places[region].towns.forEach(town => {
+                const box = document.getElementById(`t_${places[region].id}-${town.id}`);
+                if(box) {
+                    if(!clickedTerritories.includes(box.value)) {
+                        box.checked = false
+                    } else {
+                        box.parentElement.parentElement.parentElement.style.maxHeight = 'initial';
+                    }
+                }
+            })
+        })
+    }, [clickedTerritories, edits.territories])
 
     return (
         <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
@@ -471,6 +560,118 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         </select>
                                         <span><IoIosArrowDown/></span>
                                     </div>
+                                    <input type="submit" value="Изменить"/>
+                                </form>
+                            </div>
+                        )}
+                    </li>
+                    <li className="row center bet">
+                        <b>
+                            <p>Удобные для работы регионы и города</p>
+                            <small>Можно выбрать до {regionLimit} регионов и {placesLimit} различных мест в общем</small>
+                        </b>
+                        <button onClick={e => {
+                            editBackground(e);
+                            edits.territories = edits.territories === false;
+                            setEdits({...edits});
+                        }}><BsPencil/> Ред.</button>
+                        {!edits.territories && (
+                            <div>
+                                <ul>
+                                    {territories && Object.keys(territories).map(region => (
+                                        <li key={region}>
+                                            <p>{places[region].name}</p>
+                                            <ul>
+                                                {places[region].towns.map(e => {
+                                                    if(territories[region].hasOwnProperty(e.id)) {
+                                                        return (
+                                                            <li key={e.id}>&nbsp;&nbsp;&nbsp;{e.name}</li>
+                                                        )
+                                                    }
+                                                })}
+                                            </ul>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        {edits.territories && (
+                            <div>
+                                <form onSubmit={handleSubmit(updateTerritories)} className={`col start ${formCSS.form}`}>
+                                    <ul className={'col start'}>
+                                        {places && Object.keys(places).map(region => (
+                                            <li key={'r'+places[region].id}>
+                                                <a className={formCSS.bar} role="button" onClick={toggleDown}>
+                                                    <IoIosArrowDown/>&nbsp;&nbsp;{places[region].name}
+                                                </a>
+                                                <ul className={`row start ${formCSS.hid}`}>
+                                                    <li key={'twn' + places[region].id + '-' + 0}>
+                                                        <label htmlFor={'t_' + places[region].id + '-' + 0} className={formCSS.check}>
+                                                            По всей области
+                                                            <input
+                                                                id={'t_' + places[region].id + '-' + 0} type="checkbox"
+                                                                {...register('territories')}
+                                                                defaultChecked={clickedTerritories.includes(places[region].id + '-' + 0)}
+                                                                value={places[region].id + '-' + 0}
+                                                                onClick={ev => {
+                                                                    if(ev.target.checked) {
+                                                                        if(!clickedTerritories.includes(places[region].id + '-' + 0)) {
+                                                                            const newClicked = clickedTerritories.filter(e => {
+                                                                                const arr = e.split('-')
+                                                                                if(arr[0] !== places[region].id.toString()) {
+                                                                                    return e
+                                                                                }
+                                                                            })
+                                                                            newClicked.push(places[region].id + '-' + 0);
+                                                                            setClickedTerritories([...newClicked])
+                                                                        }
+                                                                    } else {
+                                                                        if(clickedTerritories.includes(places[region].id + '-' + 0)) {
+                                                                            const newArr = clickedTerritories.filter(el => el !== places[region].id + '-' + 0);
+                                                                            setClickedTerritories([...newArr])
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <span></span>
+                                                        </label>
+                                                    </li>
+                                                    {places[region].towns.map(e => (
+                                                        <li key={'twn' + places[region].id + '-' + e.id}>
+                                                            <label htmlFor={'t_' + places[region].id + '-' + e.id} className={formCSS.check}>
+                                                                {e.name}
+                                                                <input
+                                                                    id={'t_' + places[region].id + '-' + e.id} type="checkbox"
+                                                                    {...register('territories')}
+                                                                    defaultChecked={clickedTerritories.includes(places[region].id + '-' + e.id)}
+                                                                    value={places[region].id + '-' + e.id}
+                                                                    onClick={ev => {
+                                                                        if(ev.target.checked) {
+                                                                            if(!clickedTerritories.includes(places[region].id + '-' + e.id)) {
+                                                                                const newClicked = clickedTerritories.filter(el => {
+                                                                                    if(el !== places[region].id + '-' + 0) {
+                                                                                        return el
+                                                                                    }
+                                                                                });
+                                                                                newClicked.push(places[region].id + '-' + e.id)
+                                                                                setClickedTerritories([...newClicked])
+                                                                            }
+                                                                        } else {
+                                                                            if(clickedTerritories.includes(places[region].id + '-' + e.id)) {
+                                                                                const newArr = clickedTerritories.filter(el => el !== places[region].id + '-' + e.id);
+                                                                                setClickedTerritories([...newArr])
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <span></span>
+                                                            </label>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </li>
+                                        ))}
+                                    </ul>
                                     <input type="submit" value="Изменить"/>
                                 </form>
                             </div>

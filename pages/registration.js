@@ -138,6 +138,19 @@ const Registration = ({regions, defaultTowns, services}) => {
                 }
                 request(JSON.stringify(goData));
 
+                //record the masters first territory (use home region and home town)
+                const newTerritoryRows = [{
+                    login_id: msg.data.id,
+                    region_id: msg.data.region_id,
+                    town_id: msg.data.town_id
+                }];
+                const goData2 = {
+                    address: 'auth:50003',
+                    action: 'update-territory-choices',
+                    instructions: JSON.stringify(newTerritoryRows)
+                }
+                request(JSON.stringify(goData2))
+
                 doAfterRegistration(msg.data)
             }
         }
@@ -194,6 +207,7 @@ const Registration = ({regions, defaultTowns, services}) => {
             instructions: JSON.stringify(regData)
         };
         request(JSON.stringify(goData))
+
     }, [regData])
 
     const passwordWatch = watch('password');

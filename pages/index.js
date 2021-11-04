@@ -3,7 +3,6 @@ import {Order} from 'components/public/orders/order';
 import Comments from 'components/public/home/comments';
 import {Hero} from 'components/public/home/hero';
 import {
-    getCats,
     getOrdersWithImages,
     getPageBySlug,
     getRegions,
@@ -11,18 +10,15 @@ import {
     organizedTowns
 } from 'libs/static-rest';
 import css from 'styles/home.module.css';
-import {organizeCats} from 'libs/arrs';
 import Link from 'next/link';
 import {Button} from "components/public/button";
 import {toggleDown} from "libs/sfx";
 import {IoIosArrowDown} from 'react-icons/io';
+import {essentialCats} from "libs/masters-stuff";
 
 export async function getStaticProps() {
     const page = await getPageBySlug('home');
-    const services = await getCats().then(cats => {
-        if(cats === null) return null;
-        return organizeCats(cats)[1].children
-    });
+    const services = await essentialCats();
     const regions = await getRegions();
     const orders = await getOrdersWithImages({limit: 8});
     let orderRegions = null;
@@ -108,7 +104,7 @@ const Home = ({page, services, regions, orders, orderRegions, orderTowns}) => {
                             <ul className="row start">
                                 {e.children.map(e => (
                                     <li key={'s'+e.id}>
-                                        <Link href={'/service/'+e.slug}>
+                                        <Link href={'/masters/russia/all/'+e.slug}>
                                             <a>{e.name}</a>
                                         </Link>
                                     </li>
@@ -123,7 +119,7 @@ const Home = ({page, services, regions, orders, orderRegions, orderTowns}) => {
                     <ul className="row start">
                         {regions && regions.map(e => (
                             <li key={'r'+e.id}>
-                                <Link href={'/masters/'+e.id}>
+                                <Link href={'/masters/'+e.slug}>
                                     <a>{e.name}</a>
                                 </Link>
                             </li>

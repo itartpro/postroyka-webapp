@@ -31,3 +31,5 @@ export const checkZeroPos = (arr, name) => {
     if(!arr) return false;
     return !!(Array.isArray(arr) && arr.length && arr[0].hasOwnProperty(name));
 }
+
+export const sortList = (list, key) => list.sort((a,b) => a[key] - b[key]);

@@ -3,22 +3,26 @@ import {GrLocation} from "react-icons/gr";
 import {Star} from "components/public/master/star";
 
 export const Aside = props => {
+    const home = props.homeLoc || props.regions[props.profile.region_id] + ' ' + props.towns[props.profile.town_id];
     return (
         <aside className={`col start ${css.as}`}>
             <b>Расположение</b>
+            <p><GrLocation/> {home}</p>
 
-            <p><GrLocation/> Кабардино-Балкарская Республика</p>
             <b>Выезд на объекты</b>
-            <ul><GrLocation/> Ивановская
-                область
-                <li>Вичуга</li>
-                <li>Иваново</li>
-                <li>Кинешма</li>
-                <li>Ивановский район</li>
-                <li>Кинешемский район</li>
-                <li>Фурмановский район</li>
-                <li>Фурманов</li>
+            <ul>
+                {props.territories && Object.keys(props.territories).map(region => (
+                    <li key={region}>
+                        <p><GrLocation/> {props.regions[region]}</p>
+                        <ul>
+                            {Object.keys(props.territories[region]).map(town => (
+                                <li key={town}>{props.towns[town]}</li>
+                            ))}
+                        </ul>
+                    </li>
+                ))}
             </ul>
+
             <b>Оценки</b>
             <div>
                 <div className={`row start`}>

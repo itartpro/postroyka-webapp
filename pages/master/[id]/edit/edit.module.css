@@ -46,6 +46,9 @@
 .list > li > *:first-child {
     width: 100%;
     max-width: 200px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start
 }
 
 .list > li > div {

@@ -336,7 +336,7 @@ export const getRow = (column, value, table) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-row',
-        instructions: JSON.stringify({column, value, table})
+        instructions: JSON.stringify({column, value: value.toString(), table})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);
@@ -348,11 +348,46 @@ export const getRow = (column, value, table) => {
     })
 }
 
-export const getMasters = () => {
+export const getTerritories = (region_id = [], town_id = [], login_id = []) => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-territories',
+        instructions: JSON.stringify({region_id, town_id, login_id})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log(`getTerritories JSON.parse error:${e}\nresponse:${res}\n`);
+            return null
+        }
+    });
+
+}
+
+export const getOrganizedTerritories = (region_id = [], town_id = [], login_id = []) => {
+    return getTerritories(region_id, town_id, login_id).then(territories => {
+        if(territories.length > 0) {
+            const organizedTerritories = {};
+            territories.forEach(e => {
+                if(!organizedTerritories.hasOwnProperty(e.region_id)) {
+                    organizedTerritories[e.region_id] = {};
+                }
+                if(e.town_id !== 0) {
+                    organizedTerritories[e.region_id][e.town_id] = e;
+                }
+            })
+        } else {
+            return null
+        }
+    })
+}
+
+export const getMasters = (login_id = []) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-masters',
-        instructions: JSON.stringify({})
+        instructions: JSON.stringify({login_id})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);

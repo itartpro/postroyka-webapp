@@ -1,4 +1,15 @@
-import {getCats, getMastersChoices, getPortfolio, getPortfolioImages, getProfileById, getProfileComments} from "libs/static-rest";
+import {
+    getCats,
+    getMastersChoices,
+    getPortfolio,
+    getPortfolioImages,
+    getProfileById,
+    getProfileComments,
+    getTerritories,
+    organizedRegions,
+    organizedTowns,
+    getRow
+} from "libs/static-rest";
 import PublicLayout from "components/public/public-layout";
 import css from "./master.module.css";
 import {timeDiff, timeInRus} from "libs/time-stuff";
@@ -17,23 +28,21 @@ export async function getServerSideProps({params}) {
         return e;
     });
     const comments = await getProfileComments(parseInt(params.id));
-
-    const choices = await getMastersChoices(params.id);
-    const choiceIds = await getMastersChoices(params.id);
-    const organizedChoices = {};
-    choices.forEach(e => {
-        organizedChoices[e.service_id] = e;
-    })
-    const directIds = choices.reduce((result, e) => {
-        if(!e.parent) {
-            result.push(e.service_id.toString())
+    let services = null;
+    let choices = null;
+    const unorganizedChoices = await getMastersChoices(params.id);
+    if(unorganizedChoices) {
+        choices = {};
+        let directIds = [];
+        unorganizedChoices.forEach(e => {
+            directIds.push(e.service_id.toString())
+            choices[e.service_id] = e
+        });
+        const directServices = await getCats('id', directIds);
+        if(directServices) {
+            services = organizeCats(directServices)
         }
-        return result
-    }, [])
-    const directServices = await getCats('id', directIds);
-    const parentIds = [...new Set(directServices.map(e => e.parent_id.toString()))]
-    const serviceParents = await getCats('id', parentIds);
-    const services = organizeCats([...serviceParents, ...directServices])
+    }
 
     const worksUn = await getPortfolio(params.id)
     const works = {};
@@ -50,21 +59,55 @@ export async function getServerSideProps({params}) {
     //master could've chosen works unrelated to services he put a price on - so need to retrieve these services separately
     const workServices = await getCats('id', workServiceIds);
     const photos = await getPortfolioImages(workIds);
+    let regions = null;
+    let towns = null;
+    let organizedTerritories = null;
+    let homeLoc = null;
+    const territories = await getTerritories([], [], [profile.id])
+    if(territories) {
+        organizedTerritories = {};
+        const regionIds = [];
+        const townIds = [];
+        territories.forEach(e => {
+            if(!organizedTerritories.hasOwnProperty(e.region_id)) {
+                organizedTerritories[e.region_id] = {};
+                regionIds.push(e.region_id.toString());
+            }
+            organizedTerritories[e.region_id][e.town_id] = e;
+            if(e.town_id !== 0) {
+                townIds.push(e.town_id.toString());
+            }
+        });
+        if(!regionIds.includes(profile.region_id.toString())) regionIds.push(profile.region_id.toString());
+        if(!townIds.includes(profile.town_id.toString())) townIds.push(profile.town_id.toString());
+        regions = await organizedRegions(regionIds);
+        towns = await organizedTowns(townIds);
+    } else {
+        console.log('profile.region_id', profile.region_id);
+        console.log('profile.town_id', profile.town_id);
+        const homeRegion = await getRow('id', profile.region_id, 'regions');
+        const homeTown = await getRow('id', profile.town_id, 'towns');
+        homeLoc = homeRegion.name + ' ' + homeTown.name
+    }
 
     return {
         props: {
             profile,
             comments,
             services,
-            choices: organizedChoices,
+            choices,
             works,
             workServices,
-            photos
+            photos,
+            territories:organizedTerritories,
+            regions,
+            towns,
+            homeLoc
         }
     }
 }
 
-const Master = ({profile, comments, services, choices, works, workServices, photos}) => {
+const Master = ({profile, comments, services, choices, works, workServices, photos, territories, regions, towns, homeLoc}) => {
 
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
@@ -136,7 +179,7 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                     {showSection === 3 && (
                         <Portfolio user={profile} works={works} workServices={workServices} photos={photos}/>
                     )}
-                    <Aside/>
+                    <Aside profile={profile} territories={territories} homeLoc={homeLoc} regions={regions} towns={towns}/>
                 </div>
                 <br/>
                 <br/>

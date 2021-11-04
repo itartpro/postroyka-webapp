@@ -38,6 +38,17 @@ export const Master = props => {
         }
     }
 
+    const expandAbove = e => {
+        const bro = e.target.previousElementSibling;
+        if(!bro.hasAttribute('style')) {
+            bro.setAttribute('style', 'max-height: 1200px');
+            e.target.innerHTML = 'Свернуть'
+        } else {
+            bro.removeAttribute('style');
+            e.target.innerHTML = 'Развернуть'
+        }
+    }
+
     return (
         <div className={css.master}>
             <div className={css.nfo}>
@@ -62,10 +73,12 @@ export const Master = props => {
                 <p>Был 1 год 8 месяцев назад</p>
             </div>
 
-            <div className={css.text}>
-                <pre>{props.about}</pre>
-                <button>Развернуть</button>
-            </div>
+            {props.about !== "" && (
+                <div className={css.text}>
+                    <pre>{props.about}</pre>
+                    <button onClick={expandAbove}>Развернуть</button>
+                </div>
+            )}
 
             {photos.length > 0 && (
                 <div className={'row start '+css.gal}>
