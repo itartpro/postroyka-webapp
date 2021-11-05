@@ -12,6 +12,7 @@ import {organizeCats} from 'libs/arrs';
 import {toggleDown} from 'libs/sfx';
 import {useRouter} from 'next/router';
 import {errMsg} from "libs/form-stuff";
+import {ShowMessage} from "components/show-message";
 
 export async function getStaticProps() {
     const regions = await getRegions();
@@ -318,7 +319,7 @@ const Registration = ({regions, defaultTowns, services}) => {
                     </ul>
 
                     <input type="submit" value="Зарегистрироваться"/>
-                    {showErr && <showMsg>{showErr}</showMsg>}
+                    {showErr && <ShowMessage>{showErr}</ShowMessage>}
                     <br/><br/>
                 </form>
             </main>

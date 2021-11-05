@@ -30,5 +30,5 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.nextjs.loadbalancer.server.port=3000
-      - traefik.http.routers.postroyka.rule=Host(`postroyka.localhost`)
-      - traefik.http.routers.postroyka.entrypoints=web
+      - traefik.http.routers.nextjs.rule=Host(`postroyka.localhost`)
+      - traefik.http.routers.nextjs.entrypoints=web

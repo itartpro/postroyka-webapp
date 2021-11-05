@@ -3,13 +3,15 @@ import css from 'styles/login.module.css';
 import css2 from "styles/forms.module.css";
 import { useForm } from "react-hook-form";
 import {useRouter} from 'next/router';
-import {useContext, useEffect} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {WsContext} from 'context/WsProvider';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
 import Link from 'next/link';
+import {ShowMessage} from "components/show-message"
 
 const Login = () => {
 
+    const [showMsg, setShowMsg] = useState(null);
     const router = useRouter();
 
     if (router.query.hasOwnProperty('out')) {
@@ -38,7 +40,7 @@ const Login = () => {
             debased64 = atob(JWTString.split('.')[1])
             if(userString) user = JSON.parse(userString);
         } catch (err) {
-            console.log( "User and/or AccessJWT corrupted: " + err);
+            setShowMsg( "User and/or AccessJWT corrupted: " + err);
             logOut();
             return false
         }
@@ -61,21 +63,26 @@ const Login = () => {
     }, [verifiedJwt])
 
     useEffect(() => {
-        console.log(wsMsg);
-        if(!wsMsg || wsMsg.type !== "info") return false;
+        if (!wsMsg) return false;
+        if(wsMsg.type === "error" && wsMsg.data.includes("no rows in result set")) {
+            setShowMsg("Нет пользователя с таким логином/паролем");
+            return false
+        }
         const res = JSON.parse(wsMsg.data);
-        if(res.data && res.data.hasOwnProperty("avatar")) {
-            const user = res.data;
-            const essentialUserData = {
-                id: user.id,
-                level: user.level,
-                avatar: user.avatar,
-                first_name: user.first_name,
-                last_name: user.last_name
-            };
-            window.localStorage.setItem('User', JSON.stringify(essentialUserData));
-            if (user.level === 9) return router.push('/admin');
-            if (user.level === 2) return router.push('/orders')
+        if (res.data) {
+            if (res.data.hasOwnProperty("avatar")) {
+                const user = res.data;
+                const essentialUserData = {
+                    id: user.id,
+                    level: user.level,
+                    avatar: user.avatar,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                };
+                window.localStorage.setItem('User', JSON.stringify(essentialUserData));
+                if (user.level === 9) return router.push('/admin');
+                if (user.level === 2) return router.push('/orders')
+            }
         }
     }, [wsMsg]);
 
@@ -134,6 +141,7 @@ const Login = () => {
                     }                    
                 `}</style>
                 </div>
+                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
             </main>
         </PublicLayout>
     )

@@ -62,10 +62,16 @@ export const Master = props => {
             </div>
 
             <ul>
-                <li>
-                    <p>Премиальный ремонт дома под ключ</p>
-                    <b>от 6 000р / м²</b>
-                </li>
+                {props.choices && props.choices.map(e => {
+                    if(e.price > 0) {
+                        return (
+                            <li key={e.id}>
+                                <p>{props.service.name}</p>
+                                <b>{e.price}р / {props.service.extra}</b>
+                            </li>
+                        )
+                    }
+                })}
             </ul>
 
             <div className={`row start ${css.gray}`}>

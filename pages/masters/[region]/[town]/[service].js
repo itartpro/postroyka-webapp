@@ -2,9 +2,13 @@ import PublicLayout from "components/public/public-layout";
 import {getCats, getRegions, getTowns, getRow, getPageBySlug} from "libs/static-rest";
 import {organizeCats} from "libs/arrs";
 import {Main} from "components/public/masters/main";
+import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
+    console.log('new attempt')
     const service = await getPageBySlug(params.service);
+    const serviceIds = [];
+    serviceIds.push(service.id);
     let town = null;
     let region = null;
     if(params.town && params.town !== "all") {
@@ -45,6 +49,7 @@ export async function getServerSideProps({params}) {
         return organizeCats(cats)[1].children
     });
     let othersLine = "";
+    let parentService = null;
     const others = services.reduce((result, parent) => {
         parent.children.forEach(e => {
             if(service.id === e.id) {
@@ -54,7 +59,9 @@ export async function getServerSideProps({params}) {
                 }
             }
             if(service.parent_id === e.id) {
+                serviceIds.push(e.id);
                 othersLine = `Другие услуги раздела ${e.name}`;
+                parentService = e;
                 if(e.children && e.children.length > 0) {
                     e.children.forEach(e2 => result.push(e2))
                 }
@@ -67,17 +74,25 @@ export async function getServerSideProps({params}) {
     if(region) {
         towns = await getTowns(region.id);
     }
+    console.log('service', service)
+    console.log('parentService', parentService)
+    const regionIds = region !== null ? [region.id] : [];
+    const townIds = town !== null ? [town.id] : [];
+    const masters = await getOrganizedMasters([], regionIds, townIds, serviceIds)
 
     return {
         props: {
             services,
+            service,
+            parentService,
             page,
             others,
             othersLine,
             regions,
             towns,
             region,
-            town
+            town,
+            masters
         }
     }
 }

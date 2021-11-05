@@ -362,7 +362,22 @@ export const getTerritories = (region_id = [], town_id = [], login_id = []) => {
             return null
         }
     });
+}
 
+export const getChoices = (service_id = [], login_id = [], id = []) => {
+    return goPost(JSON.stringify({
+        address: 'auth:50003',
+        action: 'get-choices',
+        instructions: JSON.stringify({service_id, login_id, id})
+    })).then(res => {
+        try {
+            const parsed = JSON.parse(res);
+            return parsed.data
+        } catch (e) {
+            console.log(`getChoices JSON.parse error:${e}\nresponse:${res}\n`);
+            return null
+        }
+    });
 }
 
 export const getOrganizedTerritories = (region_id = [], town_id = [], login_id = []) => {
@@ -383,11 +398,11 @@ export const getOrganizedTerritories = (region_id = [], town_id = [], login_id =
     })
 }
 
-export const getMasters = (login_id = []) => {
+export const getMasters = (login_id = [], service_id = []) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-masters',
-        instructions: JSON.stringify({login_id})
+        instructions: JSON.stringify({login_id, service_id})
     })).then(res => {
         try {
             const parsed = JSON.parse(res);

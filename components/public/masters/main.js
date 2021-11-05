@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useRef} from 'react'
 
-export const Main = ({services, page, others, region, town, regions, othersLine, towns, masters}) => {
+export const Main = ({services, page, others, region, town, regions, othersLine, towns, masters, service, parentService}) => {
 
     const {push, query} = useRouter();
     const regionRef = useRef(null)
@@ -14,6 +14,9 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
         if (!query.service) {
             return push(`/masters/${value}`);
         } else {
+            if(value === '') {
+                return push(`/masters/russia/all/${query.service}`);
+            }
             return push(`/masters/${value}/all/${query.service}`);
         }
     }
@@ -22,9 +25,13 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
         if (!query.service) {
             return push(`/masters/${regionRef.current.value}/${value}`);
         } else {
+            if(value === '') {
+                return push(`/masters/${regionRef.current.value}/all/${query.service}`);
+            }
             return push(`/masters/${regionRef.current.value}/${value}/${query.service}`);
         }
     }
+
 
     return (
         <main className={'max ' + css.main}>
@@ -82,10 +89,7 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                             {others.map(e => (
                                 <li key={e.id}>
                                     <Link href={`/masters/${query.region || 'russia'}/${query.town || 'all'}/${e.slug}`}>
-                                        <a>
-                                            <span>{e.name}</span>
-                                            <span>от 5 000 до 13 000р / м²</span>
-                                        </a>
+                                        <a>{e.name}</a>
                                     </Link>
                                 </li>
                             ))}
@@ -94,11 +98,17 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                 )}
                 {masters && masters.map(e => {
                     return (
-                        <Master key={e.id} {...e}/>
+                        <Master key={e.id} service={service} {...e}/>
                     )
                 })}
-                {!masters && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}`}><a className={css.link}>{region.name}</a></Link></p>}
+                {!masters && region && town && service && !parentService && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}`}><a className={css.link}>{region.name}</a></Link></p>}
+                {!masters && region && town && !service && !parentService && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}`}><a className={css.link}>{region.name}</a></Link></p>}
+                {!masters && region && town && service && parentService && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}/all/${service.slug}`}><a className={css.link}>{region.name}</a></Link></p>}
+                {!masters && region && parentService && <p>Попробуйте поискать мастеров с похожими услугами в родительской услуге, и по региону<br/><Link href={`/masters/${region.slug}/all/${parentService.slug}`}><a className={css.link}>{parentService.name}</a></Link></p>}
+                {!masters && region && !town && !parentService && <p>Похоже в этом регионе нет мастеров. Зарегестрируйтесь как мастер и станьте первым!<br/><Link href={`/for-masters`}><a className={css.link}>Стать первым!</a></Link></p>}
+                {!masters && !region && !parentService && <p>Попробуйте поискать похожих мастеров <Link href={`/masters`}><a className={css.link}>Все мастера</a></Link></p>}
                 {page.text.length > 0 && <div className={css.txt} dangerouslySetInnerHTML={{__html: page.text}}/>}
+                <br/>
             </section>
         </main>
     )
