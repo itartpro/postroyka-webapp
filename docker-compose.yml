@@ -21,7 +21,6 @@ services:
     volumes:
       - ./:/home/${MYUSERNAME}/webapp
       - ../appservices/uploads:/home/${MYUSERNAME}/appservices/uploads
-      - ../appservices/uploads/logs/npm:/root/.npm/_logs
       - /home/${MYUSERNAME}/webapp/.next
       - /home/${MYUSERNAME}/webapp/node_modules
     tty: true
