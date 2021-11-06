@@ -52,6 +52,8 @@ export const getOrganizedMasters = async (loginIds = [], regionIds = [], townIds
                     loginIds.splice(i, 1);
                 }
             })
+        } else {
+            loginIds = matches
         }
     }
     if((regionIds.length > 0 || townIds.length > 0 || serviceIds.length > 0) && loginIds.length < 1) return null;

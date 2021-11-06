@@ -5,7 +5,6 @@ import {Main} from "components/public/masters/main";
 import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
-    console.log('new attempt')
     const service = await getPageBySlug(params.service);
     const serviceIds = [];
     serviceIds.push(service.id);
@@ -74,8 +73,6 @@ export async function getServerSideProps({params}) {
     if(region) {
         towns = await getTowns(region.id);
     }
-    console.log('service', service)
-    console.log('parentService', parentService)
     const regionIds = region !== null ? [region.id] : [];
     const townIds = town !== null ? [town.id] : [];
     const masters = await getOrganizedMasters([], regionIds, townIds, serviceIds)
