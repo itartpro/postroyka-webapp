@@ -330,7 +330,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                 </div>
                 <ul className={css.list}>
                     <li className={'row center bet '+css.ava}>
-                        <b>{image && 'Изменить фото профиля' || 'Фото профиля не загружено'}</b>
+                        <b>{image && 'Сохранить фото профиля' || 'Фото профиля не загружено'}</b>
                         <label htmlFor="ava_upload">
                             <BsPencil/> Ред.
                             <UploadProvider
@@ -399,7 +399,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         </>
                                     )}
 
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
@@ -451,7 +451,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         <span><IoIosArrowDown/></span>
                                     </div>
 
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
@@ -470,7 +470,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                     <textarea {...register('about', {maxLength: 1600})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
                                     {errMsg(errors.about, 1600)}
 
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
@@ -535,7 +535,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                             </li>
                                         ))}
                                     </ul>
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
@@ -560,7 +560,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                         </select>
                                         <span><IoIosArrowDown/></span>
                                     </div>
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
@@ -672,7 +672,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                             </li>
                                         ))}
                                     </ul>
-                                    <input type="submit" value="Изменить"/>
+                                    <input type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}
