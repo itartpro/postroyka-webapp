@@ -15,7 +15,8 @@ export async function getStaticProps() {
             services,
             regions,
             masters
-        }
+        },
+        revalidate: 120
     }
 }
 

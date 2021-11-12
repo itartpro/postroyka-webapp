@@ -98,7 +98,7 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                 )}
                 {masters && masters.map(e => {
                     return (
-                        <Master key={e.id} service={service} {...e}/>
+                        <Master key={'m'+e.id} service={service} {...e}/>
                     )
                 })}
                 {!masters && region && town && service && !parentService && <p>Попробуйте поискать мастеров по региону <Link href={`/masters/${region.slug}`}><a className={css.link}>{region.name}</a></Link></p>}

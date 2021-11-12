@@ -14,9 +14,10 @@ export const Master = props => {
     const image = props.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
 
     const photos = [];
-    if(props.portfolio) {
+    if(props.portfolio && props.portfolio.length > 0) {
         const set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]}
         const imageIds = [];
+        let limit = 0;
         const fillSet = set => {
             props.portfolio.forEach((album, i) => {
                 for(let image of album) {
@@ -26,8 +27,9 @@ export const Master = props => {
                         break;
                     }
                 }
+                limit += 1;
             });
-            if(imageIds.length < 6) fillSet(set);
+            if(imageIds.length < 6 && limit <= imageIds.length) fillSet(set);
         }
 
         fillSet(set);
@@ -91,8 +93,8 @@ export const Master = props => {
                     <Gallery>
                         {photos.map((e, i) => (
                             <Item key={e.id || i}
-                                  original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/'+e.name}
-                                  thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                  original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+props.id+'/work/'+e.album_id+'/'+e.name}
+                                  thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+props.id+'/work/'+e.album_id+'/mini/'+e.name}
                                   width={e.width}
                                   height={e.height}
                                   title={e.text}
@@ -101,7 +103,7 @@ export const Master = props => {
                                     <img
                                         ref={ref}
                                         onClick={open}
-                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/2/work/'+e.album_id+'/mini/'+e.name}
+                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+props.id+'/work/'+e.album_id+'/mini/'+e.name}
                                         alt={i}
                                         width={120}
                                         height={90}
