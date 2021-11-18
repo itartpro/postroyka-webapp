@@ -52,7 +52,7 @@
     display: block;
     padding: 15px 20px;
     margin-top: 20px;
-    color: white;
+    color: white!important;
     max-width: max-content;
     background: #47CB43;
     transition: all .3s

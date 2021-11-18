@@ -47,7 +47,7 @@
     width: 100%;
     max-width: 200px;
     position: sticky;
-    top: 0;
+    top: 20px;
     align-self: flex-start
 }
 
@@ -76,6 +76,9 @@
     background-color: transparent;
     width: 70px;
     height: 30px;
+    align-self: flex-start;
+    position: sticky;
+    top: 20px
 }
 
 .list li > button:hover {
@@ -155,4 +158,54 @@ li.edit_price:hover {
 
 .pad {
     padding: 15px
+}
+
+.link {
+    color: #2F80ED;
+    border-bottom: 1px dashed #2F80ED;
+}
+
+.regions {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 32%
+}
+
+.regions > li > a {
+    padding: 5px 10px
+}
+
+.regions > li > ul > li {
+    padding: 2px 10px;
+    width: 100%
+}
+
+.save_regions {
+    width: 100%;
+    max-width: 100% !important;
+    margin-top: 15px
+}
+
+@media all and (max-width: 1024px) {
+    .list li > button,
+    .list > li > *:first-child {
+        position: static;
+    }
+    .list > li {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 30px
+    }
+
+    .list > li > div {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 15px
+    }
+
+    .list > li.ava > div {
+        margin-top: 40px
+    }
 }

@@ -1,6 +1,6 @@
 import PublicLayout from "components/public/public-layout";
-import css from "./edit.module.css";
 import formCSS from 'styles/forms.module.css';
+import css from "./edit.module.css";
 import Link from 'next/link'
 import {InputUpload} from "components/input-upload";
 import {UploadProvider} from "context/UploadProvider";
@@ -292,6 +292,24 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
     const legalWatch = watch('legal');
     const fullName = user.last_name + ' ' + user.first_name + (user.paternal_name && ' ' + user.paternal_name);
 
+    const workPlaces = {0:[], 1:[], 2:[]};
+    const totalRegionsCount = regions.length;
+    let workPlacesCount = 0;
+    for (let i in places) {
+        workPlacesCount++;
+        if(workPlacesCount <= totalRegionsCount - 2 * (totalRegionsCount / 3)) {
+            workPlaces[0].push(places[i]);
+            continue
+        }
+        if(workPlacesCount <= totalRegionsCount - (totalRegionsCount / 3)) {
+            workPlaces[1].push(places[i]);
+            continue
+        }
+        if(workPlacesCount <= totalRegionsCount) {
+            workPlaces[2].push(places[i]);
+        }
+    }
+
     useEffect(() => {
         if(clickedTerritories.length > placesLimit) {
             clickedTerritories.length = 12;
@@ -330,7 +348,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                 </div>
                 <ul className={css.list}>
                     <li className={'row center bet '+css.ava}>
-                        <b>{image && 'Сохранить фото профиля' || 'Фото профиля не загружено'}</b>
+                        <b>{image && 'Обновить фото профиля' || 'Фото профиля не загружено'}</b>
                         <label htmlFor="ava_upload">
                             <BsPencil/> Ред.
                             <UploadProvider
@@ -359,12 +377,12 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                         </div>
                     </li>
                     <li className="row center bet">
-                        <b>ФИО и юр. статус</b>
+                        <b>Фамилия, имя, отчество и юр. статус</b>
                         <button onClick={e => {
                             editBackground(e);
                             edits.name = edits.name === false;
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.name && "Отмен." || "Ред."}</button>
                         {!edits.name && <div><p>{fullName}, {legal(user.legal)}</p></div>}
                         {edits.name && (
                             <div>
@@ -410,7 +428,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                             editBackground(e);
                             edits.contacts = edits.contacts === false;
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.contacts && "Отмен." || "Ред."}</button>
                         {!edits.contacts && (
                             <div>
                                 {user.phone && <p>{user.phone},</p>}
@@ -462,7 +480,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                             editBackground(e);
                             edits.about = edits.about === false;
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.about && "Отмен." || "Ред."}</button>
                         {!edits.about && <div>{user.about || "\"О себе\" не заполнено"}</div>}
                         {edits.about && (
                             <div>
@@ -487,7 +505,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                 edits.choices = false;
                             }
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.choices && "Отмен." || "Ред."}</button>
                         {!edits.choices && (
                             <div>
                                 <ul className={'col start'}>
@@ -546,7 +564,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                             editBackground(e);
                             edits.company = edits.company === false;
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.company && "Отмен." || "Ред."}</button>
                         {!edits.company && <div><p>{company(parseInt(user.company))}</p></div>}
                         {edits.company && (
                             <div>
@@ -574,7 +592,7 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                             editBackground(e);
                             edits.territories = edits.territories === false;
                             setEdits({...edits});
-                        }}><BsPencil/> Ред.</button>
+                        }}><BsPencil/> {edits.territories && "Отмен." || "Ред."}</button>
                         {!edits.territories && (
                             <div>
                                 <ul>
@@ -597,68 +615,38 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                         )}
                         {edits.territories && (
                             <div>
-                                <form onSubmit={handleSubmit(updateTerritories)} className={`col start ${formCSS.form}`}>
-                                    <ul className={'col start'}>
-                                        {places && Object.keys(places).map(region => (
-                                            <li key={'r'+places[region].id}>
-                                                <a className={formCSS.bar} role="button" onClick={toggleDown}>
-                                                    <IoIosArrowDown/>&nbsp;&nbsp;{places[region].name}
-                                                </a>
-                                                <ul className={`row start ${formCSS.hid}`}>
-                                                    <li key={'twn' + places[region].id + '-' + 0}>
-                                                        <label htmlFor={'t_' + places[region].id + '-' + 0} className={formCSS.check}>
-                                                            По всей области
-                                                            <input
-                                                                id={'t_' + places[region].id + '-' + 0} type="checkbox"
-                                                                {...register('territories')}
-                                                                defaultChecked={clickedTerritories.includes(places[region].id + '-' + 0)}
-                                                                value={places[region].id + '-' + 0}
-                                                                onClick={ev => {
-                                                                    if(ev.target.checked) {
-                                                                        if(!clickedTerritories.includes(places[region].id + '-' + 0)) {
-                                                                            const newClicked = clickedTerritories.filter(e => {
-                                                                                const arr = e.split('-')
-                                                                                if(arr[0] !== places[region].id.toString()) {
-                                                                                    return e
-                                                                                }
-                                                                            })
-                                                                            newClicked.push(places[region].id + '-' + 0);
-                                                                            setClickedTerritories([...newClicked])
-                                                                        }
-                                                                    } else {
-                                                                        if(clickedTerritories.includes(places[region].id + '-' + 0)) {
-                                                                            const newArr = clickedTerritories.filter(el => el !== places[region].id + '-' + 0);
-                                                                            setClickedTerritories([...newArr])
-                                                                        }
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <span></span>
-                                                        </label>
-                                                    </li>
-                                                    {places[region].towns.map(e => (
-                                                        <li key={'twn' + places[region].id + '-' + e.id}>
-                                                            <label htmlFor={'t_' + places[region].id + '-' + e.id} className={formCSS.check}>
-                                                                {e.name}
+                                <form onSubmit={handleSubmit(updateTerritories)} className={`row start ${formCSS.form}`}>
+                                    {workPlaces && Object.keys(workPlaces).map(third => (
+                                        <ul className={css.regions} key={'regions'+third}>
+                                            {workPlaces[third] && workPlaces[third].map(region => (
+                                                <li key={'r'+region.id}>
+                                                    <a className={formCSS.bar} role="button" onClick={toggleDown}>
+                                                        <IoIosArrowDown/>&nbsp;&nbsp;{region.name}
+                                                    </a>
+                                                    <ul className={`row start ${formCSS.hid}`}>
+                                                        <li key={'twn' + region.id + '-' + 0}>
+                                                            <label htmlFor={'t_' + region.id + '-' + 0} className={formCSS.check}>
+                                                                По всей области
                                                                 <input
-                                                                    id={'t_' + places[region].id + '-' + e.id} type="checkbox"
+                                                                    id={'t_' + region.id + '-' + 0} type="checkbox"
                                                                     {...register('territories')}
-                                                                    defaultChecked={clickedTerritories.includes(places[region].id + '-' + e.id)}
-                                                                    value={places[region].id + '-' + e.id}
+                                                                    defaultChecked={clickedTerritories.includes(region.id + '-' + 0)}
+                                                                    value={region.id + '-' + 0}
                                                                     onClick={ev => {
                                                                         if(ev.target.checked) {
-                                                                            if(!clickedTerritories.includes(places[region].id + '-' + e.id)) {
-                                                                                const newClicked = clickedTerritories.filter(el => {
-                                                                                    if(el !== places[region].id + '-' + 0) {
-                                                                                        return el
+                                                                            if(!clickedTerritories.includes(region.id + '-' + 0)) {
+                                                                                const newClicked = clickedTerritories.filter(e => {
+                                                                                    const arr = e.split('-')
+                                                                                    if(arr[0] !== region.id.toString()) {
+                                                                                        return e
                                                                                     }
-                                                                                });
-                                                                                newClicked.push(places[region].id + '-' + e.id)
+                                                                                })
+                                                                                newClicked.push(region.id + '-' + 0);
                                                                                 setClickedTerritories([...newClicked])
                                                                             }
                                                                         } else {
-                                                                            if(clickedTerritories.includes(places[region].id + '-' + e.id)) {
-                                                                                const newArr = clickedTerritories.filter(el => el !== places[region].id + '-' + e.id);
+                                                                            if(clickedTerritories.includes(region.id + '-' + 0)) {
+                                                                                const newArr = clickedTerritories.filter(el => el !== region.id + '-' + 0);
                                                                                 setClickedTerritories([...newArr])
                                                                             }
                                                                         }
@@ -667,12 +655,44 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                                                 <span></span>
                                                             </label>
                                                         </li>
-                                                    ))}
-                                                </ul>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <input type="submit" value="Сохранить"/>
+                                                        {region.towns.map(e => (
+                                                            <li key={'twn' + region.id + '-' + e.id}>
+                                                                <label htmlFor={'t_' + region.id + '-' + e.id} className={formCSS.check}>
+                                                                    {e.name}
+                                                                    <input
+                                                                        id={'t_' + region.id + '-' + e.id} type="checkbox"
+                                                                        {...register('territories')}
+                                                                        defaultChecked={clickedTerritories.includes(region.id + '-' + e.id)}
+                                                                        value={region.id + '-' + e.id}
+                                                                        onClick={ev => {
+                                                                            if(ev.target.checked) {
+                                                                                if(!clickedTerritories.includes(region.id + '-' + e.id)) {
+                                                                                    const newClicked = clickedTerritories.filter(el => {
+                                                                                        if(el !== region.id + '-' + 0) {
+                                                                                            return el
+                                                                                        }
+                                                                                    });
+                                                                                    newClicked.push(region.id + '-' + e.id)
+                                                                                    setClickedTerritories([...newClicked])
+                                                                                }
+                                                                            } else {
+                                                                                if(clickedTerritories.includes(region.id + '-' + e.id)) {
+                                                                                    const newArr = clickedTerritories.filter(el => el !== region.id + '-' + e.id);
+                                                                                    setClickedTerritories([...newArr])
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    <span></span>
+                                                                </label>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ))}
+                                    <input className={css.save_regions} type="submit" value="Сохранить"/>
                                 </form>
                             </div>
                         )}

@@ -15,8 +15,8 @@ import {errMsg} from "libs/form-stuff";
 import {ShowMessage} from "components/show-message";
 
 export async function getStaticProps() {
-    const regions = await getRegions();
-    const defaultTowns = await getTowns();
+    const regions = await getRegions().then(regions => regions.sort((a,b) => a['id'] - b['id']));
+    const defaultTowns = await getTowns().then(towns => towns.sort((a,b) => a['id'] - b['id']));
     const cats = await getCats();
     const services = organizeCats(cats)[1].children.map(e => ({
         id: e.id,
@@ -120,7 +120,7 @@ const Registration = ({regions, defaultTowns, services}) => {
         //parse towns
         if(msg && msg.data && msg.data.hasOwnProperty(0)) {
             if(msg.data[0].hasOwnProperty('region_id')) {
-                setTowns(msg.data);
+                setTowns(msg.data.sort((a,b) => a['id'] - b['id']));
                 return true
             }
         }
@@ -261,27 +261,31 @@ const Registration = ({regions, defaultTowns, services}) => {
 
                     <br/>
                     <b>Ваш адрес</b>
-                    <p>Выберите Вашу область</p>
                     <div className={'rel '+formCSS.sel}>
-                        <select placeholder="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
+                        <select data-label="Выберите Вашу область" {...register('region', {required: true})} defaultValue="1">
+                            <option value="">Выберите Вашу область</option>
                             {regions.map(e => (
                                 <option key={e.id} value={e.id}>{e.name}</option>
                             ))}
                         </select>
                         <span><IoIosArrowDown/></span>
                     </div>
+                    {errMsg(errors.region)}
 
-                    <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
                     <div className={'rel '+formCSS.sel}>
-                        <select placeholder="Выберите Ваш город" {...register('town', {required: true})}>
+                        <select {...register('town', {required: true})} data-label="Выберите Ваш город">
+                            <option value="">Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</option>
                             {towns && towns.map(e => (
                                 <option key={e.id} value={e.id}>{e.name}</option>
                             ))}
                         </select>
                         <span><IoIosArrowDown/></span>
                     </div>
+                    {errMsg(errors.town)}
+                    <p>* Примечание: При регистрации в поиске мастеров Ваш домашний город указан как Ваше единственное рабочее место.
+                        Вы сможете выбрать больше регионов/городов где Вы работайте в разделе редактирования профиля, после регистрации.</p><br/>
 
-                    <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
+                    <p>Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
                     <input type="email" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
                     {errMsg(errors.email, 50)}
 

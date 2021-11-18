@@ -141,9 +141,10 @@ const ServicePrices = ({fromDB, services, choices}) => {
                                 </li>
                             )))}
                         </ul>
-                        <div className="row"><input type="submit" value="Изменить"/></div>
+                        <div className="row"><input type="submit" value="Сохранить"/></div>
                         <br/>
                     </form>
+                    <p>* Если в списке нет услуги которую Вы предоставляйте - <Link href={'/contact'}><a className={css.link}>пишите нам</a></Link>, и мы добавим её на сайт и прикрепим к Вашему профилю.</p>
                 </div>
                 {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
             </main>

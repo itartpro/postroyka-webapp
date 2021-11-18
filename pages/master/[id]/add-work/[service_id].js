@@ -51,10 +51,10 @@ const AddWork = ({fromDB, service}) => {
         const work = {
             name: d.name,
             description: d.description,
-            hours: parseInt(d.hours || 0) + parseInt(d.days || 0) * 24,
+            volume: d.volume,
             login_id: parseInt(fromDB.id),
             service_id: parseInt(service.id),
-            price: parseInt(d.price),
+            price: d.price,
             order_id: 0
         }
         const goData = {
@@ -108,13 +108,8 @@ const AddWork = ({fromDB, service}) => {
                         <textarea {...register('description', {required: true, maxLength: 2000})} placeholder="Напишите о самой работе / о процессе"/>
                         {errMsg(errors.description, 2000)}
 
-                        <p>Сколько времени ушло на эту работу? (можно приблизительно)</p>
-                        <div className={`row center start ${css2.time}`}>
-                            <label>Часы:</label>
-                            <input type="number" min="0" max="23" placeholder="Часы" {...register('hours')}/>
-                            <label>Дни:</label>
-                            <input type="number" min="0" max="1460" placeholder="Дни" {...register('days')}/>
-                        </div>
+                        <input type="text" {...register('volume', {maxLength: 40})} placeholder="Сроки и объем"/>
+                        {errMsg(errors.volume, 40)}
 
                         <input type="number" {...register('price')} min="0" max="2147483647" placeholder="Приблизительная цена за похожую работу (в рублях)"/>
                         {errMsg(errors.price, 70)}

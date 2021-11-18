@@ -14,25 +14,33 @@ export const Master = props => {
     const image = props.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
 
     const photos = [];
+    const imageIds = [];
+    const set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]};
+    let limit = 0;
+    let albumRounds = 0;
+    let totalImages = 0;
     if(props.portfolio && props.portfolio.length > 0) {
-        const set = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]}
-        const imageIds = [];
-        let limit = 0;
-        const fillSet = set => {
+        props.portfolio.forEach(album => totalImages += album.length);
+        const fillSet = (set, imageIds, limit, totalImages, albumRounds) => {
             props.portfolio.forEach((album, i) => {
                 for(let image of album) {
-                    if(!imageIds.includes(image.id)) {
+                    if(!imageIds.includes(image.id) && limit < 6) {
                         imageIds.push(image.id);
                         set[i].push(image);
+                        limit++;
                         break;
                     }
                 }
-                limit += 1;
             });
-            if(imageIds.length < 6 && limit <= imageIds.length) fillSet(set);
+
+            albumRounds++
+
+            if(limit <= totalImages && limit < 6 && albumRounds < 6) {
+                return fillSet(set, imageIds, limit, totalImages, albumRounds);
+            }
         }
 
-        fillSet(set);
+        fillSet(set, imageIds, limit, totalImages, albumRounds);
         for(let i in set) {
             if(set[i].length > 0) {
                 set[i].forEach(e => photos.push(e))

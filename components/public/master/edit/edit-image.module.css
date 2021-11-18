@@ -1,6 +1,6 @@
 .img {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
     padding: 5px;
@@ -18,7 +18,6 @@
 .img img {
     width: 120px;
     height: 90px;
-    margin-right: 10px;
     border-radius: 4px;
 }
 
@@ -60,7 +59,7 @@
 }
 
 .img input[type=submit] {
-    width: 45%;
+    width: auto;
     background-color: #bfdbdf;
     border-radius: 4px;
     box-shadow: 0 5px 5px #cecece;

@@ -97,7 +97,11 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                 msg = JSON.parse(wsMsg.data);
             } catch (err) {
                 console.log("could not parse data: ",wsMsg.data, err)
-                return false;
+                return false
+            }
+
+            if (msg.data === "no records found") {
+                return false
             }
 
             if(msg.name === "gpics") {
@@ -132,7 +136,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
     }, [wsMsg])
 
     return (
-        <div className="col start">
+        <div className={`col start ${css.work}`}>
             <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form +' '+ css2.padded}`}>
                 <input type="text" {...register('name', {required: true, maxLength: 200})} placeholder="Название" defaultValue={work.name}/>
                 {errMsg(errors.name, 70)}
@@ -146,7 +150,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                 <input type="text" {...register('price', {maxLength: 200})}  placeholder="Средняя цена (в рублях)" defaultValue={work.price}/>
                 {errMsg(errors.price, 70)}
 
-                <input type="submit" value="Изменить инфо"/>
+                <input type="submit" value="Сохранить"/>
             </form>
             <div className={'row '+css.imgs}>
                 {(images && images.length > 0) && (
@@ -176,7 +180,7 @@ export const EditWork = ({serviceId, userId, work, setShowMsg }) => {
                         )}
                     </Gallery>
                 )}
-                {!(images && images.length > 5) && (
+                {!(images && images.length > 11) && (
                     //ограничение на 6 картинок для каждой работы
                     <div className={css.add_img}>
                         <span>Добавить фото <MdAddAPhoto/></span>

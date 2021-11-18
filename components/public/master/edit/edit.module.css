@@ -46,3 +46,15 @@
     opacity: 0;
     border: none
 }
+
+.work {
+    padding: 10px 0
+}
+
+.work:nth-of-type(even) {
+    background-color: #EEE
+}
+
+.work:nth-of-type(odd) {
+    background-color: #DDD
+}
