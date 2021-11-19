@@ -21,7 +21,15 @@ export async function getServerSideProps({params}) {
         delete e['refresh'];
         return e;
     });
-    const choices = await getMastersChoices(params.id).then(e => e.map(e => e['service_id']));
+    if (fromDB.level !== 2) {
+        return {
+            notFound: true
+        }
+    }
+    const choices = await getMastersChoices(params.id).then(data => {
+        if(!data) return [];
+        data.map(e => e['service_id'])
+    });
     const regions = await getRegions();
     const places = await getTowns(0).then(data => {
         const organizedRegions = {};

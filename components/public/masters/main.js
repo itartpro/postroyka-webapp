@@ -32,11 +32,32 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
         }
     }
 
+    const makeCompact = ev => {
+        const btn = ev.target;
+        const div = btn.nextElementSibling;
+        if(div.classList.contains(css.compact)) {
+            div.style.maxHeight = '1000px';
+            setTimeout(() => {
+                div.classList.remove(css.compact);
+                div.removeAttribute('style');
+                btn.innerText = 'Скрыть место и вид работ'
+            }, 300)
+        } else {
+            div.style.maxHeight = '1000px';
+            setTimeout(() => {
+                div.classList.add(css.compact);
+                div.removeAttribute('style');
+                btn.innerText = 'Выбрать место и вид работ'
+            }, 300)
+        }
+    }
 
     return (
         <main className={'max ' + css.main}>
             <aside>
-                <div className={`col ${css.place}`}>
+                <button onClick={e => makeCompact(e)} className={css.toggle}>Выбрать место и вид работ</button>
+                <div className={'col start '+css.compact}>
+                    <div className={`col ${css.place}`}>
                     <b>Местоположение</b>
                     <select ref={regionRef} onChange={selectRegion}
                             defaultValue={region && region.slug || ''}>
@@ -53,7 +74,6 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                         ))}
                     </select>
                 </div>
-                <div className="col start">
                     <div className={css.cats}>
                         <b>Виды работ</b>
                         <ul>
@@ -74,7 +94,7 @@ export const Main = ({services, page, others, region, town, regions, othersLine,
                         </ul>
                     </div>
                     <div className={css.add}>
-                        <button>Добавить заказ</button>
+                        <Link href={`/orders/add`}><a>Добавить заказ</a></Link>
                         <p>Заинтересованные подрядчики пришлют вам свои предложения с ценами и прочими условиями, на
                             которых они готовы взяться за работу.</p>
                     </div>

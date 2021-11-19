@@ -111,6 +111,7 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
 
     const fullName = profile.last_name + ' ' + profile.first_name + (profile.paternal_name && ' ' + profile.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(profile.created), Date.now()));
+    const lastOnline = timeInRus(timeDiff(Date.parse(profile.last_online), Date.now()));
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+profile.id+'/ava.jpg';
     const image = profile.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
     let legal = null;
@@ -159,7 +160,11 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
                     </div>
                     <div className={'col start init '+css.d2}>
                         <h1>{fullName}</h1>
-                        <p><span>На сайте {timeOnSite}</span></p>
+                        <p>
+                            <span>На сайте {timeOnSite}</span>
+                            &nbsp;&nbsp;&nbsp;
+                            <span>Был {lastOnline} назад</span>
+                        </p>
                         <p>{legal}{company && ', '+company}</p>
                         <button>Предложить заказ</button>
                     </div>

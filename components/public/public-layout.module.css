@@ -175,4 +175,8 @@
         display: none
     }
 
+    .usr ul {
+        position: static;
+        background-color: #EEE
+    }
 }

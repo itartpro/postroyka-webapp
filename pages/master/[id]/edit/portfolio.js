@@ -15,7 +15,11 @@ export async function getServerSideProps({params}) {
         delete e['refresh'];
         return e;
     });
-
+    if (fromDB.level !== 2) {
+        return {
+            notFound: true
+        }
+    }
     const choiceIds = await getMastersChoices(params.id).then(resp => {
         return resp.reduce((result, e) => {
             if(e.parent) {

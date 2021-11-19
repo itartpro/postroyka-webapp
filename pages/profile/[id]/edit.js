@@ -8,13 +8,9 @@ export const getServerSideProps = async ({params, res}) => {
         delete e['refresh'];
         return e;
     });
-
-    if(fromDB.level === 2) {
+    if (fromDB.level !== 1) {
         return {
-            redirect: {
-                destination: `/master/${fromDB.id}/edit/info`,
-                permanent: false,
-            }
+            notFound: true
         }
     }
 
@@ -29,7 +25,7 @@ const Edit = ({fromDB}) => {
     return (
         <PublicLayout loginName={fromDB.first_name}>
             <main className={`max`}>
-                <h1 className={css.h1}>Тут будет профиль пользователя</h1>
+                <h1 className={css.h1}>Тут можно будет редактировать профиль</h1>
             </main>
         </PublicLayout>
     )

@@ -10,6 +10,7 @@ export const Master = props => {
 
     const fullName = props.last_name + ' ' + props.first_name + (props.paternal_name && ' ' + props.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(props.created), Date.now()));
+    const lastOnline = timeInRus(timeDiff(Date.parse(props.last_online), Date.now()));
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+props.id+'/mini/ava.jpg';
     const image = props.avatar && masterAva || process.env.NEXT_PUBLIC_STATIC_URL+'/public/images/silhouette.jpg';
 
@@ -86,7 +87,7 @@ export const Master = props => {
 
             <div className={`row start ${css.gray}`}>
                 <p>На сайте {timeOnSite}</p>
-                <p>Был 1 год 8 месяцев назад</p>
+                <p>Был {lastOnline} назад</p>
             </div>
 
             {props.about !== "" && (

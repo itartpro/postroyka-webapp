@@ -17,6 +17,11 @@ export async function getServerSideProps({params}) {
         delete e['refresh'];
         return e;
     });
+    if (fromDB.level !== 2) {
+        return {
+            notFound: true
+        }
+    }
     const choices = await getMastersChoices(params.id);
     const choiceIds = choices.map(e => e['service_id'])
     const services = await getCats().then(cats => organizeCats(cats)[1].children.map(e => ({

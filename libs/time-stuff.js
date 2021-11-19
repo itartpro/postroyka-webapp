@@ -46,6 +46,7 @@ export const timeInRus = milliseconds => {
     const years = Math.floor(days / 365);
     let str = null;
     let left = null;
+    if(mins < 1) return 'меньше минуты'
     if(hours < 1) {
         str = mins + ' ' + minString(mins);
     }

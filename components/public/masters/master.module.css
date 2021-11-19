@@ -6,28 +6,28 @@
     padding: 25px 30px
 }
 
-.nfo, .master > ul li {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px
-}
-
-.nfo img {
-    border-radius: 60px;
-    margin-right: 20px
+.nfo {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    margin-bottom: 10px
 }
 
 .nfo > a {
-    width: initial
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    grid-gap: 15px
+}
+
+.nfo img {
+    border-radius: 60px
 }
 
 .nfo button {
-    padding: 17px 29px;
+    align-self: center;
     border: 1px solid #47CB43;
     border-radius: 4px;
     background: #fff;
+    height: 50px
 }
 
 .nfo button:hover {
@@ -40,6 +40,14 @@
 
 .master > ul {
     list-style: none
+}
+
+.master > ul li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px
 }
 
 .master > p {
@@ -99,6 +107,51 @@
 
 .vo a {
     color: #2F80ED
+}
+
+@media all and (max-width: 1100px) {
+    .master {
+        padding: 15px;
+        margin-bottom: 20px
+    }
+}
+
+@media all and (max-width: 900px) {
+    .master {
+        border-radius: 0;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        padding: 20px 10px
+    }
+}
+
+@media all and (max-width: 500px) {
+    .nfo {
+        display: flex;
+        position: relative;
+        padding-top: 90px
+    }
+
+    .nfo button {
+        position: absolute;
+        right: 20px;
+        top: 5px;
+        height: 70px;
+        width: 130px
+    }
+
+    .nfo > a {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start
+    }
+
+    .nfo img {
+        position: absolute;
+        left: 20px;
+        top: 0
+    }
 }
 
 

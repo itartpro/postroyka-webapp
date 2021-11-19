@@ -60,17 +60,20 @@ export const getOrganizedMasters = async (loginIds = [], regionIds = [], townIds
     if((regionIds.length > 0 || townIds.length > 0 || serviceIds.length > 0) && loginIds.length < 1) return null;
     const users = await getMasters(loginIds);
     const masterIds = users.map(e => e.id);
-    const portfolios = await MastersPortfolios(masterIds, serviceIds);
     const portfoliosByMaster = {};
-    const portfolioIds = [];
-    portfolios.forEach(e => {
-        if(!portfoliosByMaster.hasOwnProperty(e.login_id)) {
-            portfoliosByMaster[e.login_id] = [];
-        }
-        portfoliosByMaster[e.login_id].push(e);
-        portfolioIds.push(e.id.toString())
-    });
-    const portfolioImages = await getPortfolioImages(portfolioIds);
+    let portfolioImages = {};
+    const portfolios = await MastersPortfolios(masterIds, serviceIds);
+    if(Array.isArray(portfolios) && portfolios.length > 0) {
+        const portfolioIds = [];
+        portfolios.forEach(e => {
+            if(!portfoliosByMaster.hasOwnProperty(e.login_id)) {
+                portfoliosByMaster[e.login_id] = [];
+            }
+            portfoliosByMaster[e.login_id].push(e);
+            portfolioIds.push(e.id.toString())
+        });
+        portfolioImages = await getPortfolioImages(portfolioIds);
+    }
     return users.reduce((result, e) => {
         const master = e;
         master.portfolio = null;

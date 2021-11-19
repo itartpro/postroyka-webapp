@@ -56,7 +56,7 @@ export async function getStaticProps() {
 }
 
 const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
-    const {wsMsg, rs, request} = useContext(WsContext);
+    const {wsMsg, rs, verifiedJwt, request} = useContext(WsContext);
     const [showErr, setShowErr] = useState(null);
     const [towns, setTowns] = useState(defaultTowns);
     const [showMsg, setShowMsg] = useState(null);
@@ -210,6 +210,24 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         };
         request(JSON.stringify(goData))
     }, [regionWatch])
+
+    //When JWT is in local storage and verified - get user data
+    //TODO handle logged in users, possible duplicates, people that already have an account
+    useEffect(() => {
+        if(verifiedJwt) {
+            const userString = window.localStorage.getItem('User');
+            const JWTString = window.localStorage.getItem('AccessJWT');
+            if(userString && JWTString) {
+                const user = JSON.parse(userString);
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'get-profile',
+                    instructions: JSON.stringify({id:user.id})
+                };
+                request(JSON.stringify(goData))
+            }
+        }
+    }, [verifiedJwt])
 
     const marks = [1000, 1500, 2000, 2500, 3000, 5000, 7000, 10000, 15000, 30000, 50000, 100000, 150000, 300000, 500000, 1000000, 1500000, 3000000, 10000000];
     const [rangeValue, setRangeValue] = useState(0);

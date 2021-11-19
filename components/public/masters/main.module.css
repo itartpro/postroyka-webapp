@@ -5,9 +5,10 @@
     margin-top: 25px
 }
 
-.main > aside > div:nth-child(2) {
+.main > aside > div {
     position: sticky;
-    top: 7px
+    top: 7px;
+    transition: all .3s
 }
 
 .link {
@@ -73,13 +74,20 @@
     margin-top: 10px
 }
 
-.add > button {
-    color: #fff;
+.add > a {
+    display: flex;
+    justify-content: center;
+    color: #fff!important;
     background: #47CB43;
     border-radius: 4px;
-    padding: 17px;
+    padding: 15px;
     width: 100%;
-    border: none
+    transition: all .3s;
+}
+
+.add > a:hover {
+    text-shadow: 0 0 5px white;
+    background: #3fb33c
 }
 
 .add p {
@@ -109,16 +117,61 @@
     margin: 50px auto
 }
 
-@media all and (max-width: 850px) {
-    .place {
-        padding: 20px 25px
+
+@media all and (max-width: 1100px) {
+    .main {
+        grid-template-columns: 280px 1fr;
+        grid-gap: 15px
     }
+
+    .cats, .place {
+        padding: 15px
+    }
+}
+
+.toggle {
+    display: none
+}
+
+@media all and (max-width: 900px) {
 
     .add {
         padding: 20px 25px
     }
 
-    .right > div {
-        padding: 20px
+    .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-top: 0;
+        padding: 0;
+        position: relative
+    }
+
+    .main > aside {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 2
+    }
+
+    .toggle {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        box-shadow: inset 0 0 10px #AAA
+    }
+
+    .main > aside > div.compact {
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        position: static
+    }
+
+    .right > header, .right > p, .others {
+        padding: 0 10px
     }
 }

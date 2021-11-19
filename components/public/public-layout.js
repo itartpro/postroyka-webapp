@@ -3,23 +3,37 @@ import {useRouter} from 'next/router';
 import css from './public-layout.module.css';
 import Link from 'next/link';
 import {toggleDown} from 'libs/sfx';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
+import {WsContext} from 'context/WsProvider';
+import {nowToISO} from "libs/js-time-to-psql";
 
 const PublicLayout = ({page, children, ogImage, loginName}) => {
     const router = useRouter();
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const [user, setUser] = useState(null);
+    const { request, verifiedJwt } = useContext(WsContext);
 
     useEffect(() => {
         const str = window.localStorage.getItem('User');
         if(!str) return setUser(null);
         try {
             const parsed = JSON.parse(str);
-            setTimeout(() => {
-                const check = window.localStorage.getItem('User');
-                if(check) setUser(parsed)
-            }, 200)
+            if(str) setUser(parsed);
+
+            //update last time online
+            if(verifiedJwt) {
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'update-last-online',
+                    instructions: JSON.stringify({
+                        id:parsed.id,
+                        last_online: nowToISO()
+                    })
+                };
+                request(JSON.stringify(goData))
+            }
+
         } catch (e) {
             setUser(null)
         }
@@ -73,13 +87,26 @@ const PublicLayout = ({page, children, ogImage, loginName}) => {
                             {user && (
                                 <>
                                     <a role="button" onClick={toggleDown}>{loginName || (user.first_name + ' ' + user.last_name)}</a>
-                                    {user.level === 2 && (
-                                        <ul>
-                                            <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
-                                            <li><Link href={'/master/'+user.id+'/edit/info'}><a>Настройки</a></Link></li>
-                                            <li><a href="/login?out">Выход</a></li>
-                                        </ul>
-                                    )}
+                                        {user.level === 1 && (
+                                            <ul>
+                                                <li><Link href={'/profile/'+user.id}><a>Профиль</a></Link></li>
+                                                <li><Link href={'/profile/'+user.id+'/edit'}><a>Настройки</a></Link></li>
+                                                <li><Link href={'/login?out'}><a>Выход</a></Link></li>
+                                            </ul>
+                                        )}
+                                        {user.level === 2 && (
+                                            <ul>
+                                                <li><Link href={'/master/'+user.id}><a>Профиль</a></Link></li>
+                                                <li><Link href={'/master/'+user.id+'/edit/info'}><a>Настройки</a></Link></li>
+                                                <li><Link href={'/login?out'}><a>Выход</a></Link></li>
+                                            </ul>
+                                        )}
+                                        {user.level === 9 && (
+                                            <ul>
+                                                <li><Link href={'/admin'}><a>В админку</a></Link></li>
+                                                <li><Link href={'/login?out'}><a>Выход</a></Link></li>
+                                            </ul>
+                                        )}
                                 </>
                             )}
                         </li>
