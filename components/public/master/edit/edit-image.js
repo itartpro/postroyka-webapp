@@ -4,11 +4,11 @@ import {WsContext} from 'context/WsProvider'
 
 export const EditImage = ({table,id,PhotoSwipe,folder,thumb,alt,title,text,link,sort_order,name,width,height,removeImage,updateImage}) => {
 
-    //const formData = {table,id,alt,title,text,link,sort_order}
+    const formData = {table,id,alt,title,text,link,sort_order}
     const {request, wsMsg, setWsMsg} = useContext(WsContext);
-    //const [form, setForm] = useState(formData);
+    const [form, setForm] = useState(formData);
 
-    /*const handleChange = e => {
+    const handleChange = e => {
         const t = e.target
         return setForm({...form, [t.name]: t.value});
     }
@@ -21,7 +21,7 @@ export const EditImage = ({table,id,PhotoSwipe,folder,thumb,alt,title,text,link,
             instructions: JSON.stringify({...form,"table":table})
         }
         request(JSON.stringify(goData));
-    }*/
+    }
 
     const imageRemove = deletedName => deletedName === name ? removeImage(name) : null;
 

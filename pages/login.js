@@ -49,7 +49,8 @@ const Login = () => {
 
         if(user.id === idFromJWT) {
             if (user.level === 9) return router.push('/admin');
-            if (user.level === 2) return router.push('/orders')
+            if (user.level === 2) return router.push('/orders');
+            if (user.level === 1) return router.push('/profile/'+user.id);
         }
 
         if(idFromJWT !== 0) {
@@ -68,7 +69,13 @@ const Login = () => {
             setShowMsg("Нет пользователя с таким логином/паролем");
             return false
         }
-        const res = JSON.parse(wsMsg.data);
+        let res = null;
+        try {
+            res = JSON.parse(wsMsg.data)
+        } catch (err) {
+            console.log(err);
+            return false
+        }
         if (res.data) {
             if (res.data.hasOwnProperty("avatar")) {
                 const user = res.data;
@@ -81,7 +88,8 @@ const Login = () => {
                 };
                 window.localStorage.setItem('User', JSON.stringify(essentialUserData));
                 if (user.level === 9) return router.push('/admin');
-                if (user.level === 2) return router.push('/orders')
+                if (user.level === 2) return router.push('/orders');
+                if (user.level === 1) return router.push('/profile/'+user.id);
             }
         }
     }, [wsMsg]);
