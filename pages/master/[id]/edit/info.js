@@ -28,7 +28,7 @@ export async function getServerSideProps({params}) {
     }
     const choices = await getMastersChoices(params.id).then(data => {
         if(!data) return [];
-        data.map(e => e['service_id'])
+        return data.map(e => e['service_id'])
     });
     const regions = await getRegions();
     const places = await getTowns(0).then(data => {

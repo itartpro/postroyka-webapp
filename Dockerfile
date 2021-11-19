@@ -14,5 +14,6 @@ adduser -S -u $UID $MYUSERNAME -G $MYUSERGROUP
 WORKDIR /home/$MYUSERNAME/webapp
 COPY . .
 RUN npm install
+
 ENTRYPOINT chown -R $MYUSERNAME:$MYUSERGROUP /home/$MYUSERNAME/webapp && \
 exec runuser -u $MYUSERNAME npm run dev
