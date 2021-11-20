@@ -259,7 +259,7 @@ export const getOrdersWithImages = instructions => {
         if(orderIds.length > 0) {
             return getOrdersImages(orderIds).then(res => {
                 const organized = {};
-                if(res.length > 0) {
+                if(Array.isArray(res) && res.length > 0) {
                     res.forEach(e => {
                         if (!organized.hasOwnProperty(e.album_id)) {
                             organized[e.album_id] = [];
@@ -278,11 +278,12 @@ export const getOrdersWithImages = instructions => {
                         }
                     });
                     return orders;
+                } else {
+                    //if no images then jump to here and return without images
+                    return orders;
                 }
             });
         }
-        //if no images then jump to here and return without images
-        return orders;
     });
 }
 

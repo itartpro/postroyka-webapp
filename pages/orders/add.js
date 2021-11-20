@@ -15,10 +15,12 @@ import {IoIosArrowDown} from 'react-icons/io';
 import {useRouter} from "next/router";
 import {MarkedRangeSlider} from "components/public/orders/marked-range-slider";
 import {translit} from "libs/slugify";
-
+import {ShowMessage} from "components/show-message";
 import 'photoswipe/dist/photoswipe.css'
 import 'photoswipe/dist/default-skin/default-skin.css'
 import { Gallery, Item } from 'react-photoswipe-gallery';
+import {validateEmailPhoneInput} from "libs/email-phone-input";
+import css2 from "../../styles/forms.module.css";
 
 export async function getStaticProps() {
     const regions = await getRegions();
@@ -56,22 +58,79 @@ export async function getStaticProps() {
 }
 
 const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
-    const {wsMsg, rs, verifiedJwt, request} = useContext(WsContext);
+    const {wsMsg, rs, verifiedJwt, request, logOut} = useContext(WsContext);
     const [showErr, setShowErr] = useState(null);
     const [towns, setTowns] = useState(defaultTowns);
     const [showMsg, setShowMsg] = useState(null);
     const [order, setOrder] = useState({});
     const [images,setImages] = useState([]);
+    const [showLogin, setShowLogin] = useState(false);
     const router = useRouter();
+    const [user, setUser] = useState(null);
+
+    //all of this deals with the title and id for images temp folder
+    useEffect(() => {
+        if(!router.query.id) {
+            //router.push('/profile/'+user.id);
+            let newUrl = router.pathname;
+            if(router.query.title) {
+                newUrl += '?title=' + router.query.title.replace(/ /g, '+');
+                newUrl += '&id=' + Date.now()
+            } else {
+                newUrl += '?id=' + Date.now()
+            }
+            router.push(newUrl)
+        }
+        router.query.title && setValue('title', router.query.title)
+    }, [router.query])
+
+    //When JWT is in local storage and verified - get user data
+    useEffect(() => {
+        if(!verifiedJwt) return false;
+
+        const userString = window.localStorage.getItem('User');
+        const JWTString = window.localStorage.getItem('AccessJWT');
+        if(!userString && !JWTString) return logOut();
+
+        let idFromJWT = 0;
+        let debased64 = null;
+        let localUser = {id:null};
+
+        try {
+            debased64 = atob(JWTString.split('.')[1])
+            if(userString) localUser = JSON.parse(userString);
+        } catch (err) {
+            setShowMsg( "User and/or AccessJWT corrupted: " + err);
+            logOut();
+            return false
+        }
+        const parsed = JSON.parse(debased64);
+        idFromJWT = parseInt(parsed.sub)
+
+        if(localUser.id === idFromJWT) {
+            setUser(localUser)
+        } else {
+            if(idFromJWT !== 0) {
+                const goData = {
+                    address: 'auth:50003',
+                    action: 'get-profile',
+                    instructions: JSON.stringify({id:idFromJWT})
+                };
+                request(JSON.stringify(goData))
+            }
+        }
+    }, [verifiedJwt])
 
     //handle info from server
     useEffect(() => {
         if (rs !== 1 || !wsMsg) return false;
-        console.log(wsMsg)
 
         if (wsMsg.type === "error") {
-            if(wsMsg.data.includes("is taken") && showErr === null) {
-                setShowErr("Кто-то уже зарегестрировался на сайте с таким email или телефоном")
+            if(wsMsg.data.includes("is taken")) {
+                let msg = "Кто-то уже зарегестрировался на сайте с таким email или телефоном. Если это Вы - то введите Ваш логин (email/телефон) в конце формы.";
+                setShowErr(msg);
+                setShowMsg(msg);
+                setShowLogin(true);
             } else {
                 setShowErr(wsMsg.data)
             }
@@ -93,18 +152,16 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         if(msg.data && msg.name === 'auth') {
             //looks like the visitor registered and got into the database
             if(msg.data.hasOwnProperty('refresh')) {
-                if(msg.data.refresh === null) {
-                    //insert new order into database, with the visitors id
-                    let addOrder = order;
-                    addOrder.login_id = msg.data.id;
-                    setOrder(addOrder);
-                    const goData = {
-                        address: 'auth:50003',
-                        action: 'add-order',
-                        instructions: JSON.stringify(addOrder)
-                    };
-                    request(JSON.stringify(goData))
-                }
+                const user = msg.data;
+                const essentialUserData = {
+                    id: user.id,
+                    level: user.level,
+                    avatar: user.avatar,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                };
+                window.localStorage.setItem('User', JSON.stringify(essentialUserData));
+                setUser(essentialUserData);
             }
 
             //looks like the order has been added to db, check for images and add them to alum and move them to folder
@@ -116,6 +173,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             address: 'gpics:50001',
                             action: 'process',
                             instructions: JSON.stringify({
+                                src: 'temp/'+router.query.id,
                                 name: e.name,
                                 folder: 'orders/' + album_id,
                                 width: 1400,
@@ -135,7 +193,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     });
                     setImages([]);
                 }
-                return router.push('/profile/'+msg.data.id+'/edit')
+                return router.push('/profile/'+msg.data.login_id)
             }
 
             //parse towns
@@ -148,17 +206,35 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         }
 
         if(msg.data && msg.name === 'gpics') {
-            const folder = 'temp'
+            const folder = 'temp/'+router.query.id
             const imgApi = folder && '/api/images/'+folder.split('/').join('-');
             fetch(imgApi)
                 .then(res => res.json())
                 .then(data => {
-                    setImages([...data])
+                    if(data && data.length > 0) {
+                        setImages([...data])
+                    } else {
+                        setImages([])
+                    }
                 })
                 .catch(err => console.log(err))
         }
 
     }, [rs, wsMsg]);
+
+    useEffect(() => {
+        if(!user || !order) return false;
+        if(user.hasOwnProperty('id') && user.hasOwnProperty('first_name') && order.hasOwnProperty('town_id')) {
+            //insert new order into database, with the visitors id
+            order.login_id = user.id;
+            const goData = {
+                address: 'auth:50003',
+                action: 'add-order',
+                instructions: JSON.stringify(order)
+            };
+            request(JSON.stringify(goData))
+        }
+    }, [user, order])
 
     const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm({
         defaultValues: {
@@ -166,8 +242,6 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         }
     });
 
-    //all of this deals with the title
-    useEffect(() => router.query && router.query.title && setValue('title', router.query.title), [router.query])
     const titleWatch = watch('title');
     const searchWord = str => {
         if(!str || str.length < 3) return false;
@@ -211,24 +285,6 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         request(JSON.stringify(goData))
     }, [regionWatch])
 
-    //When JWT is in local storage and verified - get user data
-    //TODO handle logged in users, possible duplicates, people that already have an account
-    useEffect(() => {
-        if(verifiedJwt) {
-            const userString = window.localStorage.getItem('User');
-            const JWTString = window.localStorage.getItem('AccessJWT');
-            if(userString && JWTString) {
-                const user = JSON.parse(userString);
-                const goData = {
-                    address: 'auth:50003',
-                    action: 'get-profile',
-                    instructions: JSON.stringify({id:user.id})
-                };
-                request(JSON.stringify(goData))
-            }
-        }
-    }, [verifiedJwt])
-
     const marks = [1000, 1500, 2000, 2500, 3000, 5000, 7000, 10000, 15000, 30000, 50000, 100000, 150000, 300000, 500000, 1000000, 1500000, 3000000, 10000000];
     const [rangeValue, setRangeValue] = useState(0);
     const getRangeValue = e => {
@@ -240,7 +296,10 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         const goData = {
             address: 'gpics:50001',
             action: 'delete',
-            instructions: JSON.stringify({"folder":"temp","name":name})
+            instructions: JSON.stringify({
+                folder:"temp/"+router.query.id,
+                name
+            })
         }
         request(JSON.stringify(goData));
     }
@@ -292,6 +351,23 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
         request(JSON.stringify(goData))
     }
 
+    const tryLogin = d => {
+        const login = validateEmailPhoneInput(d.login);
+        {/* login returns {type, value} type is 'email' or 'phone' (this check fails if other type of login is used) */}
+        if(!login) return false;
+        const instructions = {
+            login: btoa(login.value),
+            password: btoa(d.password)
+        };
+        const goData = {
+            address: 'auth:50003',
+            action: 'login',
+            instructions: JSON.stringify(instructions)
+        };
+
+        request(JSON.stringify(goData), 'jwt-auth')
+    }
+
     return (
         <PublicLayout>
             <main className="col start max">
@@ -326,8 +402,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                             <Gallery>
                                 {images.map((e, i) =>
                                     <Item key={i}
-                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
-                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
+                                          original={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+router.query.id+'/'+e.name}
+                                          thumbnail={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+router.query.id+'/'+e.name}
                                           width={e.width}
                                           height={e.height}
                                     >
@@ -337,7 +413,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                                     <img
                                                         ref={ref}
                                                         onClick={open}
-                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+e.name}
+                                                        src={process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/temp/'+router.query.id+'/'+e.name}
                                                         alt={i}
                                                         width={Math.round(e.width * 100 / e.height)}
                                                         height={100}
@@ -366,7 +442,7 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                                             address={'gpics:50001'}
                                             action={'process'}
                                             instructions={{
-                                                folder: 'temp',
+                                                folder: 'temp/'+router.query.id,
                                                 width: 1400,
                                                 height: 1400,
                                                 fit: 'Fit', //Fit or Fill (with crop)
@@ -413,11 +489,11 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     </div>
                     <br/>
 
-                    <b>Как Вас зовут? (публикуется, фамилия и отчество не обязательно)</b>
-                    <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя"/>
+                    <b>Как Вас зовут? (публикуется имя, фамилия и отчество не обязательно)</b>
+                    <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя" defaultValue={user.first_name || ""}/>
                     {errMsg(errors.first_name, 40)}
 
-                    <input type="text" {...register('last_name', {required: false, maxLength: 40})} placeholder="Ваша фамилия"/>
+                    <input type="text" {...register('last_name', {required: false, maxLength: 40})} placeholder="Ваша фамилия" defaultValue={user.last_name || ""}/>
                     {errMsg(errors.last_name, 40)}
 
                     <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество"/>
@@ -431,26 +507,43 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     ---- А ЕЩЁ идеальнее это сделать возможность логина ПО гугл и ПО почте/телефону паролю
                     ---- Если у них уже сделана система Логина/пароля то им нужно авторизоватся и после этого авторизоватся в Google
                     */}
-                    <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
-                    <input type="email" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
-                    {errMsg(errors.email, 50)}
+                    {!user && (
+                        <>
+                            <p>В дальнейшем Вы сможете авторизовываться на сайте используя свой Email и Пароль</p>
+                            <input type="email" {...register('email', {required: true, maxLength: 50})} placeholder="Ваш email"/>
+                            {errMsg(errors.email, 50)}
 
-                    <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
-                    {errMsg(errors.password, 32)}
+                            <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Выберите пароль"/>
+                            {errMsg(errors.password, 32)}
 
-                    <input type="password" {...register('password_confirm', {
-                        required: true,
-                        maxLength: 32,
-                        validate: {
-                            sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
-                        }
-                    })} placeholder="Повторите пароль"/>
-                    {errMsg(errors.password_confirm, 32)}
+                            <input type="password" {...register('password_confirm', {
+                                required: true,
+                                maxLength: 32,
+                                validate: {
+                                    sameAs: v => translit(v) === passwordWatch || "Пароли не похожи"
+                                }
+                            })} placeholder="Повторите пароль"/>
+                            {errMsg(errors.password_confirm, 32)}
+                        </>
+                    )}
 
                     <input type="submit" value="Найти мастера"/>
                     {showErr && <small>{showErr}</small>}
                 </form>
+                {showLogin && (
+                    <form onSubmit={handleSubmit(tryLogin)} className={`col init start ${css2.form}`}>
+                        <br/><br/>
+                        <input type="text" {...register('login', {required: true, maxLength: 70})} placeholder="Ваш email или телефон"/>
+                        {errors.login && <small>Обязательное поле не более 70 символов</small>}
+
+                        <input type="password" {...register('password', {required: true, maxLength: 32})} placeholder="Ваш пароль"/>
+                        {errors.password && <small>Обязательное поле не более 32 символов</small>}
+
+                        <input type="submit" name="attempt_login" value="Войти"/>
+                    </form>
+                )}
                 <br/><br/><br/>
+                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={6000}/>}
             </main>
         </PublicLayout>
     )

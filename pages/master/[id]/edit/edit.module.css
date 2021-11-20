@@ -187,6 +187,12 @@ li.edit_price:hover {
     margin-top: 15px
 }
 
+.inverse {
+    background: transparent;
+    color: #00d007!important;
+    border: 1px solid #00d007
+}
+
 @media all and (max-width: 1024px) {
     .list li > button,
     .list > li > *:first-child {

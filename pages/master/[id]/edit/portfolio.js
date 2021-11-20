@@ -76,7 +76,8 @@ const Portfolio = ({fromDB, services, works}) => {
                                                 setShowMsg={setShowMsg}
                                             />
                                         ))}
-                                        <Link href={'/master/'+fromDB.id+'/add-work/'+s.id}><a className={css.b1 + ' ' + formCSS.grn}>Добавить новую работу в раздел {s.name}</a></Link>
+                                        <br/><br/>
+                                        <Link href={'/master/'+fromDB.id+'/add-work/'+s.id}><a className={`${css.b1} ${formCSS.grn} ${css.inverse}`}>Добавить новую работу в раздел "{s.name}"</a></Link>
                                     </div>
                                 </li>
                             ))}

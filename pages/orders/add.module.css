@@ -22,6 +22,11 @@
     width: 120px
 }
 
+.imgs > div:last-of-type {
+    margin: 0;
+    width: 100%
+}
+
 .imgs > div > button {
     background: none;
     border: none;
@@ -39,7 +44,7 @@
     max-width: initial
 }
 
-.add_img {
+.imgs > div.add_img {
     width: 120px;
     height: 90px;
     background: #AAA;
