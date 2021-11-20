@@ -1,0 +1,13 @@
+.gal {
+    margin-bottom: 20px
+}
+
+.gal img {
+    border-radius: 4px;
+    margin: 0 9px 9px 0;
+    cursor: pointer;
+}
+
+.gal img:last-of-type {
+    margin: 0
+}

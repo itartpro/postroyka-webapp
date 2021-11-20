@@ -215,12 +215,16 @@ export const getLatestArticles = (limit = null, url = null) => {
         })
 }
 
-export const getOrders = ({order_by = "", limit = 0, offset = 0, service_id = [], town_id = [],
-                              region_id = [], budgetGreater = 0, budgetLess = 0}) => {
+export const getOrders = ({order_by = "", limit = 0, offset = 0, id = [], service_id = [],
+    town_id = [], region_id = [], login_id = [], budgetGreater = 0, budgetLess = 0}) => {
     return goPost(JSON.stringify({
         address: 'auth:50003',
         action: 'get-orders',
-        instructions: JSON.stringify({order_by, limit, offset, service_id, town_id, region_id, budgetGreater, budgetLess})
+        instructions: JSON.stringify({
+            order_by, limit, offset, id,
+            service_id, town_id, region_id, login_id,
+            budgetGreater, budgetLess
+        })
     })).then(res => {
         try {
             const parsed = JSON.parse(res);

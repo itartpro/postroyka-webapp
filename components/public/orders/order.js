@@ -1,12 +1,13 @@
 import css from "./order.module.css";
 import {timeDiff, timeInRus} from "libs/time-stuff";
+import Link from "next/link";
 
 export const Order = props => {
     const created = timeInRus(timeDiff(Date.parse(props.created), Date.now()));
     return (
         <div className={`row bet ${css.box}`}>
             <div className={`row bet`}>
-                <p>{props.title}</p>
+                <Link href={`/orders/${props.id}`}><a>{props.title}</a></Link>
                 <span>{props.budget}р</span>
             </div>
             <div className={`row start center`}>
