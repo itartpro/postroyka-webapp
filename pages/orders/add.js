@@ -484,16 +484,17 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                     <MarkedRangeSlider returnValue={getRangeValue} marks={marks}/>
                     <div className={'row '+css.budget}>
                         <span>До</span>
-                        <input type="number" placeholder="budget" defaultValue={0} {...register("budget", {required: true, max: marks[marks.length - 1], min: marks[0]})} />
+                        <input type="number" data-label="Бюджет" {...register("budget", {required: true, max: marks[marks.length - 1], min: marks[0]})} />
                         <span>рублей</span>
                     </div>
+                    {errMsg(errors.budget)}
                     <br/>
 
                     <b>Как Вас зовут? (публикуется имя, фамилия и отчество не обязательно)</b>
-                    <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя" defaultValue={user.first_name || ""}/>
+                    <input type="text" {...register('first_name', {required: true, maxLength: 40})} placeholder="Ваше имя" defaultValue={user && user.first_name || ""}/>
                     {errMsg(errors.first_name, 40)}
 
-                    <input type="text" {...register('last_name', {required: false, maxLength: 40})} placeholder="Ваша фамилия" defaultValue={user.last_name || ""}/>
+                    <input type="text" {...register('last_name', {required: false, maxLength: 40})} placeholder="Ваша фамилия" defaultValue={user && user.last_name || ""}/>
                     {errMsg(errors.last_name, 40)}
 
                     <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} placeholder="Ваше отчество"/>
