@@ -339,7 +339,8 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
             region_id: parseInt(d.region),
             town_id: parseInt(d.town),
             login_id: 0,
-            budget: parseInt(d.budget)
+            budget: parseInt(d.budget),
+            time: d.time || ""
         };
         setOrder(addOrder);
 
@@ -397,6 +398,13 @@ const Add = ({regions, defaultTowns, smartSearch, directServices}) => {
                         data-label="Описание работы"
                         placeholder="Напишите список работ, укажите объём (например, если это помещение, то в квадратных метрах). Опишите Ваши пожелания и требования если они есть. Чем детальнее Вы напишите тех. задание - тем охотнее согласятся работать компетентные мастера."/>
                     {errMsg(errors.description, 2000)}
+                    <br/>
+
+                    <p>Сроки (когда можно начинать/нужно закончить)</p>
+                    <input type="text" {...register('time', {maxLength: 100})} placeholder="Сроки"/>
+                    {errMsg(errors.time, 100)}
+                    <br/>
+
                     <div className={'row start '+css.imgs}>
                         {(images && images.length > 0) && (
                             <Gallery>

@@ -6,6 +6,11 @@ import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
     const region = await getRow("slug", params.region, "regions")
+    if (!region) {
+        return {
+            notFound: true,
+        }
+    }
     const page = {
         title: 'Мастера области ' + region.name,
         slug: params.region,

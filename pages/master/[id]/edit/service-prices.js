@@ -71,8 +71,14 @@ export async function getServerSideProps({params}) {
 const ServicePrices = ({fromDB, services, choices}) => {
     const [user, setUser] = useState(fromDB);
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
-    const {wsMsg, request} = useContext(WsContext);
     const [showMsg, setShowMsg] = useState(null);
+    //verify user access
+    const { wsMsg, verifiedJwt, verifyById, checkAccess, request } = useContext(WsContext);
+    const [ showContent, setShowContent ] = useState(undefined);
+    useEffect(() => {
+        const check = verifyById(fromDB.id) || checkAccess([9]);
+        verifiedJwt !== undefined && setShowContent(check === true ? check : false);
+    }, [verifiedJwt, showContent]);
 
     const updateChoicePrices = d => {
         const choice = [];
@@ -118,8 +124,9 @@ const ServicePrices = ({fromDB, services, choices}) => {
     }, [wsMsg])
 
     return (
-        <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
+        <PublicLayout loginName={showContent && (user.first_name + ' ' + user.last_name)}>
             <br/>
+            {showContent && (
             <main className="col start max">
                 <div className={'row start '+css.tabs}>
                     <Link href={'/master/'+user.id+'/edit/info'}><a>Информация</a></Link>
@@ -153,6 +160,7 @@ const ServicePrices = ({fromDB, services, choices}) => {
                 </div>
                 {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
             </main>
+            ) || <main className="col max"><p>Нет данных</p></main>}
         </PublicLayout>
     )
 }

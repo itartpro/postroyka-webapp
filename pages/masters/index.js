@@ -5,6 +5,11 @@ import {getOrganizedMasters, essentialCats} from "libs/masters-stuff";
 
 export async function getStaticProps() {
     const page = await getPageBySlug('masters');
+    if (!page) {
+        return {
+            notFound: true,
+        }
+    }
     const regions = await getRegions();
     const services = await essentialCats();
     const masters = await getOrganizedMasters();

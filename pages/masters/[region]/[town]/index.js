@@ -6,6 +6,11 @@ import {essentialCats, getOrganizedMasters} from "libs/masters-stuff";
 export async function getServerSideProps({params}) {
     const town = await getRow("slug", params.town, "towns");
     const region = await getRow("id", town.region_id.toString(), "regions");
+    if (!town || !region) {
+        return {
+            notFound: true,
+        }
+    }
     const page = {
         title: `Найти мастера, или бригаду рабочих в городе ${town.name}, ${region.name}`,
         slug: params.town,

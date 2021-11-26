@@ -98,16 +98,16 @@ export default function WsProvider(props) {
         return JSON.parse(debased64);
     }
 
-    const checkAccess = levels => {
+    const checkAccess = (levels = []) => {
         const parsed = decodeJWT('AccessJWT');
         const level = parseInt(parsed.level);
         if (!levels.includes(level)) return false;
         return !(verifiedJwt !== undefined && verifiedJwt !== true)
     }
 
-    const verifyById = id => {
+    const verifyById = (id = 0) => {
         const parsed = decodeJWT('AccessJWT');
-        return parseInt(id) === parseInt(parsed.sub);
+        return id === parseInt(parsed.sub);
     }
 
     const refreshAttempt = () => {

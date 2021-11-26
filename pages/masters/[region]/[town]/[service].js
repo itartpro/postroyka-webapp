@@ -6,6 +6,11 @@ import {getOrganizedMasters} from "libs/masters-stuff";
 
 export async function getServerSideProps({params}) {
     const service = await getPageBySlug(params.service);
+    if (!service) {
+        return {
+            notFound: true,
+        }
+    }
     const serviceIds = [];
     serviceIds.push(service.id);
     let town = null;

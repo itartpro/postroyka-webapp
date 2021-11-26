@@ -9,7 +9,6 @@ export const Hero = ({h1}) => {
     const slides = useRef([]);
     const timer = useRef();
     const router = useRouter();
-    const [query, setQuery] = useState("")
 
     const [sliderRef, slider] = useKeenSlider({
         slides: 3,
@@ -30,6 +29,7 @@ export const Hero = ({h1}) => {
         slides.current[currentSlide].classList.add(css.show);
     }, [currentSlide])
 
+    const [query, setQuery] = useState("");
     const handleParam = setValue => e => setValue(e.target.value);
     const handleSubmit = e => {
         e.preventDefault();

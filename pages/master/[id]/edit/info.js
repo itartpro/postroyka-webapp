@@ -17,11 +17,12 @@ import {ShowMessage} from "components/show-message";
 
 export async function getServerSideProps({params}) {
     const fromDB = await getProfileById(parseInt(params.id)).then(e => {
+        if(!e) return null;
         delete e['password'];
         delete e['refresh'];
         return e;
     });
-    if (fromDB.level !== 2) {
+    if (!fromDB || fromDB.level !== 2) {
         return {
             notFound: true
         }
@@ -86,7 +87,6 @@ export async function getServerSideProps({params}) {
 }
 
 const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, homeTown, places, territories, defClickedTerritories}) => {
-    const {wsMsg, request} = useContext(WsContext);
     const masterAva = process.env.NEXT_PUBLIC_STATIC_URL+'/uploads/masters/'+fromDB.id+'/ava.jpg';
     const initAva = fromDB.avatar && masterAva || '/images/silhouette.jpg';
     const [image, setImage] = useState(null);
@@ -98,6 +98,13 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
     const [chosenServices, setChosenServices] = useState([])
     const simulateClick = useRef([]);
     const [showMsg, setShowMsg] = useState(null);
+    //verify user access
+    const { wsMsg, verifiedJwt, verifyById, checkAccess, request } = useContext(WsContext);
+    const [ showContent, setShowContent ] = useState(undefined);
+    useEffect(() => {
+        const check = verifyById(fromDB.id) || checkAccess([9]);
+        verifiedJwt !== undefined && setShowContent(check === true ? check : false);
+    }, [verifiedJwt, showContent]);
 
     //form stuff
     const {register, handleSubmit, watch, formState: {errors}} = useForm();
@@ -347,346 +354,210 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
     }, [clickedTerritories, edits.territories])
 
     return (
-        <PublicLayout loginName={user.first_name + ' ' + user.last_name}>
-            <main className="col start max">
-                <div className={'row start '+css.tabs}>
-                    <a className={css.on}>Информация</a>
-                    <Link href={'/master/'+user.id+'/edit/service-prices'}><a>Услуги и цены</a></Link>
-                    <Link href={'/master/'+user.id+'/edit/portfolio'}><a>Портфолио</a></Link>
-                </div>
-                <ul className={css.list}>
-                    <li className={'row center bet '+css.ava}>
-                        <b>{image && 'Обновить фото профиля' || 'Фото профиля не загружено'}</b>
-                        <label htmlFor="ava_upload">
-                            <BsPencil/> Ред.
-                            <UploadProvider
-                                chunkSize={1048576}
-                                allowed={['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon']}
-                                address={'gpics:50001'}
-                                action={'process'}
-                                instructions={{
-                                    folder: 'masters/' + user.id,
-                                    width: 150,
-                                    height: 150,
-                                    fit: 'Fill', //Fit or Fill (with crop)
-                                    position: 'Top',
-                                    new_name: 'ava',
-                                    copy:{
-                                        folder:'masters/' + user.id + '/mini',
-                                        height:70,
-                                        width:70
-                                    }
-                                }}>
-                                <InputUpload name="avatar" id="ava_upload" multiple={false}/>
-                            </UploadProvider>
-                        </label>
-                        <div>
-                            {image && <img src={image} alt={user.first_name} width="150" height="150" loading="lazy"/>}
-                        </div>
-                    </li>
-                    <li className="row center bet">
-                        <b>Фамилия, имя, отчество и юр. статус</b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.name = edits.name === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.name && "Отмен." || "Ред."}</button>
-                        {!edits.name && <div><p>{fullName}, {legal(user.legal)}</p></div>}
-                        {edits.name && (
+        <PublicLayout loginName={showContent && (user.first_name + ' ' + user.last_name)}>
+            <br/>
+            {showContent && (
+                <main className="col start max">
+                    <div className={'row start '+css.tabs}>
+                        <a className={css.on}>Информация</a>
+                        <Link href={'/master/'+user.id+'/edit/service-prices'}><a>Услуги и цены</a></Link>
+                        <Link href={'/master/'+user.id+'/edit/portfolio'}><a>Портфолио</a></Link>
+                    </div>
+                    <ul className={css.list}>
+                        <li className={'row center bet '+css.ava}>
+                            <b>{image && 'Обновить фото профиля' || 'Фото профиля не загружено'}</b>
+                            <label htmlFor="ava_upload">
+                                <BsPencil/> Ред.
+                                <UploadProvider
+                                    chunkSize={1048576}
+                                    allowed={['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon']}
+                                    address={'gpics:50001'}
+                                    action={'process'}
+                                    instructions={{
+                                        folder: 'masters/' + user.id,
+                                        width: 150,
+                                        height: 150,
+                                        fit: 'Fill', //Fit or Fill (with crop)
+                                        position: 'Top',
+                                        new_name: 'ava',
+                                        copy:{
+                                            folder:'masters/' + user.id + '/mini',
+                                            height:70,
+                                            width:70
+                                        }
+                                    }}>
+                                    <InputUpload name="avatar" id="ava_upload" multiple={false}/>
+                                </UploadProvider>
+                            </label>
                             <div>
-                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
-                                    <div className={'rel '+formCSS.sel}>
-                                        <select {...register('legal', {required: true})} defaultValue={user.legal}>
-                                            <option value="1">{legal(1)}</option>
-                                            <option value="2">{legal(2)}</option>
-                                            <option value="3">{legal(3)}</option>
-                                        </select>
-                                        <span><IoIosArrowDown/></span>
-                                    </div>
-
-                                    {legalWatch === "3" && (
-                                        <>
-                                            <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={user.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
-                                            {errMsg(errors.first_name, 70)}
-
-                                            <input type="text" {...register('last_name', {required: true, maxLength: 70})} defaultValue={user.last_name} placeholder="Точное полное наименование юридического лица"/>
-                                            {errMsg(errors.last_name, 70)}
-                                        </>
-                                    ) || (
-                                        <>
-                                            <input type="text" {...register('first_name', {required: true, maxLength: 40})} defaultValue={user.first_name} placeholder="Ваше имя"/>
-                                            {errMsg(errors.first_name, 40)}
-
-                                            <input type="text" {...register('last_name', {required: true, maxLength: 40})} defaultValue={user.last_name} placeholder="Ваша фамилия"/>
-                                            {errMsg(errors.last_name, 40)}
-
-                                            <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} defaultValue={user.paternal_name} placeholder="Ваше отчество (не обязательно)"/>
-                                            {errMsg(errors.paternal_name, 40)}
-                                        </>
-                                    )}
-
-                                    <input type="submit" value="Сохранить"/>
-                                </form>
+                                {image && <img src={image} alt={user.first_name} width="150" height="150" loading="lazy"/>}
                             </div>
-                        )}
-                    </li>
-                    <li className="row center bet">
-                        <b>Контакты</b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.contacts = edits.contacts === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.contacts && "Отмен." || "Ред."}</button>
-                        {!edits.contacts && (
-                            <div>
-                                {user.phone && <p>{user.phone},</p>}
-                                {user.email && <p>{user.email}</p>}
-                                {<p>{homeRegion}, {homeTown}</p>}
-                            </div>
-                        ) || (
-                            <div>
-                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                        </li>
+                        <li className="row center bet">
+                            <b>Фамилия, имя, отчество и юр. статус</b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                edits.name = edits.name === false;
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.name && "Отмен." || "Ред."}</button>
+                            {!edits.name && <div><p>{fullName}, {legal(user.legal)}</p></div>}
+                            {edits.name && (
+                                <div>
+                                    <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                        <div className={'rel '+formCSS.sel}>
+                                            <select {...register('legal', {required: true})} defaultValue={user.legal}>
+                                                <option value="1">{legal(1)}</option>
+                                                <option value="2">{legal(2)}</option>
+                                                <option value="3">{legal(3)}</option>
+                                            </select>
+                                            <span><IoIosArrowDown/></span>
+                                        </div>
 
-                                    <input type="text" {...register('phone', {maxLength: 40})} defaultValue={user.phone} placeholder="Ваш телефон"/>
-                                    {errMsg(errors.phone, 40)}
+                                        {legalWatch === "3" && (
+                                            <>
+                                                <input type="text" {...register('first_name', {required: true, maxLength: 70})} defaultValue={user.first_name} placeholder="Краткое наименование (публикуется на странице)"/>
+                                                {errMsg(errors.first_name, 70)}
 
-                                    <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={user.email} placeholder="Ваш email"/>
-                                    {errMsg(errors.email, 40)}
+                                                <input type="text" {...register('last_name', {required: true, maxLength: 70})} defaultValue={user.last_name} placeholder="Точное полное наименование юридического лица"/>
+                                                {errMsg(errors.last_name, 70)}
+                                            </>
+                                        ) || (
+                                            <>
+                                                <input type="text" {...register('first_name', {required: true, maxLength: 40})} defaultValue={user.first_name} placeholder="Ваше имя"/>
+                                                {errMsg(errors.first_name, 40)}
 
-                                    <br/>
-                                    <br/>
-                                    <b>Ваш город/нас. пункт</b>
-                                    <p>Выберите Вашу область</p>
-                                    <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={user.region_id}>
-                                            {regions.map(e => (
-                                                <option key={'ir'+e.id} value={e.id}>{e.name}</option>
-                                            ))}
-                                        </select>
-                                        <span><IoIosArrowDown/></span>
-                                    </div>
+                                                <input type="text" {...register('last_name', {required: true, maxLength: 40})} defaultValue={user.last_name} placeholder="Ваша фамилия"/>
+                                                {errMsg(errors.last_name, 40)}
 
-                                    <br/>
-                                    <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
-                                    <div className={'rel '+formCSS.sel}>
-                                        <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})} defaultValue={user.town_id}>
-                                            {towns && towns.map(e => (
-                                                <option key={e.id} value={e.id}>{e.name}</option>
-                                            ))}
-                                        </select>
-                                        <span><IoIosArrowDown/></span>
-                                    </div>
+                                                <input type="text" {...register('paternal_name', {required: false, maxLength: 40})} defaultValue={user.paternal_name} placeholder="Ваше отчество (не обязательно)"/>
+                                                {errMsg(errors.paternal_name, 40)}
+                                            </>
+                                        )}
 
-                                    <input type="submit" value="Сохранить"/>
-                                </form>
-                            </div>
-                        )}
-                    </li>
-                    <li className="row center bet">
-                        <b>О себе</b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.about = edits.about === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.about && "Отмен." || "Ред."}</button>
-                        {!edits.about && <div>{user.about || "\"О себе\" не заполнено"}</div>}
-                        {edits.about && (
-                            <div>
-                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
-                                    <textarea {...register('about', {maxLength: 1600})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
-                                    {errMsg(errors.about, 1600)}
+                                        <input type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                        <li className="row center bet">
+                            <b>Контакты</b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                edits.contacts = edits.contacts === false;
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.contacts && "Отмен." || "Ред."}</button>
+                            {!edits.contacts && (
+                                <div>
+                                    {user.phone && <p>{user.phone},</p>}
+                                    {user.email && <p>{user.email}</p>}
+                                    {<p>{homeRegion}, {homeTown}</p>}
+                                </div>
+                            ) || (
+                                <div>
+                                    <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
 
-                                    <input type="submit" value="Сохранить"/>
-                                </form>
-                            </div>
-                        )}
-                    </li>
-                    <li className="row center bet">
-                        <b>Выбранные специализации</b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            if(edits.choices === false) {
-                                setClickedServices(choices);
-                                edits.choices = true;
-                            } else {
-                                setClickedServices([]);
-                                edits.choices = false;
-                            }
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.choices && "Отмен." || "Ред."}</button>
-                        {!edits.choices && (
-                            <div>
-                                <ul className={'col start'}>
-                                    <li><b>Выбранные специализации</b></li>
-                                    {chosenServices.length > 0 && chosenServices.map((e,i) => <li key={'cn'+i}>{e}</li>)}
-                                </ul>
-                            </div>
-                        )}
-                        {edits.choices && (
-                            <div>
-                                <form onSubmit={handleSubmit(updateChoices)} className={`col start ${formCSS.form}`}>
+                                        <input type="text" {...register('phone', {maxLength: 40})} defaultValue={user.phone} placeholder="Ваш телефон"/>
+                                        {errMsg(errors.phone, 40)}
+
+                                        <input type="text" {...register('email', {required: true, maxLength: 40})} defaultValue={user.email} placeholder="Ваш email"/>
+                                        {errMsg(errors.email, 40)}
+
+                                        <br/>
+                                        <br/>
+                                        <b>Ваш город/нас. пункт</b>
+                                        <p>Выберите Вашу область</p>
+                                        <div className={'rel '+formCSS.sel}>
+                                            <select placeholder="Выберите Вашу область" {...register('region_id', {required: true})} defaultValue={user.region_id}>
+                                                {regions.map(e => (
+                                                    <option key={'ir'+e.id} value={e.id}>{e.name}</option>
+                                                ))}
+                                            </select>
+                                            <span><IoIosArrowDown/></span>
+                                        </div>
+
+                                        <br/>
+                                        <p>Выберите Ваш город/населённый пункт (или ближайший к нему из списка)</p>
+                                        <div className={'rel '+formCSS.sel}>
+                                            <select placeholder="Выберите Ваш город" {...register('town_id', {required: true})} defaultValue={user.town_id}>
+                                                {towns && towns.map(e => (
+                                                    <option key={e.id} value={e.id}>{e.name}</option>
+                                                ))}
+                                            </select>
+                                            <span><IoIosArrowDown/></span>
+                                        </div>
+
+                                        <input type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                        <li className="row center bet">
+                            <b>О себе</b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                edits.about = edits.about === false;
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.about && "Отмен." || "Ред."}</button>
+                            {!edits.about && <div>{user.about || "\"О себе\" не заполнено"}</div>}
+                            {edits.about && (
+                                <div>
+                                    <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                        <textarea {...register('about', {maxLength: 1600})} defaultValue={user.about || ""} placeholder="Напишите о себе"/>
+                                        {errMsg(errors.about, 1600)}
+
+                                        <input type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                        <li className="row center bet">
+                            <b>Выбранные специализации</b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                if(edits.choices === false) {
+                                    setClickedServices(choices);
+                                    edits.choices = true;
+                                } else {
+                                    setClickedServices([]);
+                                    edits.choices = false;
+                                }
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.choices && "Отмен." || "Ред."}</button>
+                            {!edits.choices && (
+                                <div>
                                     <ul className={'col start'}>
-                                        {services && services.map(parent => (
-                                            <li key={'s'+parent.id}>
-                                                <a className={formCSS.bar} role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
-                                                <ul className={`row start ${formCSS.hid}`}>
-                                                    {parent.children.map(e => (
-                                                        <li ref={el => simulateClick.current[e.id] = el} key={'s'+e.id}>
-                                                            <label htmlFor={'srv_'+e.id} className={formCSS.check}>
-                                                                {e.name}
-                                                                <input
-                                                                    id={'srv_'+e.id} type="checkbox"
-                                                                    {...register('services')}
-                                                                    defaultChecked={clickedServices.includes(e.id)}
-                                                                    value={e.id}
-                                                                    onClick={ev => {
-                                                                        if(ev.target.checked) {
-                                                                            if(!clickedServices.includes(e.id)) {
-                                                                                clickedServices.push(e.id);
-                                                                                setClickedServices([...clickedServices])
-                                                                            }
-                                                                        } else {
-                                                                            if(clickedServices.includes(e.id)) {
-                                                                                const newArr = clickedServices.filter(el => el !== e.id);
-                                                                                setClickedServices([...newArr])
-                                                                            }
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <span></span>
-                                                            </label>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </li>
-                                        ))}
+                                        <li><b>Выбранные специализации</b></li>
+                                        {chosenServices.length > 0 && chosenServices.map((e,i) => <li key={'cn'+i}>{e}</li>)}
                                     </ul>
-                                    <input type="submit" value="Сохранить"/>
-                                </form>
-                            </div>
-                        )}
-                    </li>
-                    <li className="row center bet">
-                        <b>Состав бригады</b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.company = edits.company === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.company && "Отмен." || "Ред."}</button>
-                        {!edits.company && <div><p>{company(parseInt(user.company))}</p></div>}
-                        {edits.company && (
-                            <div>
-                                <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
-                                    <div className={'rel '+formCSS.sel}>
-                                        <select {...register('company', {required: true})} defaultValue={user.company}>
-                                            <option value="1">{company(1)}</option>
-                                            <option value="2">{company(2)}</option>
-                                            <option value="3">{company(3)}</option>
-                                            <option value="4">{company(4)}</option>
-                                        </select>
-                                        <span><IoIosArrowDown/></span>
-                                    </div>
-                                    <input type="submit" value="Сохранить"/>
-                                </form>
-                            </div>
-                        )}
-                    </li>
-                    <li className="row center bet">
-                        <b>
-                            <p>Удобные для работы регионы и города</p>
-                            <small>Можно выбрать до {regionLimit} регионов и {placesLimit} различных мест в общем</small>
-                        </b>
-                        <button onClick={e => {
-                            editBackground(e);
-                            edits.territories = edits.territories === false;
-                            setEdits({...edits});
-                        }}><BsPencil/> {edits.territories && "Отмен." || "Ред."}</button>
-                        {!edits.territories && (
-                            <div>
-                                <ul>
-                                    {territories && Object.keys(territories).map(region => (
-                                        <li key={region}>
-                                            <p>{places[region].name}</p>
-                                            <ul>
-                                                {places[region].towns.map(e => {
-                                                    if(territories[region].hasOwnProperty(e.id)) {
-                                                        return (
-                                                            <li key={e.id}>&nbsp;&nbsp;&nbsp;{e.name}</li>
-                                                        )
-                                                    }
-                                                })}
-                                            </ul>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-                        {edits.territories && (
-                            <div>
-                                <form onSubmit={handleSubmit(updateTerritories)} className={`row start ${formCSS.form}`}>
-                                    {workPlaces && Object.keys(workPlaces).map(third => (
-                                        <ul className={css.regions} key={'regions'+third}>
-                                            {workPlaces[third] && workPlaces[third].map(region => (
-                                                <li key={'r'+region.id}>
-                                                    <a className={formCSS.bar} role="button" onClick={toggleDown}>
-                                                        <IoIosArrowDown/>&nbsp;&nbsp;{region.name}
-                                                    </a>
+                                </div>
+                            )}
+                            {edits.choices && (
+                                <div>
+                                    <form onSubmit={handleSubmit(updateChoices)} className={`col start ${formCSS.form}`}>
+                                        <ul className={'col start'}>
+                                            {services && services.map(parent => (
+                                                <li key={'s'+parent.id}>
+                                                    <a className={formCSS.bar} role="button" onClick={toggleDown}><IoIosArrowDown/>&nbsp;&nbsp;{parent.name}</a>
                                                     <ul className={`row start ${formCSS.hid}`}>
-                                                        <li key={'twn' + region.id + '-' + 0}>
-                                                            <label htmlFor={'t_' + region.id + '-' + 0} className={formCSS.check}>
-                                                                По всей области
-                                                                <input
-                                                                    id={'t_' + region.id + '-' + 0} type="checkbox"
-                                                                    {...register('territories')}
-                                                                    defaultChecked={clickedTerritories.includes(region.id + '-' + 0)}
-                                                                    value={region.id + '-' + 0}
-                                                                    onClick={ev => {
-                                                                        if(ev.target.checked) {
-                                                                            if(!clickedTerritories.includes(region.id + '-' + 0)) {
-                                                                                const newClicked = clickedTerritories.filter(e => {
-                                                                                    const arr = e.split('-')
-                                                                                    if(arr[0] !== region.id.toString()) {
-                                                                                        return e
-                                                                                    }
-                                                                                })
-                                                                                newClicked.push(region.id + '-' + 0);
-                                                                                setClickedTerritories([...newClicked])
-                                                                            }
-                                                                        } else {
-                                                                            if(clickedTerritories.includes(region.id + '-' + 0)) {
-                                                                                const newArr = clickedTerritories.filter(el => el !== region.id + '-' + 0);
-                                                                                setClickedTerritories([...newArr])
-                                                                            }
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <span></span>
-                                                            </label>
-                                                        </li>
-                                                        {region.towns.map(e => (
-                                                            <li key={'twn' + region.id + '-' + e.id}>
-                                                                <label htmlFor={'t_' + region.id + '-' + e.id} className={formCSS.check}>
+                                                        {parent.children.map(e => (
+                                                            <li ref={el => simulateClick.current[e.id] = el} key={'s'+e.id}>
+                                                                <label htmlFor={'srv_'+e.id} className={formCSS.check}>
                                                                     {e.name}
                                                                     <input
-                                                                        id={'t_' + region.id + '-' + e.id} type="checkbox"
-                                                                        {...register('territories')}
-                                                                        defaultChecked={clickedTerritories.includes(region.id + '-' + e.id)}
-                                                                        value={region.id + '-' + e.id}
+                                                                        id={'srv_'+e.id} type="checkbox"
+                                                                        {...register('services')}
+                                                                        defaultChecked={clickedServices.includes(e.id)}
+                                                                        value={e.id}
                                                                         onClick={ev => {
                                                                             if(ev.target.checked) {
-                                                                                if(!clickedTerritories.includes(region.id + '-' + e.id)) {
-                                                                                    const newClicked = clickedTerritories.filter(el => {
-                                                                                        if(el !== region.id + '-' + 0) {
-                                                                                            return el
-                                                                                        }
-                                                                                    });
-                                                                                    newClicked.push(region.id + '-' + e.id)
-                                                                                    setClickedTerritories([...newClicked])
+                                                                                if(!clickedServices.includes(e.id)) {
+                                                                                    clickedServices.push(e.id);
+                                                                                    setClickedServices([...clickedServices])
                                                                                 }
                                                                             } else {
-                                                                                if(clickedTerritories.includes(region.id + '-' + e.id)) {
-                                                                                    const newArr = clickedTerritories.filter(el => el !== region.id + '-' + e.id);
-                                                                                    setClickedTerritories([...newArr])
+                                                                                if(clickedServices.includes(e.id)) {
+                                                                                    const newArr = clickedServices.filter(el => el !== e.id);
+                                                                                    setClickedServices([...newArr])
                                                                                 }
                                                                             }
                                                                         }}
@@ -699,15 +570,154 @@ const Info = ({fromDB, defaultTowns, regions, services, choices, homeRegion, hom
                                                 </li>
                                             ))}
                                         </ul>
-                                    ))}
-                                    <input className={css.save_regions} type="submit" value="Сохранить"/>
-                                </form>
-                            </div>
-                        )}
-                    </li>
-                </ul>
-                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
-            </main>
+                                        <input type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                        <li className="row center bet">
+                            <b>Состав бригады</b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                edits.company = edits.company === false;
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.company && "Отмен." || "Ред."}</button>
+                            {!edits.company && <div><p>{company(parseInt(user.company))}</p></div>}
+                            {edits.company && (
+                                <div>
+                                    <form onSubmit={handleSubmit(submitEdit)} className={`col start ${formCSS.form}`}>
+                                        <div className={'rel '+formCSS.sel}>
+                                            <select {...register('company', {required: true})} defaultValue={user.company}>
+                                                <option value="1">{company(1)}</option>
+                                                <option value="2">{company(2)}</option>
+                                                <option value="3">{company(3)}</option>
+                                                <option value="4">{company(4)}</option>
+                                            </select>
+                                            <span><IoIosArrowDown/></span>
+                                        </div>
+                                        <input type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                        <li className="row center bet">
+                            <b>
+                                <p>Удобные для работы регионы и города</p>
+                                <small>Можно выбрать до {regionLimit} регионов и {placesLimit} различных мест в общем</small>
+                            </b>
+                            <button onClick={e => {
+                                editBackground(e);
+                                edits.territories = edits.territories === false;
+                                setEdits({...edits});
+                            }}><BsPencil/> {edits.territories && "Отмен." || "Ред."}</button>
+                            {!edits.territories && (
+                                <div>
+                                    <ul>
+                                        {territories && Object.keys(territories).map(region => (
+                                            <li key={region}>
+                                                <p>{places[region].name}</p>
+                                                <ul>
+                                                    {places[region].towns.map(e => {
+                                                        if(territories[region].hasOwnProperty(e.id)) {
+                                                            return (
+                                                                <li key={e.id}>&nbsp;&nbsp;&nbsp;{e.name}</li>
+                                                            )
+                                                        }
+                                                    })}
+                                                </ul>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            {edits.territories && (
+                                <div>
+                                    <form onSubmit={handleSubmit(updateTerritories)} className={`row start ${formCSS.form}`}>
+                                        {workPlaces && Object.keys(workPlaces).map(third => (
+                                            <ul className={css.regions} key={'regions'+third}>
+                                                {workPlaces[third] && workPlaces[third].map(region => (
+                                                    <li key={'r'+region.id}>
+                                                        <a className={formCSS.bar} role="button" onClick={toggleDown}>
+                                                            <IoIosArrowDown/>&nbsp;&nbsp;{region.name}
+                                                        </a>
+                                                        <ul className={`row start ${formCSS.hid}`}>
+                                                            <li key={'twn' + region.id + '-' + 0}>
+                                                                <label htmlFor={'t_' + region.id + '-' + 0} className={formCSS.check}>
+                                                                    По всей области
+                                                                    <input
+                                                                        id={'t_' + region.id + '-' + 0} type="checkbox"
+                                                                        {...register('territories')}
+                                                                        defaultChecked={clickedTerritories.includes(region.id + '-' + 0)}
+                                                                        value={region.id + '-' + 0}
+                                                                        onClick={ev => {
+                                                                            if(ev.target.checked) {
+                                                                                if(!clickedTerritories.includes(region.id + '-' + 0)) {
+                                                                                    const newClicked = clickedTerritories.filter(e => {
+                                                                                        const arr = e.split('-')
+                                                                                        if(arr[0] !== region.id.toString()) {
+                                                                                            return e
+                                                                                        }
+                                                                                    })
+                                                                                    newClicked.push(region.id + '-' + 0);
+                                                                                    setClickedTerritories([...newClicked])
+                                                                                }
+                                                                            } else {
+                                                                                if(clickedTerritories.includes(region.id + '-' + 0)) {
+                                                                                    const newArr = clickedTerritories.filter(el => el !== region.id + '-' + 0);
+                                                                                    setClickedTerritories([...newArr])
+                                                                                }
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    <span></span>
+                                                                </label>
+                                                            </li>
+                                                            {region.towns.map(e => (
+                                                                <li key={'twn' + region.id + '-' + e.id}>
+                                                                    <label htmlFor={'t_' + region.id + '-' + e.id} className={formCSS.check}>
+                                                                        {e.name}
+                                                                        <input
+                                                                            id={'t_' + region.id + '-' + e.id} type="checkbox"
+                                                                            {...register('territories')}
+                                                                            defaultChecked={clickedTerritories.includes(region.id + '-' + e.id)}
+                                                                            value={region.id + '-' + e.id}
+                                                                            onClick={ev => {
+                                                                                if(ev.target.checked) {
+                                                                                    if(!clickedTerritories.includes(region.id + '-' + e.id)) {
+                                                                                        const newClicked = clickedTerritories.filter(el => {
+                                                                                            if(el !== region.id + '-' + 0) {
+                                                                                                return el
+                                                                                            }
+                                                                                        });
+                                                                                        newClicked.push(region.id + '-' + e.id)
+                                                                                        setClickedTerritories([...newClicked])
+                                                                                    }
+                                                                                } else {
+                                                                                    if(clickedTerritories.includes(region.id + '-' + e.id)) {
+                                                                                        const newArr = clickedTerritories.filter(el => el !== region.id + '-' + e.id);
+                                                                                        setClickedTerritories([...newArr])
+                                                                                    }
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                        <span></span>
+                                                                    </label>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ))}
+                                        <input className={css.save_regions} type="submit" value="Сохранить"/>
+                                    </form>
+                                </div>
+                            )}
+                        </li>
+                    </ul>
+                    {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={3000}/>}
+                </main>
+            ) || <main className="col start max"><p>Нет данных</p></main>}
         </PublicLayout>
     )
 }

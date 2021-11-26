@@ -23,10 +23,17 @@ import {Comments} from "components/public/master/comments";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id)).then(e => {
-        delete e['password'];
-        delete e['refresh'];
+        if(e) {
+            delete e['password'];
+            delete e['refresh'];
+        }
         return e;
     });
+    if (!profile) {
+        return {
+            notFound: true,
+        }
+    }
     const comments = await getProfileComments(parseInt(params.id));
     let services = null;
     let choices = null;
@@ -83,8 +90,6 @@ export async function getServerSideProps({params}) {
         regions = await organizedRegions(regionIds);
         towns = await organizedTowns(townIds);
     } else {
-        console.log('profile.region_id', profile.region_id);
-        console.log('profile.town_id', profile.town_id);
         const homeRegion = await getRow('id', profile.region_id, 'regions');
         const homeTown = await getRow('id', profile.town_id, 'towns');
         homeLoc = homeRegion.name + ' ' + homeTown.name

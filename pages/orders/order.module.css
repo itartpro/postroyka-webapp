@@ -11,3 +11,164 @@
 .gal img:last-of-type {
     margin: 0
 }
+
+.gray {
+    color: #AAA
+}
+
+.budget > span:nth-child(1) {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.budget .gray {
+    margin-left: 15px
+}
+
+.details li {
+    list-style: none;
+    line-height: 160%
+}
+
+.details li > span:nth-child(1) {
+    color: #AAA;
+    margin-right: 15px
+}
+
+.bottom {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    grid-gap: 20px
+}
+
+.bottom > div {
+    position: relative;
+    border: 1px solid #DDD;
+    border-radius: 8px;
+    padding: 30px 40px 60px 40px
+}
+
+.bottom > div > b {
+    font-size: 1.2rem
+}
+
+.bottom > div li {
+    list-style: circle;
+    margin-left: 1rem;
+    line-height: 160%
+}
+
+.grn {
+    display: block;
+    padding: 15px 20px;
+    color: white!important;
+    max-width: max-content;
+    background: #47CB43;
+    transition: all .3s;
+    border-radius: 4px
+}
+
+.grn:hover {
+    background: #067800
+}
+
+.bottom > div > div {
+    margin: 15px 0
+}
+
+.bottom > div > div > a:nth-child(2) {
+    color: #0B758C!important;
+    text-shadow: 0 0 0 #0B758C;
+    margin-left: 30px
+}
+
+.bottom > div > form {
+    width: calc(100% - 80px);
+    position: absolute;
+    bottom: -35px;
+}
+
+.bottom input[type=text] {
+    background: #FFFFFF;
+    border: 1px solid #47CB43;
+    box-sizing: border-box;
+    border-radius: 8px;
+    min-height: 70px;
+    text-indent: 30px;
+    font-size: 1rem;
+    width: 100%
+}
+
+.bottom input[type=submit] {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    min-height: 70px;
+    padding: 0 30px;
+    font-size: 1rem;
+    color: #47cb43;
+    background: rgba(71, 203, 67, 0.1);
+    border: none
+}
+
+@media all and (max-width: 1024px){
+
+    .bottom {
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 70px
+    }
+
+    .bottom img {
+        height: auto
+    }
+
+    .bottom > div > form {
+        width: 100%;
+        left: 0;
+        bottom: -45px
+    }
+
+    .bottom > div > div > a:nth-child(2) {
+        width: 100%;
+        margin: 15px 0 0 0
+    }
+
+    .bottom input[type=text] {
+        min-height: 50px;
+        text-indent: 10px;
+    }
+
+    .bottom input[type=submit] {
+        min-height: 50px;
+        padding: 0 15px
+    }
+}
+
+@media all and (max-width: 760px){
+    .bottom {
+        grid-template-columns: 1fr;
+        justify-content: center
+    }
+
+    .bottom > div {
+        padding: 15px;
+        margin-bottom: 60px
+    }
+
+    .bottom input[type=submit] {
+        left: 0;
+        right: initial;
+        bottom: -55px;
+        width: 100%;
+        background: #47CB43;
+        color: white;
+        border-radius: 4px
+    }
+
+    .budget .gray {
+        display: block;
+        margin-left: 0;
+        width: 100%
+    }
+}

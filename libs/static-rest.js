@@ -343,6 +343,7 @@ export const getRow = (column, value, table) => {
         action: 'get-row',
         instructions: JSON.stringify({column, value: value.toString(), table})
     })).then(res => {
+        console.log(table, res);
         try {
             const parsed = JSON.parse(res);
             return parsed.data

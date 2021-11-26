@@ -48,7 +48,9 @@ const Home = ({page, services, regions, orders, orderRegions, orderTowns}) => {
     return (
         <PublicLayout page={page}>
             <main className={`col start`}>
-                <header className={`row ${css.hr1}`}><Hero h1={page.h1}/></header>
+                <header className={`row ${css.hr1}`}>
+                    <Hero h1={page.h1}/>
+                </header>
                 <div className={'row center bet max '+css.best}>
                     <div className="col start rel">
                         <b>Добавьте заказ</b>

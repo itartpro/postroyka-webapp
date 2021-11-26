@@ -5,10 +5,17 @@ import {Order} from "components/public/orders/order";
 
 export async function getServerSideProps({params}) {
     const profile = await getProfileById(parseInt(params.id)).then(e => {
-        delete e['password'];
-        delete e['refresh'];
+        if(e) {
+            delete e['password'];
+            delete e['refresh'];
+        }
         return e;
     });
+    if (!profile) {
+        return {
+            notFound: true,
+        }
+    }
 
     const orders = await getOrdersWithImages({login_id: [parseInt(params.id)]})
     let orderRegions = null;
