@@ -8,7 +8,13 @@ import {formatPrice} from "libs/sfx";
 import {isoToRusDate} from "libs/js-time-to-psql";
 import {timeDiff, timeInRus} from "libs/time-stuff";
 import Link from "next/link";
-import {useState} from "react";
+import {useState, useEffect, useContext} from "react";
+import {WsContext} from "context/WsProvider";
+import {useForm} from "react-hook-form";
+import {errMsg} from "libs/form-stuff";
+import formCSS from "styles/forms.module.css";
+import {nowToISO} from "libs/js-time-to-psql";
+import {ShowMessage} from "components/show-message";
 
 export async function getServerSideProps({params}) {
 
@@ -21,13 +27,7 @@ export async function getServerSideProps({params}) {
     const otherOrdersCount = await getOrders({login_id: order.login_id}).then(res => Array.isArray(res) ? res.length : null);
     const town = await getRow('id', order.town_id, 'towns');
     const region = await getRow('id', order.region_id, 'regions');
-    const customer = await getProfileById(parseInt(order.login_id)).then(e => {
-        if(e) {
-            delete e['password'];
-            delete e['refresh'];
-        }
-        return e;
-    });
+    const customer = await getProfileById(parseInt(order.login_id)).then(e => e !== null ? {id: e.id, first_name: e.first_name} : null);
     const service = await getPageBySlug("", order.service_id).then(res => {
         if(res) {
             return {
@@ -54,7 +54,7 @@ export async function getServerSideProps({params}) {
 const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
     const [query, setQuery] = useState("");
     const handleParam = setValue => e => setValue(e.target.value);
-    const handleSubmit = e => {
+    const addOrder = e => {
         e.preventDefault();
         if(query.length > 3) {
             router.replace({
@@ -64,6 +64,79 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
         } else {
             router.push('orders/add')
         }
+    }
+    const [showMsg, setShowMsg] = useState(null);
+    //verify user access
+    const { wsMsg, verifiedJwt, verifyById, checkAccess, request } = useContext(WsContext);
+    const [showContent, setShowContent ] = useState(undefined);
+    const [masterId, setMasterId] = useState(null);
+    const [offer, setOffer] = useState(null);
+    useEffect(() => {
+        const check = checkAccess([2, 9]);
+        verifiedJwt !== undefined && setShowContent(check === true ? check : false);
+        if(check === true) {
+            const user = JSON.parse(window.localStorage.getItem('User'));
+            if(user.level === 2 && user.id !== customer.id) {
+                setMasterId(user.id);
+                //TODO check if master already sent his offer, or received an offer
+            } else {
+                setShowContent(false)
+            }
+        }
+    }, [verifiedJwt, showContent]);
+
+    //handle info from server
+    useEffect(() => {
+        if (!wsMsg) return false;
+
+        if (wsMsg.type === "error") {
+            if(wsMsg.data.includes("is taken")) {
+                let msg = "Кто-то уже зарегестрировался на сайте с таким email или телефоном. Если это Вы - то введите Ваш логин (email/телефон) в конце формы.";
+                setShowMsg(msg)
+            } else {
+                setShowMsg(wsMsg.data)
+            }
+            return false
+        }
+        if (wsMsg.type !== "info") {
+            setShowMsg(wsMsg.data);
+            return false
+        }
+
+        let msg = {};
+        try {
+            msg = JSON.parse(wsMsg.data);
+        } catch (err) {
+            console.log("could not parse data: ",wsMsg.data, err);
+            return false
+        }
+
+        if(msg.data && msg.name === 'auth') {
+            //handle addition of offer
+            if(msg.data.hasOwnProperty('order_id')) setOffer(msg.data)
+        }
+
+    }, [wsMsg]);
+
+    //form stuff
+    const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const submitOffer = d => {
+        const offer = {
+            order_id: order.id,
+            customer_id: customer.id,
+            master_id: masterId,
+            accept: 2, //2 - master offers to customer
+            price: d.price,
+            meeting: d.meeting,
+            description: d.description,
+            created: nowToISO()
+        };
+        const goData = {
+            address: 'auth:50003',
+            action: 'add-offer',
+            instructions: JSON.stringify(offer)
+        };
+        request(JSON.stringify(goData))
     }
 
     return (
@@ -129,6 +202,44 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                         <span>{service.name}</span>
                     </li>
                 </ul>
+                {!offer && showContent && (
+                    <form onSubmit={handleSubmit(submitOffer)} className={`col start ${formCSS.form}`}>
+                        <br/>
+                        <b>Предложить свою кандидатуру</b>
+                        <span className={css.gray}>* Ваше имя, дата предложения и ссылка на Ваш профиль будут автоматически показаны в Вашем предложении.</span>
+                        <input type="text" {...register('price', {required: true, maxLength: 100})} data-label="Цена за работу" placeholder="Цена за всю работу (можно приблизительно)"/>
+                        {errMsg(errors.price, 100)}
+
+                        <input type="text" {...register('meeting', {maxLength: 100})} data-label="Дата и условия выезда" placeholder="Дата и условия выезда (Когда вы сможете встретится, приедете Вы или менеджер)"/>
+                        {errMsg(errors.meeting, 100)}
+
+                        <textarea {...register('description', {required: true, maxLength: 300})} placeholder="Ваше предложение"/>
+                        {errMsg(errors.description, 2000)}
+
+                        <input type="submit" value="Предложить"/>
+                        <br/>
+                    </form>
+                )}
+                {offer && (
+                    <div className={css.offered}>
+                        <b>Вы уже отправили своё предложение на выполнение этого заказа</b>
+                        <p>Заказчик увидит Ваше предложение, описание Вашего профиля, ссылку на Ваш профиль, и свяжется с Вами если предложение ему подойдёт</p>
+                        <ul className={`${css.details}`}>
+                            <li>
+                                <span>Цена за работу:</span>
+                                <span>{offer.price}</span>
+                            </li>
+                            <li>
+                                <span>Дата и условия выезда:</span>
+                                <span>{offer.meeting}</span>
+                            </li>
+                            <li>
+                                <span>Ваше предложение:</span>
+                                <span>{offer.description}</span>
+                            </li>
+                        </ul>
+                    </div>
+                )}
                 <div className={`row bet ${css.bottom}`}>
                     <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/public/images/orders/bottom.jpg`} alt="Покрасить стены"  width="420" height="322" loading="lazy"/>
                     <div className="col bet">
@@ -143,12 +254,13 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                             <Link href={'/for-masters'}><a>Условия работы на сервисе</a></Link>
                         </div>
                         <p><b>Или</b> Найдите мастера под Ваши работы</p>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={addOrder}>
                             <input type="text" name="title" value={query} onChange={handleParam(setQuery)} placeholder="Что требуется сделать?"/>
                             <input type="submit" value="Найти мастера ›"/>
                         </form>
                     </div>
                 </div>
+                {showMsg && <ShowMessage text={showMsg} clear={setShowMsg} timer={6000}/>}
             </main>
         </PublicLayout>
     )

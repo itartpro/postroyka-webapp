@@ -73,6 +73,21 @@
     background: #067800
 }
 
+.offered {
+    margin: 20px 0;
+    padding: 30px 40px;
+    border: 1px solid #DDD;
+    border-radius: 8px
+}
+
+.offered > b {
+    font-size: 1.3rem
+}
+
+.offered > p {
+    margin: 10px 0
+}
+
 .bottom > div > div {
     margin: 15px 0
 }
@@ -170,5 +185,12 @@
         display: block;
         margin-left: 0;
         width: 100%
+    }
+
+    .offered {
+        padding: 15px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none
     }
 }
