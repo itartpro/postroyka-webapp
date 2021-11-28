@@ -20,7 +20,7 @@ import 'photoswipe/dist/photoswipe.css'
 import 'photoswipe/dist/default-skin/default-skin.css'
 import { Gallery, Item } from 'react-photoswipe-gallery';
 import {validateEmailPhoneInput} from "libs/email-phone-input";
-import css2 from "../../styles/forms.module.css";
+import css2 from "styles/forms.module.css";
 
 export async function getStaticProps() {
     const regions = await getRegions();

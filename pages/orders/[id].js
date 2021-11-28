@@ -15,6 +15,8 @@ import {errMsg} from "libs/form-stuff";
 import formCSS from "styles/forms.module.css";
 import {nowToISO} from "libs/js-time-to-psql";
 import {ShowMessage} from "components/show-message";
+import {useRouter} from "next/router";
+import {Offer} from "components/public/orders/offer";
 
 export async function getServerSideProps({params}) {
 
@@ -52,6 +54,7 @@ export async function getServerSideProps({params}) {
 }
 
 const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
+    const router = useRouter();
     const [query, setQuery] = useState("");
     const handleParam = setValue => e => setValue(e.target.value);
     const addOrder = e => {
@@ -68,28 +71,54 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
     const [showMsg, setShowMsg] = useState(null);
     //verify user access
     const { wsMsg, verifiedJwt, verifyById, checkAccess, request } = useContext(WsContext);
-    const [showContent, setShowContent ] = useState(undefined);
+    const [showContent, setShowContent ] = useState(false);
+    const [offers, setOffers ] = useState([]);
+    const [masters, setMasters] = useState(null);
     const [masterId, setMasterId] = useState(null);
     const [offer, setOffer] = useState(null);
+
     useEffect(() => {
-        const check = checkAccess([2, 9]);
-        verifiedJwt !== undefined && setShowContent(check === true ? check : false);
-        if(check === true) {
-            const user = JSON.parse(window.localStorage.getItem('User'));
-            if(user.level === 2 && user.id !== customer.id) {
-                setMasterId(user.id);
-                //TODO check if master already sent his offer, or received an offer
-            } else {
-                setShowContent(false)
-            }
+        const masterCheck = checkAccess([2]);
+        const customerCheck = checkAccess([1, 9]);
+        const user = JSON.parse(window.localStorage.getItem('User'));
+
+        if(masterCheck && user.id !== customer.id) {
+            setShowContent(true);
+            setMasterId(user.id);
+            const goData = {
+                address: 'auth:50003',
+                action: 'get-offers',
+                instructions: JSON.stringify({
+                    order_id: [order.id],
+                    master_id: [masterId]
+                })
+            };
+            request(JSON.stringify(goData))
+        } else {
+            setShowContent(false);
         }
-    }, [verifiedJwt, showContent]);
+
+        if(customerCheck && (user.id === customer.id || user.level === 9)) {
+            const goData = {
+                address: 'auth:50003',
+                action: 'get-offers',
+                instructions: JSON.stringify({
+                    order_id: [order.id]
+                })
+            };
+            request(JSON.stringify(goData))
+        }
+
+    }, [verifiedJwt]);
 
     //handle info from server
     useEffect(() => {
         if (!wsMsg) return false;
 
         if (wsMsg.type === "error") {
+            if(wsMsg.data.includes("no records found")) {
+                return false;
+            }
             if(wsMsg.data.includes("is taken")) {
                 let msg = "Кто-то уже зарегестрировался на сайте с таким email или телефоном. Если это Вы - то введите Ваш логин (email/телефон) в конце формы.";
                 setShowMsg(msg)
@@ -113,13 +142,83 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
 
         if(msg.data && msg.name === 'auth') {
             //handle addition of offer
-            if(msg.data.hasOwnProperty('order_id')) setOffer(msg.data)
+            console.log(msg.data);
+
+            if(Array.isArray(msg.data) && msg.data[0] && msg.data[0].hasOwnProperty('order_id')) {
+                const user = JSON.parse(window.localStorage.getItem('User'));
+                if(user.level === 2) {
+                    setOffer(msg.data[0])
+                } else {
+                    setOffers(msg.data)
+                }
+            }
+
+            if(msg.data.hasOwnProperty('masters')) {
+                //organize masters into an object to tie them with offers easily
+                const candidates = {};
+                const towns = {};
+                const regions = {};
+                msg.data.towns.forEach(e => {
+                    if(!towns[e.id]) {
+                        towns[e.id] = e;
+                    }
+                })
+
+                msg.data.regions.forEach(e => {
+                    if(!regions[e.id]) {
+                        regions[e.id] = e;
+                    }
+                })
+
+                msg.data.masters.forEach(m => {
+                    console.log(regions[m.region_id].name)
+                    if(!candidates[m.id]) {
+                        candidates[m.id] = m;
+                        if(regions[m.region_id]) {
+                            m.region_name = regions[m.region_id].name
+                        }
+                        if(towns[m.town_id]) {
+                            m.town_name = towns[m.town_id].name
+                        }
+                    }
+                })
+                setMasters(candidates);
+            }
+
+            if(msg.data === "updated successfully") setShowMsg("Успешно обновлено");
+
+            if(msg.data === "deleted row from offers") setOffer(null);
         }
 
     }, [wsMsg]);
 
+    //first time that masters are retrieved we may need to gather other info - such as their rating, last comment
+    useEffect(() => {
+        if(!masters) return false;
+        console.log('got masters', masters);
+    }, [masters])
+
+    useEffect(() => {
+        if(offer && offer.price) {
+            setValue('edit_price', offer.price);
+            setValue('edit_meeting', offer.meeting);
+            setValue('edit_description', offer.description);
+        }
+    }, [offer])
+
+    useEffect(() => {
+        if(offers.length < 1) return false;
+        const login_id = offers.map(e => e.master_id);
+        const goData = {
+            address: 'auth:50003',
+            action: 'get-expanded-masters',
+            instructions: JSON.stringify({login_id})
+        };
+        request(JSON.stringify(goData))
+    }, [offers])
+
     //form stuff
-    const {register, handleSubmit, watch, formState: {errors}} = useForm();
+    const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm();
     const submitOffer = d => {
         const offer = {
             order_id: order.id,
@@ -136,7 +235,36 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
             action: 'add-offer',
             instructions: JSON.stringify(offer)
         };
+        setOffer(offer);
         request(JSON.stringify(goData))
+    }
+
+    const submitEditOffer = d => {
+        if(offer) {
+            offer.price = d.edit_price;
+            offer.meeting = d.edit_meeting;
+            offer.description = d.edit_description;
+        }
+        const goData = {
+            address: 'auth:50003',
+            action: 'update-offer',
+            instructions: JSON.stringify(offer)
+        };
+        request(JSON.stringify(goData));
+    }
+
+    const deleteOffer = e => {
+        e.preventDefault();
+        const goData = {
+            address: 'auth:50003',
+            action: 'delete-row',
+            instructions: JSON.stringify({
+                column:'id',
+                value:offer.id.toString(),
+                table:'offers'
+            })
+        };
+        request(JSON.stringify(goData));
     }
 
     return (
@@ -202,7 +330,7 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                         <span>{service.name}</span>
                     </li>
                 </ul>
-                {!offer && showContent && (
+                {verifiedJwt && !offer && showContent && (
                     <form onSubmit={handleSubmit(submitOffer)} className={`col start ${formCSS.form}`}>
                         <br/>
                         <b>Предложить свою кандидатуру</b>
@@ -214,32 +342,40 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                         {errMsg(errors.meeting, 100)}
 
                         <textarea {...register('description', {required: true, maxLength: 300})} placeholder="Ваше предложение"/>
-                        {errMsg(errors.description, 2000)}
+                        {errMsg(errors.description, 300)}
 
                         <input type="submit" value="Предложить"/>
                         <br/>
                     </form>
                 )}
-                {offer && (
+                {verifiedJwt && offer && (
                     <div className={css.offered}>
                         <b>Вы уже отправили своё предложение на выполнение этого заказа</b>
                         <p>Заказчик увидит Ваше предложение, описание Вашего профиля, ссылку на Ваш профиль, и свяжется с Вами если предложение ему подойдёт</p>
-                        <ul className={`${css.details}`}>
-                            <li>
-                                <span>Цена за работу:</span>
-                                <span>{offer.price}</span>
-                            </li>
-                            <li>
-                                <span>Дата и условия выезда:</span>
-                                <span>{offer.meeting}</span>
-                            </li>
-                            <li>
-                                <span>Ваше предложение:</span>
-                                <span>{offer.description}</span>
-                            </li>
-                        </ul>
+                        <br/>
+                        <form onSubmit={handleSubmit(submitEditOffer)} className={`col start ${formCSS.form}`}>
+                            <b>Редактировать своё предложение</b>
+                            <input type="text" {...register('edit_price', {required: true, maxLength: 100})} data-label="Цена за работу" placeholder="Цена за всю работу (можно приблизительно)"/>
+                            {errMsg(errors.edit_price, 100)}
+
+                            <input type="text" {...register('edit_meeting', {maxLength: 100})} data-label="Дата и условия выезда" placeholder="Дата и условия выезда (Когда вы сможете встретится, приедете Вы или менеджер)"/>
+                            {errMsg(errors.edit_meeting, 100)}
+
+                            <textarea {...register('edit_description', {required: true, maxLength: 300})} placeholder="Ваше предложение"/>
+                            {errMsg(errors.edit_description, 300)}
+
+                            <div className="row start">
+                                <input type="submit" value="Сохранить"/>&nbsp;&nbsp;&nbsp;
+                                <input type="submit" onClick={deleteOffer} value="Удалить предложение"/>
+                            </div>
+                        </form>
+                        <br/>
                     </div>
                 )}
+                {verifiedJwt && offers.length > 0 && masters && offers.map(o => {
+                    return (<Offer key={o.id} offer={o} master={masters[o.master_id]}/>)
+                })}
+
                 <div className={`row bet ${css.bottom}`}>
                     <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/public/images/orders/bottom.jpg`} alt="Покрасить стены"  width="420" height="322" loading="lazy"/>
                     <div className="col bet">

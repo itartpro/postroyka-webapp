@@ -142,10 +142,10 @@ const Master = ({profile, comments, services, choices, works, workServices, phot
             company = 'бригада 3-4 человека';
             break;
         case 3:
-            legal = 'бригада 5-20 человека';
+            company = 'бригада 5-20 человека';
             break;
         case 4:
-            legal = 'бригада более 20 человек';
+            company = 'бригада более 20 человек';
             break;
         default:
             company = 'мастер работает один';

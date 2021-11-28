@@ -1,0 +1,44 @@
+.offer {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    border: 1px solid #AAA;
+    border-radius: 4px;
+    padding: 20px
+}
+
+.d1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center
+}
+
+.d1 > img {
+    border-radius: 50%;
+    margin-bottom: 10px
+}
+
+.d1 > b:nth-of-type(2) {
+    margin-top: 15px;
+    font-size: .9rem
+}
+
+.d1 > p:last-child {
+    font-size: .9rem
+}
+
+.comp {
+    margin: 10px 0
+}
+
+.d2 > p {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px
+}
+
+.d2 > p > b {
+    display: block;
+    margin-right: 10px;
+    min-width: 182px
+}
