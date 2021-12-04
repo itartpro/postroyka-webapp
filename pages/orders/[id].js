@@ -70,35 +70,39 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
     }
     const [showMsg, setShowMsg] = useState(null);
     //verify user access
-    const { wsMsg, verifiedJwt, verifyById, checkAccess, request } = useContext(WsContext);
+    const { wsMsg, verifiedJwt, checkAccess, request } = useContext(WsContext);
     const [showContent, setShowContent ] = useState(false);
     const [offers, setOffers ] = useState([]);
     const [masters, setMasters] = useState(null);
-    const [masterId, setMasterId] = useState(null);
+    const [user, setUser] = useState(null);
     const [offer, setOffer] = useState(null);
 
     useEffect(() => {
         const masterCheck = checkAccess([2]);
         const customerCheck = checkAccess([1, 9]);
-        const user = JSON.parse(window.localStorage.getItem('User'));
+        const userStr = window.localStorage.getItem('User');
+        let usr = {};
+        if(!userStr) return false;
+        try {
+            usr = JSON.parse(userStr);
+            setUser(usr)
+        } catch (e) {
+            return false;
+        }
 
-        if(masterCheck && user.id !== customer.id) {
-            setShowContent(true);
-            setMasterId(user.id);
+        if(masterCheck && usr.id !== customer.id) {
             const goData = {
                 address: 'auth:50003',
                 action: 'get-offers',
                 instructions: JSON.stringify({
                     order_id: [order.id],
-                    master_id: [masterId]
+                    master_id: [usr.id]
                 })
             };
             request(JSON.stringify(goData))
-        } else {
-            setShowContent(false);
         }
 
-        if(customerCheck && (user.id === customer.id || user.level === 9)) {
+        if(customerCheck && (usr.id === customer.id || usr.level === 9)) {
             const goData = {
                 address: 'auth:50003',
                 action: 'get-offers',
@@ -142,11 +146,10 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
 
         if(msg.data && msg.name === 'auth') {
             //handle addition of offer
-            console.log(msg.data);
-
             if(Array.isArray(msg.data) && msg.data[0] && msg.data[0].hasOwnProperty('order_id')) {
                 const user = JSON.parse(window.localStorage.getItem('User'));
                 if(user.level === 2) {
+                    console.log('got here??');
                     setOffer(msg.data[0])
                 } else {
                     setOffers(msg.data)
