@@ -1,9 +1,12 @@
 import {timeDiff, timeInRus} from "libs/time-stuff";
 import css from "./offer.module.css";
 import Link from "next/link";
+import {useState} from "react";
+import {isoToLocale} from "libs/js-time-to-psql";
+import {BsChat, BsTrash} from "react-icons/bs";
+import {useRouter} from "next/router";
 
 export const Offer = ({offer, master}) => {
-    console.log(offer);
     const fullName = master.last_name + ' ' + master.first_name + (master.paternal_name && ' ' + master.paternal_name);
     const timeOnSite = timeInRus(timeDiff(Date.parse(master.created), Date.now()));
     const lastOnline = timeInRus(timeDiff(Date.parse(master.last_online), Date.now()));
@@ -28,6 +31,12 @@ export const Offer = ({offer, master}) => {
             company = 'мастер работает один';
             break;
     }
+    const [showSection, setShowSection] = useState(1);
+    const startChat = () => {
+        const router = useRouter();
+        return router.push('/chat?offer='+offer.id)
+    }
+
     return (
         <div className={css.offer}>
             <div className={css.d1}>
@@ -41,9 +50,33 @@ export const Offer = ({offer, master}) => {
                 <p>Был {lastOnline} назад</p>
             </div>
             <div className={css.d2}>
-                <p>{offer.description}</p>
-                <p><b>Цена за работу:</b><span>{offer.price}</span></p>
-                <p><b>Дата и условия выезда:</b><span>{offer.meeting}</span></p>
+                <div className={`row start ${css.tabs}`}>
+                    <button onClick={() => setShowSection(1)} className={showSection === 1 ? css.on : null}>Предложение</button>
+                    <button onClick={() => setShowSection(2)} className={showSection === 2 ? css.on : null}>Об исполнителе</button>
+                    <button onClick={() => setShowSection(3)} className={showSection === 3 ? css.on : null}>Отзывы</button>
+                </div>
+                {showSection === 1 && (
+                <div className={css.d3}>
+                    <p>{offer.description}</p>
+                    <p><b>Цена за работу:</b><span>{offer.price}</span></p>
+                    <p><b>Дата и условия выезда:</b><span>{offer.meeting}</span></p>
+                    <p><b>Время предложения:</b><span>{isoToLocale(offer.created)}</span></p>
+                </div>
+                )}
+                {showSection === 2 && (
+                    <div className={css.d3}>
+                        <pre>{master.about}</pre>
+                    </div>
+                )}
+                {showSection === 3 && (
+                    <div className={css.d3}>
+                        <p>тут будет отзыв</p>
+                    </div>
+                )}
+                <div className={`row bet ${css.actions}`}>
+                    <button onClick={startChat}><BsChat/> Написать</button>
+                    <button><BsTrash/> Нет, спасибо</button>
+                </div>
             </div>
         </div>
     )

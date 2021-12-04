@@ -1,0 +1,78 @@
+.chat {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+}
+
+.d1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px 10px;
+}
+
+.d1 > img {
+    border-radius: 50%;
+    margin-bottom: 10px
+}
+
+.d1 > b:nth-of-type(2) {
+    margin-top: 15px;
+    font-size: .9rem
+}
+
+.d1 > p:last-child {
+    font-size: .9rem
+}
+
+.d2 {
+    display: grid;
+    grid-template-rows: 1fr 40px;
+}
+
+.d2 > div {
+    background: #fff7ee
+}
+
+.d2 > form {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+}
+
+.d2 input[type=text] {
+    padding: 0 10px
+}
+
+.d2 input[type=text]:focus {
+    outline: none
+}
+
+.me, .them {
+    align-self: flex-end;
+    position: relative;
+    margin: 10px;
+    padding: 10px 15px 25px 15px;
+    border-radius: 4px;
+    background-color: #b8ffb8;
+    box-shadow: 1px 2px 2px #CCC
+}
+
+.them {
+    align-self: flex-start;
+    background-color: #fff4e6
+}
+
+.me > span, .them > span {
+    position: absolute;
+    bottom: 5px;
+    font-size: .8rem;
+    color: #777
+}
+
+.me > span {
+    right: 15px
+}
+
+.them > span {
+    left: 15px
+}

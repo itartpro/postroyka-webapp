@@ -149,7 +149,6 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
             if(Array.isArray(msg.data) && msg.data[0] && msg.data[0].hasOwnProperty('order_id')) {
                 const user = JSON.parse(window.localStorage.getItem('User'));
                 if(user.level === 2) {
-                    console.log('got here??');
                     setOffer(msg.data[0])
                 } else {
                     setOffers(msg.data)
@@ -157,6 +156,7 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
             }
 
             if(msg.data.hasOwnProperty('masters')) {
+                //result from 'get-expanded-masters'
                 //organize masters into an object to tie them with offers easily
                 const candidates = {};
                 const towns = {};
@@ -174,7 +174,6 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                 })
 
                 msg.data.masters.forEach(m => {
-                    console.log(regions[m.region_id].name)
                     if(!candidates[m.id]) {
                         candidates[m.id] = m;
                         if(regions[m.region_id]) {
@@ -194,12 +193,6 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
         }
 
     }, [wsMsg]);
-
-    //first time that masters are retrieved we may need to gather other info - such as their rating, last comment
-    useEffect(() => {
-        if(!masters) return false;
-        console.log('got masters', masters);
-    }, [masters])
 
     useEffect(() => {
         if(offer && offer.price) {
@@ -226,7 +219,7 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
         const offer = {
             order_id: order.id,
             customer_id: customer.id,
-            master_id: masterId,
+            master_id: user.id,
             accept: 2, //2 - master offers to customer
             price: d.price,
             meeting: d.meeting,
@@ -375,9 +368,12 @@ const Order = ({order, otherOrdersCount, town, region, customer, service}) => {
                         <br/>
                     </div>
                 )}
-                {verifiedJwt && offers.length > 0 && masters && offers.map(o => {
-                    return (<Offer key={o.id} offer={o} master={masters[o.master_id]}/>)
-                })}
+                {verifiedJwt && offers.length > 0 && masters && (
+                    <div className={css.offers}>
+                        <p><b>Предложения</b> ({offers.length})</p>
+                        {offers.map(o => <Offer key={o.id} offer={o} master={masters[o.master_id]}/>)}
+                    </div>
+                )}
 
                 <div className={`row bet ${css.bottom}`}>
                     <img src={`${process.env.NEXT_PUBLIC_STATIC_URL}/public/images/orders/bottom.jpg`} alt="Покрасить стены"  width="420" height="322" loading="lazy"/>
